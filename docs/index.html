@@ -274,6 +274,18 @@
     @media(max-width:430px){.top{gap:7px}.brand{gap:8px}.brand-orb{width:39px;height:39px;flex-basis:39px;font-size:22px}.brand strong{font-size:13px;max-width:180px}.top-controls{max-width:128px}.sound-toggle{max-width:128px;white-space:normal;line-height:1.2}.hero h1{font-size:clamp(35px,11vw,52px)}.ranked-choices{grid-template-columns:1fr}.ranked-choice{padding:10px}.hero-ribbon span{font-size:8px}}
     @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}body:before,.brand-orb,.hero:before,.hero:after,.category-card,.picker-panel{animation:none!important}.button,.category-card,.candidate-picker,.candidate-option{transition:none!important}}
 
+    .spoilers-section{margin:0 0 28px;padding:22px;background:#191c1f;border:1px solid #454a4f;border-left:4px solid var(--gold)}
+    .spoilers-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+    .spoilers-section h2{margin:0 0 7px;font-size:25px}
+    .spoilers-section .spoilers-description{margin:0 0 15px;color:var(--muted);font-size:12px;line-height:1.6}
+    .spoilers-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+    .spoiler-card{min-width:0;padding:15px;background:#101214;border:1px solid #3b4145;border-top:3px solid var(--gold)}
+    .spoiler-card .spoiler-category{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#aab0b4;line-height:1.5}
+    .spoiler-card .spoiler-name{font-size:21px;line-height:1.15;font-weight:800;margin:8px 0;overflow-wrap:anywhere}
+    .spoiler-card .spoiler-points{font-size:12px;color:var(--gold);font-weight:700}
+    .spoiler-card .spoiler-rank{font-size:11px;color:#d7dadc;margin-top:5px}
+    @media(max-width:760px){.spoilers-grid{grid-template-columns:1fr}.spoilers-section{padding:17px}.spoilers-section h2{font-size:22px}}
+
   </style>
 </head>
 <body>
@@ -289,6 +301,16 @@
       <div class="hero-ribbon" aria-hidden="true"><span>PERSONALIDADES</span><span>MOMENTOS ICÔNICOS</span><span>21 CATEGORIAS</span><span>DUAS FASES</span></div>
     </section>
 
+    <section id="spoilersSection" class="spoilers-section" aria-labelledby="spoilersTitle">
+      <div class="spoilers-head">
+        <div><div class="eyebrow">PARCIAL DA TURMA</div><h2 id="spoilersTitle">👀 Spoilers do Awards</h2></div>
+        <span class="pill" id="spoilersRefreshLabel">Atualiza a cada 15 minutos</span>
+      </div>
+      <p class="spoilers-description">Três destaques aleatórios da apuração atual. Os nomes, pontos e posições são reais e podem mudar conforme novos votos entram.</p>
+      <div id="spoilersGrid" class="spoilers-grid" aria-live="polite"><article class="spoiler-card">Carregando spoilers…</article></div>
+      <p class="fine">Os spoilers são públicos. A apuração completa continua restrita à ADM até o encerramento da votação.</p>
+    </section>
+
     <main id="loginView" class="grid">
       <section class="panel">
         <h2>Entre na votação</h2>
@@ -298,11 +320,14 @@
           <input class="field" id="fullName" name="fullName" autocomplete="name" placeholder="Nome completo" required maxlength="120">
           <label class="label" for="ra">RA (sem SP)</label>
           <input class="field" id="ra" name="ra" type="password" inputmode="text" autocomplete="current-password" placeholder="RA sem SP" required maxlength="24">
-          <div id="adminCodeWrap" class="hidden">
-            <label class="label" for="adminCode">Código extra de ADM</label>
-            <input class="field" id="adminCode" name="adminCode" type="password" autocomplete="off" placeholder="Código de acesso da administração" maxlength="100">
-            <div class="fine">O código administrativo é independente do RA. Não compartilhe.</div>
+          <div id="adminLoginFields" class="hidden">
+            <label class="label" for="adminUsername">Usuário ADM</label>
+            <input class="field" id="adminUsername" name="adminUsername" autocomplete="username" placeholder="Usuário administrativo" maxlength="100" disabled>
+            <label class="label" for="adminPassword">Senha ADM</label>
+            <input class="field" id="adminPassword" name="adminPassword" type="password" autocomplete="current-password" placeholder="Senha administrativa" maxlength="512" disabled>
+            <div class="fine">Acesso exclusivo à administração do 1ºA Awards.</div>
           </div>
+          <button class="button secondary" id="loginModeButton" type="button" style="width:100%;margin-top:14px">Entrar como ADM</button>
           <button class="button primary" id="loginButton" type="submit">Acessar votação</button>
           <div id="loginMessage" aria-live="polite"></div>
         </form>
@@ -314,7 +339,7 @@
         <div class="feature"><div class="ico">01</div><div><strong>Polêmicas & sem filtro</strong><p>Fofocas, opiniões fortes, drama e histórias que rendem conversa.</p></div></div>
         <div class="feature"><div class="ico">02</div><div><strong>Vida social & comportamento</strong><p>Jeitos de conviver, distrações, celular e organização da turma.</p></div></div>
         <div class="feature"><div class="ico">03</div><div><strong>Clássicos & momentos memoráveis</strong><p>Estilo, situações icônicas, sobrevivência nas avaliações e sorte.</p></div></div>
-        <div class="feature"><div class="ico">04</div><div><strong>Apuração e divulgação</strong><p>10 dias de votação geral, 10 dias de final e resultados ao encerrar o prazo.</p></div></div>
+        <div class="feature"><div class="ico">04</div><div><strong>Apuração e divulgação</strong><p>A primeira fase recebe votos; com 20 cédulas, a ADM pode iniciar a final por mais 10 dias.</p></div></div>
         <div class="notice">Na moral: é para brincar, não humilhar. Vote com respeito e não use a votação para atacar ou expor colegas.</div>
       </aside>
     </main>
@@ -322,11 +347,16 @@
     <main id="dashboardView" class="dashboard hidden">
       <div class="dash-head"><div><div class="eyebrow">ÁREA DO PARTICIPANTE</div><h2 id="welcomeTitle">Bem-vindo(a)!</h2><div id="statusLine" class="sub" style="margin:7px 0 0">Conectando ao sistema...</div></div><div class="dash-actions"><button id="refreshButton" class="button secondary">Atualizar dados</button><button id="logoutButton" class="button danger">Sair</button></div></div>
       <section id="personalMessageCard" class="panel personal-message hidden" aria-live="polite"><div class="eyebrow">UM RECADO PRA VOCÊ</div><h3>Mensagem individual</h3><p id="personalMessageText"></p></section>
-      <section class="timer-panel"><div><h3 id="timerTitle">A contagem regressiva</h3><p id="timerDescription">Os resultados serão liberados depois de 20 dias.</p><div id="adminStartWrap" class="hidden" style="margin-top:14px"><button id="startCountdownButton" class="button primary" style="width:auto;margin:0">Abrir votação · iniciar prazo</button><p class="fine">A contagem começa uma única vez. O horário é registrado no servidor e vale para toda a turma.</p></div></div><div class="timer" id="timer"><div class="timebox"><strong id="days">20</strong><span>Dias</span></div><div class="timebox"><strong id="hours">00</strong><span>Horas</span></div><div class="timebox"><strong id="minutes">00</strong><span>Minutos</span></div><div class="timebox"><strong id="seconds">00</strong><span>Segundos</span></div></div></section>
+      <section class="timer-panel"><div><h3 id="timerTitle">A contagem regressiva</h3><p id="timerDescription">A primeira fase dura até 10 dias; a final dura 10 dias após ser iniciada pela ADM.</p><div id="adminStartWrap" class="hidden" style="margin-top:14px"><button id="startCountdownButton" class="button primary" style="width:auto;margin:0">Abrir votação · iniciar prazo</button><p class="fine">A contagem começa uma única vez. O horário é registrado no servidor e vale para toda a turma.</p></div></div><div class="timer" id="timer"><div class="timebox"><strong id="days">20</strong><span>Dias</span></div><div class="timebox"><strong id="hours">00</strong><span>Horas</span></div><div class="timebox"><strong id="minutes">00</strong><span>Minutos</span></div><div class="timebox"><strong id="seconds">00</strong><span>Segundos</span></div></div></section>
       <section id="votingSection" class="hidden"><h2 class="section-title" id="ballotTitle">Votação geral</h2><p class="ballot-intro" id="ballotIntro">Em cada categoria, escolha uma 1ª opção (1 ponto) e uma 2ª opção diferente (0,5 ponto). Você pode pular categorias. A cédula desta fase não pode ser alterada depois do envio.</p><div class="ballot-progress" aria-live="polite"><div class="ballot-progress-top"><span>PROGRESSO DA CÉDULA</span><strong id="ballotProgressText">0 de 42 opções escolhidas</strong></div><div class="progress-track" role="progressbar" aria-label="Categorias preenchidas" aria-valuemin="0" aria-valuemax="42" aria-valuenow="0" id="ballotProgressTrack"><span id="ballotProgressBar"></span></div></div><form id="ballotForm"><div id="categoriesGrid" class="cat-grid"></div><div class="ballot-footer"><button class="button primary" id="submitBallotButton" type="submit" style="width:auto;margin:0">Enviar cédula</button><small>Confira as escolhas antes de enviar. O envio é definitivo.</small></div><div id="voteMessage" aria-live="polite"></div></form></section>
       <section id="alreadyVoted" class="panel hidden"><h2>Cédula registrada</h2><p id="alreadyVotedText" class="sub" style="margin-bottom:0">Sua cédula desta fase foi registrada. Você poderá participar da próxima fase quando ela abrir.</p></section>
-      <section id="resultsSection" class="hidden"><h2 class="section-title">Resultados oficiais</h2><p class="ballot-intro">A votação terminou após duas fases. Os resultados abaixo são calculados pela pontuação da final: 1 ponto para a primeira opção e 0,5 para a segunda. Em caso de empate, todos os nomes empatados aparecem como vencedores.</p><div id="resultsGrid" class="result-grid"></div></section>
-      <section id="adminSection" class="panel hidden" style="margin-top:28px"><div class="stats-head"><div><div class="eyebrow">ACESSO RESTRITO</div><h2 style="margin:8px 0 4px">Painel de administração</h2><p class="sub" style="margin:0">Acompanhe os totais por categoria e a participação. O painel não associa escolhas a alunos.</p></div><span class="pill">ADMIN</span></div><div id="adminStats" class="loading">Carregando apuração...</div><div class="fine">A apuração ao vivo é restrita à administração. A divulgação pública acontece após o encerramento do prazo.</div></section>
+      <section id="resultsSection" class="hidden"><h2 class="section-title">Resultados oficiais</h2><p class="ballot-intro">A votação terminou após as duas fases. Os resultados abaixo usam a pontuação da final: 1 ponto para a primeira opção e 0,5 para a segunda. Em caso de empate, todos os nomes empatados aparecem como vencedores.</p><div id="resultsGrid" class="result-grid"></div></section>
+      <section id="adminSection" class="panel hidden" style="margin-top:28px"><div class="stats-head"><div><div class="eyebrow">ACESSO RESTRITO</div><h2 style="margin:8px 0 4px">Painel de administração</h2><p class="sub" style="margin:0">Acompanhe os totais por categoria e a participação. O painel não associa escolhas a alunos.</p></div><span class="pill">ADMIN</span></div><div id="adminFinalWrap" class="hidden" style="margin:18px 0;padding:15px;border:1px solid #5b4b20;background:#171819">
+        <h3 style="margin:0 0 7px;font-size:20px">Começar a segunda fase</h3>
+        <p class="sub" style="margin:0 0 12px">Quando houver 20 cédulas da primeira fase, este botão ficará liberado. Ao clicar, o cronômetro reinicia para 10 dias. Os votos anteriores serão preservados.</p>
+        <button id="startFinalButton" class="button primary" type="button" style="width:auto;margin:0" disabled>Iniciar 2ª fase (0/20 cédulas)</button>
+        <div id="startFinalMessage" aria-live="polite"></div>
+      </div><div id="adminStats" class="loading">Carregando apuração...</div><div class="fine">A apuração completa é restrita à administração. Três spoilers públicos mostram destaques aleatórios a cada 15 minutos.</div></section>
       <div id="dashboardMessage" aria-live="polite"></div>
     </main>
     <footer class="foot"><strong>THE AMAZING PRIMEIRO A AWARDS</strong><br>UMA LEMBRANÇA DO 1ºA · 2026<br>Participe com respeito e mantenha seus dados de acesso privados.</footer>
@@ -336,9 +366,9 @@
   (() => {
     'use strict';
     const categories = [
-      {id:'iconico',name:'Mais Bonito(a)',desc:'Tem uma beleza que chama a atenção da turma.',group:'Clássicos & momentos memoráveis'},
+      {id:'iconico',name:'Mais Icônico(a)',desc:'Tem uma beleza que chama a atenção da turma.',group:'Clássicos & momentos memoráveis'},
       {id:'mais_fofoqueiro',name:'Mais Fofoqueiro(a)',desc:'Sempre sabe das novidades antes de todo mundo.',group:'Polêmicas & sem filtro'},
-      {id:'mais_sem_filtro',name:'MMais Feio(a)',desc:'Tem identidade própria e sabe montar combinações marcantes.',group:'Polêmicas & sem filtro'},
+      {id:'mais_sem_filtro',name:'Mais Sem Filtro',desc:'Tem identidade própria e sabe montar combinações marcantes.',group:'Polêmicas & sem filtro'},
       {id:'mais_dramatico',name:'Mais Dramático(a)',desc:'Transforma qualquer coisa em uma cena de novela.',group:'Polêmicas & sem filtro'},
       {id:'mais_polemico',name:'Mais Polêmico(a)',desc:'Sempre tem uma opinião que rende discussão no grupo.',group:'Polêmicas & sem filtro'},
       {id:'mais_enrolado',name:'Mais Enrolado(a)',desc:'Promete que vai fazer o trabalho e vai deixando para depois.',group:'Polêmicas & sem filtro'},
@@ -352,7 +382,7 @@
       {id:'mais_preguicoso',name:'Mais Preguiçoso(a)',desc:'Sempre procura o caminho mais fácil para resolver qualquer tarefa.',group:'Vida social & comportamento'},
       {id:'pai_mae_turma',name:'Mais “Pai/Mãe da Turma”',desc:'Lembra os prazos, organiza os trabalhos e salva o grupo dos esquecimentos.',group:'Vida social & comportamento'},
       {id:'mais_cringe',name:'Mais Cringe',desc:'Protagoniza momentos de vergonha alheia que viram história da turma.',group:'Clássicos & momentos memoráveis'},
-      {id:'mais_estiloso',name:'MMais Feio(a)',desc:'Tem identidade própria e sabe montar combinações marcantes.',group:'Clássicos & momentos memoráveis'},
+      {id:'mais_estiloso',name:'Mais Estiloso(a)',desc:'Tem identidade própria e sabe montar combinações marcantes.',group:'Clássicos & momentos memoráveis'},
       {id:'mais_cola',name:'Mais “Cola”',desc:'O mestre da sobrevivência nas avaliações — categoria de brincadeira.',group:'Clássicos & momentos memoráveis'},
       {id:'mais_gente_boa',name:'Mais Gente Boa',desc:'Trata os colegas bem e contribui para um clima leve na turma.',group:'Clássicos & momentos memoráveis'},
       {id:'mais_sortudo',name:'Mais Sortudo(a)',desc:'Parece sempre acertar no chute ou se salvar na última questão.',group:'Clássicos & momentos memoráveis'},
@@ -371,6 +401,33 @@
       let data={}; try{data=await response.json()}catch(_){/* noop */}
       if(!response.ok || data.error) throw new Error(data.error || `Falha na solicitação (${response.status}).`);
       return data;
+    }
+    let publicSpoilerTimer = null;
+    async function refreshPublicSpoilers(){
+      const root=$('spoilersGrid');
+      if(!root)return;
+      try{
+        const data=await api('public_spoilers');
+        const items=Array.isArray(data.items)?data.items:[];
+        if(!items.length){
+          root.innerHTML='<article class="spoiler-card"><div class="spoiler-category">AINDA SEM DESTAQUES</div><div class="spoiler-name">Aguardando os primeiros votos</div><div class="spoiler-rank">Os spoilers aparecem quando houver pontuação registrada.</div></article>';
+        }else{
+          root.innerHTML=items.map(item=>{
+            const points=Number(item.points||0).toLocaleString('pt-BR',{maximumFractionDigits:1});
+            const rank=Number(item.rank||0);
+            const rankText=rank===1?'1º lugar':`${rank}º lugar`;
+            return `<article class="spoiler-card"><div class="spoiler-category">${h(item.categoryName)}</div><div class="spoiler-name">${h(item.name)}</div><div class="spoiler-points">${points} ${Number(item.points)===1?'ponto':'pontos'}</div><div class="spoiler-rank">Está em ${rankText}</div></article>`;
+          }).join('');
+        }
+        if(publicSpoilerTimer)clearTimeout(publicSpoilerTimer);
+        const nextAt=Number(data.nextRefreshAt||0);
+        const wait=Math.max(1000,nextAt?nextAt-Date.now()+300:15*60*1000);
+        publicSpoilerTimer=setTimeout(refreshPublicSpoilers,wait);
+      }catch(error){
+        root.innerHTML='<article class="spoiler-card"><div class="spoiler-category">SPOILERS</div><div class="spoiler-name">Não foi possível carregar agora</div><div class="spoiler-rank">Vamos tentar novamente automaticamente.</div></article>';
+        if(publicSpoilerTimer)clearTimeout(publicSpoilerTimer);
+        publicSpoilerTimer=setTimeout(refreshPublicSpoilers,60000);
+      }
     }
     function message(el, text, type=''){el.className='notice'+(type?' '+type:'');el.textContent=text;el.classList.remove('hidden');}
     function clearMessage(el){el.className='hidden';el.textContent='';}
@@ -517,27 +574,74 @@
       const button=document.querySelector('[data-picker-toggle="'+id+'"]');
       if(button)button.focus();
     });
-    $('fullName').addEventListener('input',()=>{
-      const isDavid = normalizeName($('fullName').value)==='david chrispim de melo';
-      $('adminCodeWrap').classList.toggle('hidden',!isDavid);
+    let adminLoginMode = false;
+    function updateLoginMode(){
+      $('loginModeButton').textContent=adminLoginMode?'Entrar como aluno':'Entrar como ADM';
+      $('loginButton').textContent=adminLoginMode?'Acessar painel ADM':'Acessar votação';
+      $('fullName').disabled=adminLoginMode;
+      $('ra').disabled=adminLoginMode;
+      $('fullName').required=!adminLoginMode;
+      $('ra').required=!adminLoginMode;
+      $('adminUsername').disabled=!adminLoginMode;
+      $('adminPassword').disabled=!adminLoginMode;
+      $('adminUsername').required=adminLoginMode;
+      $('adminPassword').required=adminLoginMode;
+      $('adminLoginFields').classList.toggle('hidden',!adminLoginMode);
+      document.querySelector('label[for="fullName"]').classList.toggle('hidden',adminLoginMode);
+      document.querySelector('label[for="ra"]').classList.toggle('hidden',adminLoginMode);
+    }
+    $('loginModeButton').addEventListener('click',()=>{
+      adminLoginMode=!adminLoginMode;
+      clearMessage($('loginMessage'));
+      updateLoginMode();
     });
-    $('loginForm').addEventListener('submit', async e=>{
-      e.preventDefault(); const btn=$('loginButton'), msg=$('loginMessage');clearMessage(msg);btn.disabled=true;btn.textContent='Verificando...';
+    $('loginForm').addEventListener('submit',async e=>{
+      e.preventDefault();
+      const btn=$('loginButton'),msg=$('loginMessage');
+      clearMessage(msg);btn.disabled=true;btn.textContent='Verificando...';
       try{
-        const data=await api('login',{fullName:$('fullName').value,ra:$('ra').value,adminCode:$('adminCode').value});
+        let data;
+        if(adminLoginMode){
+          data=await api('admin_login',{username:$('adminUsername').value,password:$('adminPassword').value});
+          if(data.isAdmin!==true)throw new Error('A conta não possui permissão administrativa.');
+        }else{
+          data=await api('login',{fullName:$('fullName').value,ra:$('ra').value});
+        }
         session={token:data.token,name:data.fullName,studentId:data.studentId,isAdmin:!!data.isAdmin};
-        sessionStorage.setItem('firstA_session',JSON.stringify(session)); candidates=data.candidates||[];
+        sessionStorage.setItem('firstA_session',JSON.stringify(session));
+        candidates=data.candidates||[];
         $('loginView').classList.add('hidden');$('dashboardView').classList.remove('hidden');
         await refreshAll(true);startPolling();
-      }catch(err){message(msg,err.message||'Não foi possível entrar. Confira o nome e o RA.','error');}
-      finally{btn.disabled=false;btn.textContent='Acessar votação';}
+      }catch(err){message(msg,err.message||'Não foi possível entrar. Confira os dados.','error');}
+      finally{btn.disabled=false;updateLoginMode();}
     });
-    $('logoutButton').addEventListener('click',()=>{sessionStorage.removeItem('firstA_session');session=null;candidates=[];finalistsByCategory={};status=null;results=null;adminStats=null;lastPhase=null;if(polling)clearInterval(polling);if(ticker)clearInterval(ticker);$('categoriesGrid').innerHTML='';$('categoriesGrid').dataset.rendered='';$('dashboardView').classList.add('hidden');$('personalMessageCard').classList.add('hidden');$('personalMessageText').textContent='';$('loginView').classList.remove('hidden');$('ra').value='';$('adminCode').value='';});
+    $('logoutButton').addEventListener('click',()=>{
+      sessionStorage.removeItem('firstA_session');session=null;candidates=[];finalistsByCategory={};status=null;results=null;adminStats=null;lastPhase=null;
+      if(polling)clearInterval(polling);if(ticker)clearInterval(ticker);
+      $('categoriesGrid').innerHTML='';$('categoriesGrid').dataset.rendered='';
+      $('dashboardView').classList.add('hidden');$('personalMessageCard').classList.add('hidden');$('personalMessageText').textContent='';
+      $('loginView').classList.remove('hidden');$('fullName').value='';$('ra').value='';$('adminUsername').value='';$('adminPassword').value='';
+      adminLoginMode=false;updateLoginMode();
+    });
+    updateLoginMode();
     $('refreshButton').addEventListener('click',()=>refreshAll(true).catch(showDashboardError));
     $('startCountdownButton').addEventListener('click',async()=>{
       const btn=$('startCountdownButton');btn.disabled=true;btn.textContent='Iniciando...';
-      try{await api('start_countdown',{session:session.token});await refreshAll(true);message($('dashboardMessage'),'Prazo iniciado: 10 dias de votação geral, seguidos de 10 dias de final.','success');}
+      try{await api('start_countdown',{session:session.token});await refreshAll(true);message($('dashboardMessage'),'A primeira fase começou. Quando houver 20 cédulas gerais, você poderá iniciar a final pelo painel ADM.','success');}
       catch(err){showDashboardError(err)}finally{btn.disabled=false;btn.textContent='Abrir votação · iniciar prazo';}
+    });
+    $('startFinalButton').addEventListener('click',async()=>{
+      const btn=$('startFinalButton'),msg=$('startFinalMessage');
+      clearMessage(msg);
+      if(!confirm('Começar a segunda fase agora? O cronômetro será reiniciado para 10 dias. Os votos da primeira fase serão preservados.'))return;
+      btn.disabled=true;btn.textContent='Iniciando segunda fase...';
+      try{
+        const data=await api('start_final',{session:session.token});
+        await refreshAll(true);
+        await refreshPublicSpoilers();
+        message($('dashboardMessage'),`A segunda fase começou! Foram recebidas ${data.totalGeneralBallots} cédulas na primeira fase. O cronômetro foi reiniciado para 10 dias.`,'success');
+      }catch(err){message(msg,err.message||'Não foi possível iniciar a segunda fase.','error');}
+      finally{btn.disabled=false;renderAdminStats();}
     });
     $('ballotForm').addEventListener('submit',async e=>{
       e.preventDefault();const btn=$('submitBallotButton'),msg=$('voteMessage');clearMessage(msg);
@@ -552,7 +656,7 @@
       if(Object.keys(votes).length===0){message(msg,'Escolha ao menos uma primeira opção antes de enviar.','error');return;}
       const faseNome=status.phase==='final'?'na final':'na votação geral';if(!confirm(`Você preencheu ${Object.keys(votes).length} categoria(s) ${faseNome}: ${firstChoices} primeira(s) opção(ões) (1 ponto cada) e ${secondChoices} segunda(s) opção(ões) (0,5 ponto cada). As duas opções precisam ser pessoas diferentes e a cédula não poderá ser alterada depois do envio. Confirmar?`))return;
       btn.disabled=true;btn.textContent='Enviando voto...';
-      try{await api('submit_vote',{session:session.token,votes});status.hasVoted=true;if(status.phase==='general')status.hasVotedGeneral=true;if(status.phase==='final')status.hasVotedFinal=true;renderDashboard();message($('dashboardMessage'),status.phase==='general'?'Voto da primeira fase registrado. A final começa no 11º dia.':'Voto da final registrado. Os resultados serão liberados ao fim do 20º dia.','success');}
+      try{await api('submit_vote',{session:session.token,votes});status.hasVoted=true;if(status.phase==='general')status.hasVotedGeneral=true;if(status.phase==='final')status.hasVotedFinal=true;renderDashboard();message($('dashboardMessage'),status.phase==='general'?'Voto da primeira fase registrado. A ADM poderá iniciar a final quando houver 20 cédulas gerais.':'Voto da final registrado. Os resultados serão liberados quando terminar o prazo da segunda fase.','success');}
       catch(err){message(msg,err.message||'Não foi possível registrar os votos.','error');}
       finally{btn.disabled=false;btn.textContent='Enviar cédula';}
     });
@@ -588,28 +692,28 @@
       $('timer').classList.toggle('hidden',!status.deadline);
       if(status.phase==='not_started'){
         $('timerTitle').textContent='A contagem ainda não começou';
-        $('timerDescription').textContent=session.isAdmin?'Quando estiver tudo pronto, inicie os 20 dias: 10 de votação geral e 10 de final.':'A organização ainda não iniciou oficialmente a contagem regressiva.';
+        $('timerDescription').textContent=session.isAdmin?'Inicie a primeira fase. Quando houver 20 cédulas gerais, a segunda fase poderá começar pelo painel ADM.':'A organização ainda não iniciou oficialmente a contagem regressiva.';
         $('votingSection').classList.add('hidden');$('alreadyVoted').classList.add('hidden');$('resultsSection').classList.add('hidden');
       }else if(status.phase==='closed'){
-        $('timerTitle').textContent='Votação encerrada';$('timerDescription').textContent='Os 20 dias terminaram. Os resultados oficiais da final estão disponíveis.';
+        $('timerTitle').textContent='Votação encerrada';$('timerDescription').textContent='O prazo da fase final terminou. Os resultados oficiais estão disponíveis.';
         $('votingSection').classList.add('hidden');$('alreadyVoted').classList.add('hidden');$('resultsSection').classList.remove('hidden');renderResults();
       }else{
         const general=status.phase==='general';
         $('timerTitle').textContent=general?'Fase 1 — votação geral':'Fase 2 — final por categoria';
         $('timerDescription').textContent=general
-          ?'Nos primeiros 10 dias, escolha 1ª opção (1 ponto) e 2ª opção diferente (0,5 ponto) por categoria. Os quatro com maior pontuação avançam para a final.'
-          :'Do 11º ao 20º dia, vote entre os quatro finalistas de cada categoria. Os resultados saem quando o prazo terminar.';
+          ?'Vote na primeira fase. Quando houver pelo menos 20 cédulas, a ADM poderá iniciar a final manualmente. Se o relógio zerar antes disso, a primeira fase continua aberta.'
+          :'A segunda fase está aberta por 10 dias. Vote entre os quatro finalistas de cada categoria; os resultados saem quando o prazo terminar.';
         $('ballotTitle').textContent=general?'Votação geral':'Final por categoria';
         $('ballotIntro').textContent=general
-          ?'Escolha uma 1ª opção (1 ponto) e uma 2ª opção diferente (0,5 ponto) por categoria. No 11º dia, os quatro mais votados em cada tema avançam para a final. Você pode pular categorias.'
+          ?'Escolha uma 1ª opção (1 ponto) e uma 2ª opção diferente (0,5 ponto) por categoria. Quando houver 20 cédulas gerais, a ADM poderá iniciar a final. Você pode pular categorias.'
           :'Agora cada categoria mostra apenas os quatro finalistas da primeira fase. Escolha 1ª opção (1 ponto) e 2ª opção diferente (0,5 ponto). A cédula da final é independente da primeira.';
         $('resultsSection').classList.add('hidden');
         $('votingSection').classList.toggle('hidden',!!status.hasVoted);
         $('alreadyVoted').classList.toggle('hidden',!status.hasVoted);
         if(status.hasVoted){
           $('alreadyVotedText').textContent=general
-            ?'Seu voto da votação geral já foi registrado. No 11º dia, você poderá votar de novo, agora entre os quatro finalistas de cada categoria.'
-            :'Seu voto da final já foi registrado. Os resultados oficiais serão liberados assim que terminar o 20º dia.';
+            ?'Seu voto da primeira fase já foi registrado. Quando a ADM iniciar a final, você poderá votar novamente entre os quatro finalistas de cada categoria.'
+            :'Seu voto da final já foi registrado. Os resultados oficiais serão liberados quando terminar o prazo da segunda fase.';
         }else{
           $('submitBallotButton').textContent=general?'Enviar voto da primeira fase':'Enviar voto da final';
           renderBallot();
@@ -640,7 +744,7 @@
       if(!status||!status.phaseDeadline)return;
       const remaining=Math.max(0,new Date(status.phaseDeadline).getTime()-(Date.now()+serverOffsetMs));const total=Math.floor(remaining/1000);
       $('days').textContent=String(Math.floor(total/86400)).padStart(2,'0');$('hours').textContent=String(Math.floor(total%86400/3600)).padStart(2,'0');$('minutes').textContent=String(Math.floor(total%3600/60)).padStart(2,'0');$('seconds').textContent=String(total%60).padStart(2,'0');
-      if(remaining===0&&!status.resultsReleased&&!releaseRefreshPending){releaseRefreshPending=true;refreshAll(true).catch(showDashboardError).finally(()=>{releaseRefreshPending=false;});}
+      if(remaining===0&&status.phase==='final'&&!status.resultsReleased&&!releaseRefreshPending){releaseRefreshPending=true;refreshAll(true).catch(showDashboardError).finally(()=>{releaseRefreshPending=false;});}
     }
     function renderResults(){
       const map=new Map((results||[]).map(x=>[x.categoryId,x]));
@@ -651,6 +755,10 @@
       if(!adminStats){root.innerHTML='<div class="loading">Carregando apuração...</div>';return;}
       const total=Number(adminStats.totalBallots||0), max=Number(adminStats.totalStudents||0), pct=max?Math.round(total/max*100):0;
       const phases=adminStats.phaseCounts||{general:0,final:0};
+      const generalBallots=Number(phases.general||0);
+      const finalWrap=$('adminFinalWrap'),finalButton=$('startFinalButton');
+      if(finalWrap)finalWrap.classList.toggle('hidden',!session.isAdmin||!status||status.phase!=='general');
+      if(finalButton){finalButton.disabled=generalBallots<20;finalButton.textContent=generalBallots<20?`Iniciar 2ª fase (${generalBallots}/20 cédulas)`:`Iniciar 2ª fase (${generalBallots} cédulas)`;}
       const phaseName=adminStats.phase==='general'?'Votação geral':adminStats.phase==='final'?'Final por categoria':adminStats.phase==='closed'?'Encerrada':'Não iniciada';
       root.innerHTML=`<div class="stats-grid"><div class="stat"><strong>${total}</strong><span>Cédulas nesta fase</span></div><div class="stat"><strong>${max}</strong><span>Participantes cadastrados</span></div><div class="stat"><strong>${pct}%</strong><span>Participação nesta fase</span></div></div><div class="notice">Fase: ${phaseName}. Cédulas na votação geral: ${Number(phases.general||0)} · Cédulas na final: ${Number(phases.final||0)}. ${status&&status.deadline?`Prazo final: ${new Date(status.deadline).toLocaleString('pt-BR')}`:'Contagem ainda não iniciada.'} ${status&&status.resultsReleased?'Resultados públicos liberados.':'Os totais abaixo são restritos à ADM até o fim do prazo.'}</div><h3 class="section-title" style="font-size:20px">Apuração ao vivo — ${adminStats.tallyPhase==='final'?'final por categoria':'votação geral'}</h3><div class="tally-list">${categories.map(c=>{const item=(adminStats.results||[]).find(x=>x.categoryId===c.id)||{votes:[]};const sorted=(item.votes||[]).slice().sort((a,b)=>b.count-a.count||a.name.localeCompare(b.name,'pt-BR')).filter(x=>x.count>0);return `<div class="tally-card"><h3>${h(c.name)}</h3>${sorted.length?sorted.slice(0,5).map(v=>`<div class="tally-row"><span>${h(v.name)}</span><span class="count">${Number(v.count).toLocaleString('pt-BR',{maximumFractionDigits:1})} pt</span></div>`).join(''):'<div class="tally-row"><span>Sem votos ainda</span><span class="count">0</span></div>'}</div>`}).join('')}</div>`;
     }
@@ -697,6 +805,7 @@
     $('soundToggle').addEventListener('click',toggleSound);
     function playSelectionSound(){if(!soundEnabled)return;tone(783.99,0.12,0.018,'triangle');tone(1046.5,0.2,0.014,'sine',0.08);}
     boot();
+    refreshPublicSpoilers();
   })();
   </script>
 </body>

@@ -5,14 +5,16 @@ const SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
 const RA_HMAC_SECRET = Deno.env.get("RA_HMAC_SECRET") ?? "";
 const SESSION_SECRET = Deno.env.get("SESSION_SECRET") ?? "";
 const ADMIN_ACCESS_CODE = Deno.env.get("ADMIN_ACCESS_CODE") ?? "";
+const ADMIN_USERNAME = Deno.env.get("ADMIN_USERNAME") ?? "";
+const ADMIN_PASSWORD = Deno.env.get("ADMIN_PASSWORD") ?? "";
 const ROSTER_SETUP_KEY = Deno.env.get("ROSTER_SETUP_KEY") ?? "";
 const ADMIN_NAME = "david chrispim de melo";
 const DAY_MS = 24 * 60 * 60 * 1000;
 
 const categories = [
-  { id: "iconico", name: "Mais Bonito(a)" },
+  { id: "iconico", name: "Mais Icônico(a)" },
   { id: "mais_fofoqueiro", name: "Mais Fofoqueiro(a)" },
-  { id: "mais_sem_filtro", name: "MMais Feio(a)" },
+  { id: "mais_sem_filtro", name: "Mais Sem Filtro" },
   { id: "mais_dramatico", name: "Mais Dramático(a)" },
   { id: "mais_polemico", name: "Mais Polêmico(a)" },
   { id: "mais_enrolado", name: "Mais Enrolado(a)" },
@@ -26,7 +28,7 @@ const categories = [
   { id: "mais_preguicoso", name: "Mais Preguiçoso(a)" },
   { id: "pai_mae_turma", name: "Mais “Pai/Mãe da Turma”" },
   { id: "mais_cringe", name: "Mais Cringe" },
-  { id: "mais_estiloso", name: "MMais Feio(a)" },
+  { id: "mais_estiloso", name: "Mais Estiloso(a)" },
   { id: "mais_cola", name: "Mais “Cola”" },
   { id: "mais_gente_boa", name: "Mais Gente Boa" },
   { id: "mais_sortudo", name: "Mais Sortudo(a)" },
@@ -94,10 +96,28 @@ function constantTimeEqual(a: string, b: string): boolean {
   for (let i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
   return diff === 0;
 }
-async function getDeadline(): Promise<string | null> {
-  const { data, error } = await supabase.from("awards_config").select("deadline").eq("id", 1).single();
+type AwardsPhase = "not_started" | "general" | "final" | "closed";
+
+async function getAwardsState(): Promise<{ deadline: string | null; phase: AwardsPhase }> {
+  const { data, error } = await supabase
+    .from("awards_config")
+    .select("deadline, phase")
+    .eq("id", 1)
+    .single();
   if (error) throw error;
-  return data?.deadline ?? null;
+
+  const deadline = data?.deadline ?? null;
+  const storedPhase = String(data?.phase ?? (deadline ? "general" : "not_started"));
+  if (!deadline || storedPhase === "not_started") return { deadline, phase: "not_started" };
+  // A fase geral continua aberta até a ADM iniciar a final, mesmo se o relógio zerar.
+  if (storedPhase === "general") return { deadline, phase: "general" };
+  if (storedPhase === "final" && Date.now() >= new Date(deadline).getTime()) return { deadline, phase: "closed" };
+  if (storedPhase === "final") return { deadline, phase: "final" };
+  return { deadline, phase: "closed" };
+}
+
+async function getDeadline(): Promise<string | null> {
+  return (await getAwardsState()).deadline;
 }
 async function getPersonalMessage(studentId: string): Promise<string | null> {
   const { data, error } = await supabase.from("student_messages")
@@ -110,16 +130,7 @@ async function getPersonalMessage(studentId: string): Promise<string | null> {
   }
   return typeof data?.message === "string" ? data.message : null;
 }
-function getPhase(deadline: string | null, nowMs = Date.now()): "not_started" | "general" | "final" | "closed" {
-  if (!deadline) return "not_started";
-  const deadlineMs = new Date(deadline).getTime();
-  if (nowMs >= deadlineMs) return "closed";
-  if (nowMs < deadlineMs - 10 * DAY_MS) return "general";
-  return "final";
-}
-function released(deadline: string | null): boolean {
-  return getPhase(deadline) === "closed";
-}
+
 async function getAggregate(phase: "general" | "final" | null = null) {
   const [{ data: students, error: studentsError }, { data: allBallots, error: ballotsError }] = await Promise.all([
     supabase.from("students").select("id, full_name"),
@@ -195,6 +206,45 @@ Deno.serve(async (req: Request) => {
     const body = await req.json();
     const action = String(body.action ?? "");
 
+    if (action === "public_spoilers") {
+      const { phase } = await getAwardsState();
+      const slotMs = 15 * 60 * 1000;
+      const slot = Math.floor(Date.now() / slotMs);
+      const nextRefreshAt = (slot + 1) * slotMs;
+
+      if (phase === "not_started") {
+        return json({ items: [], phase, nextRefreshAt });
+      }
+
+      const tallyPhase = phase === "final" || phase === "closed" ? "final" : "general";
+      const aggregate = await getAggregate(tallyPhase);
+      let randomState = slot >>> 0;
+      const seededRandom = () => {
+        randomState = (Math.imul(randomState, 1664525) + 1013904223) >>> 0;
+        return randomState / 4294967296;
+      };
+
+      const shuffled = categories.slice();
+      for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(seededRandom() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+      }
+
+      const items: Array<{ categoryId: string; categoryName: string; name: string; points: number; rank: number }> = [];
+      for (const category of shuffled) {
+        const categoryResult = aggregate.results.find((item) => item.categoryId === category.id);
+        if (!categoryResult) continue;
+        const eligible = categoryResult.votes.filter((person) => Number(person.count) > 0);
+        if (!eligible.length) continue;
+        const person = eligible[Math.floor(seededRandom() * eligible.length)];
+        const rank = 1 + categoryResult.votes.filter((other) => Number(other.count) > Number(person.count)).length;
+        items.push({ categoryId: category.id, categoryName: category.name, name: person.name, points: person.count, rank });
+        if (items.length === 3) break;
+      }
+
+      return json({ items, phase: tallyPhase, nextRefreshAt });
+    }
+
     if (action === "setup_roster") {
       if (!ROSTER_SETUP_KEY || !constantTimeEqual(String(body.setupKey ?? ""), ROSTER_SETUP_KEY)) return json({ error: "Chave de configuração inválida." }, 401);
       if (!Array.isArray(body.roster) || body.roster.length < 1 || body.roster.length > 100) return json({ error: "Lista de participantes inválida." }, 400);
@@ -221,6 +271,40 @@ Deno.serve(async (req: Request) => {
       return json({ imported: rows.length, note: "Importação concluída. Os RAs não foram armazenados em texto puro." });
     }
 
+    if (action === "admin_login") {
+      const username = String(body.username ?? "").trim();
+      const password = String(body.password ?? "");
+
+      if (!ADMIN_USERNAME || !ADMIN_PASSWORD) {
+        return json({ error: "O login administrativo não está configurado." }, 500);
+      }
+      if (!username || !password || password.length > 512 ||
+          !constantTimeEqual(username, ADMIN_USERNAME) ||
+          !constantTimeEqual(password, ADMIN_PASSWORD)) {
+        return json({ error: "Usuário ou senha incorretos." }, 401);
+      }
+
+      const { data: adminStudent, error: adminError } = await supabase
+        .from("students")
+        .select("id, full_name")
+        .eq("normalized_name", ADMIN_NAME)
+        .eq("is_admin", true)
+        .maybeSingle();
+      if (adminError) throw adminError;
+      if (!adminStudent) {
+        return json({ error: "O registro ADM não foi encontrado na lista de participantes." }, 409);
+      }
+
+      const token = await createSession({ sid: adminStudent.id, name: adminStudent.full_name, admin: true });
+      const { data: candidates, error: candidatesError } = await supabase
+        .from("students")
+        .select("id, full_name")
+        .neq("id", adminStudent.id)
+        .order("full_name");
+      if (candidatesError) throw candidatesError;
+      return json({ token, studentId: adminStudent.id, fullName: adminStudent.full_name, isAdmin: true, candidates: candidates ?? [] });
+    }
+
     if (action === "login") {
       const fullName = String(body.fullName ?? "").trim();
       const normalized = normalizeName(fullName);
@@ -232,8 +316,7 @@ Deno.serve(async (req: Request) => {
       if (error) throw error;
       const submittedDigest = await signHex(RA_HMAC_SECRET, ra);
       if (!student || !constantTimeEqual(student.ra_digest, submittedDigest)) return json({ error: "Nome ou RA não confere. Verifique a grafia do nome completo e o RA sem SP." }, 401);
-      const hasAdminCode = Boolean(ADMIN_ACCESS_CODE && constantTimeEqual(String(body.adminCode ?? ""), ADMIN_ACCESS_CODE));
-      const isAdmin = Boolean(student.is_admin && hasAdminCode);
+      const isAdmin = false;
       const token = await createSession({ sid: student.id, name: student.full_name, admin: isAdmin });
       const { data: candidates, error: candidatesError } = await supabase.from("students").select("id, full_name").neq("id", student.id).order("full_name");
       if (candidatesError) throw candidatesError;
@@ -241,8 +324,7 @@ Deno.serve(async (req: Request) => {
     }
 
     if (action === "status") {
-      const deadline = await getDeadline();
-      const phase = getPhase(deadline);
+      const { deadline, phase } = await getAwardsState();
       let hasVoted: boolean | null = null;
       let hasVotedGeneral: boolean | null = null;
       let hasVotedFinal: boolean | null = null;
@@ -259,9 +341,7 @@ Deno.serve(async (req: Request) => {
         hasVotedFinal = Boolean(studentState?.has_voted_final);
         hasVoted = phase === "general" ? hasVotedGeneral : phase === "final" ? hasVotedFinal : false;
       }
-      const phaseDeadline = deadline && phase === "general"
-        ? new Date(new Date(deadline).getTime() - 10 * DAY_MS).toISOString()
-        : phase === "final" || phase === "closed" ? deadline : null;
+      const phaseDeadline = phase === "general" || phase === "final" || phase === "closed" ? deadline : null;
       return json({ deadline, phaseDeadline, phase, resultsReleased: phase === "closed", hasVoted, hasVotedGeneral, hasVotedFinal, isAdmin, personalMessage, serverNow: new Date().toISOString() });
     }
 
@@ -269,8 +349,7 @@ Deno.serve(async (req: Request) => {
       const session = await authenticatedSession(body.session);
       const { data, error } = await supabase.from("students").select("id, full_name").neq("id", session.sid).order("full_name");
       if (error) throw error;
-      const deadline = await getDeadline();
-      const phase = getPhase(deadline);
+      const { deadline, phase } = await getAwardsState();
       const allFinalists = phase === "final" || phase === "closed" ? await getFinalistsByCategory() : {};
       // A pessoa autenticada nunca aparece como opção, mesmo se for finalista.
       const finalistsByCategory = Object.fromEntries(Object.entries(allFinalists).map(([categoryId, people]) => [categoryId, people.filter((person) => person.id !== session.sid)]));
@@ -279,21 +358,49 @@ Deno.serve(async (req: Request) => {
 
     if (action === "start_countdown") {
       await authenticatedSession(body.session, true);
-      const current = await getDeadline();
-      if (current) return json({ deadline: current, alreadyStarted: true });
-      const deadline = new Date(Date.now() + 20 * DAY_MS).toISOString();
-      const { data, error } = await supabase.from("awards_config").update({ deadline }).eq("id", 1).is("deadline", null).select("deadline").maybeSingle();
+      const current = await getAwardsState();
+      if (current.phase !== "not_started") return json({ deadline: current.deadline, alreadyStarted: true });
+      const deadline = new Date(Date.now() + 10 * DAY_MS).toISOString();
+      const { data, error } = await supabase.from("awards_config")
+        .update({ deadline, phase: "general" })
+        .eq("id", 1).is("deadline", null).eq("phase", "not_started")
+        .select("deadline, phase").maybeSingle();
       if (error) throw error;
-      if (data?.deadline) return json({ deadline: data.deadline, alreadyStarted: false });
-      return json({ deadline: await getDeadline(), alreadyStarted: true });
+      if (data?.deadline) return json({ deadline: data.deadline, phase: data.phase, alreadyStarted: false });
+      const latest = await getAwardsState();
+      return json({ deadline: latest.deadline, phase: latest.phase, alreadyStarted: true });
+    }
+
+    if (action === "start_final") {
+      await authenticatedSession(body.session, true);
+      const current = await getAwardsState();
+      if (current.phase !== "general" || !current.deadline) {
+        return json({ error: "A segunda fase só pode começar enquanto a primeira estiver aberta." }, 409);
+      }
+
+      const { data: ballots, error: ballotsError } = await supabase
+        .from("ballots").select("ballot_id").eq("phase", "general");
+      if (ballotsError) throw ballotsError;
+      const total = ballots?.length ?? 0;
+      if (total < 20) {
+        return json({ error: `Ainda são necessárias 20 cédulas da primeira fase. Recebidas: ${total}/20.` }, 409);
+      }
+
+      const deadline = new Date(Date.now() + 10 * DAY_MS).toISOString();
+      const { data, error } = await supabase.from("awards_config")
+        .update({ deadline, phase: "final" })
+        .eq("id", 1).eq("phase", "general").eq("deadline", current.deadline)
+        .select("deadline, phase").maybeSingle();
+      if (error) throw error;
+      if (!data) return json({ error: "A fase mudou enquanto você iniciava a final. Atualize a página." }, 409);
+      return json({ success: true, deadline: data.deadline, phase: data.phase, totalGeneralBallots: total });
     }
 
     if (action === "submit_vote") {
       const session = await authenticatedSession(body.session);
-      const deadline = await getDeadline();
-      const phase = getPhase(deadline);
+      const { deadline, phase } = await getAwardsState();
       if (phase === "not_started") return json({ error: "A votação ainda não foi aberta pela organização." }, 409);
-      if (phase === "closed") return json({ error: "O prazo de 20 dias terminou. Os resultados serão exibidos agora." }, 409);
+      if (phase === "closed") return json({ error: "O prazo da fase atual terminou. Atualize a página para conferir os resultados." }, 409);
       const rawVotes = body.votes;
       if (!rawVotes || typeof rawVotes !== "object" || Array.isArray(rawVotes)) return json({ error: "Cédula de votação inválida." }, 400);
       const entries = Object.entries(rawVotes as Record<string, unknown>);
@@ -349,7 +456,7 @@ Deno.serve(async (req: Request) => {
       if (error) {
         const msg = String(error.message ?? "");
         if (msg.includes("já enviou")) return json({ error: "Você já enviou sua cédula nesta fase." }, 409);
-        if (msg.includes("prazo de votação terminou")) return json({ error: "O prazo de 20 dias terminou. Atualize a página para conferir os resultados." }, 409);
+        if (msg.includes("prazo de votação terminou")) return json({ error: "O prazo da fase atual terminou. Atualize a página para conferir os resultados." }, 409);
         if (msg.includes("ainda não foi aberta")) return json({ error: "A votação ainda não foi aberta pela organização." }, 409);
         if (msg.includes("fase da votação mudou")) return json({ error: "A fase mudou enquanto você votava. Atualize a página para carregar a cédula certa." }, 409);
         throw error;
@@ -359,8 +466,7 @@ Deno.serve(async (req: Request) => {
 
     if (action === "admin_stats") {
       await authenticatedSession(body.session, true);
-      const deadline = await getDeadline();
-      const phase = getPhase(deadline);
+      const { deadline, phase } = await getAwardsState();
       const tallyPhase = phase === "final" || phase === "closed" ? "final" : "general";
       const [aggregate, phaseCounts] = await Promise.all([getAggregate(tallyPhase), getPhaseBallotCounts()]);
       return json({ ...aggregate, deadline, phase, tallyPhase, phaseCounts, resultsReleased: phase === "closed" });
@@ -368,8 +474,8 @@ Deno.serve(async (req: Request) => {
 
     if (action === "results") {
       await authenticatedSession(body.session);
-      const deadline = await getDeadline();
-      if (!released(deadline)) return json({ error: "Os resultados ainda estão bloqueados até o fim dos 20 dias." }, 403);
+      const { phase } = await getAwardsState();
+      if (phase !== "closed") return json({ error: "Os resultados oficiais ficam disponíveis ao terminar o prazo da final." }, 403);
       const aggregate = await getAggregate("final");
       return json({ results: aggregate.results, totalBallots: aggregate.totalBallots });
     }
