@@ -1,0 +1,4 @@
+[functions.awards-api]
+# A API tem autenticação e autorização próprias (sessão HMAC, código ADM e chave de importação).
+# A função recebe chamadas de usuários ainda não autenticados para permitir a tela de login.
+verify_jwt = false

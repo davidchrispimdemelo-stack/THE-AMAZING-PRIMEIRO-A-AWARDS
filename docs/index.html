@@ -1,0 +1,703 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0a9fcb">
+  <meta name="description" content="The Amazing Primeiro A Awards — a premiação do 1ºA com visual aquático, luminoso e inspirado em Frutiger Aero.">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <title>The Amazing Primeiro A Awards</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=Righteous&family=Baloo+2:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#0c0b0e;--panel:#151419;--panel2:#1d1b22;--gold:#e4bf69;--gold2:#b88936;--text:#f6f2e9;--muted:#aaa5ae;--line:#37323b;--red:#ff837e;--green:#9fdfb0}
+    *{box-sizing:border-box} body{margin:0;background:radial-gradient(ellipse at top,#28202a 0,#0c0b0e 47rem);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh}
+    body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.17;background-image:radial-gradient(#e4bf69 0.7px,transparent .7px);background-size:25px 25px;mask-image:linear-gradient(to bottom,black,transparent 70%)}
+    .wrap{width:min(1080px,calc(100% - 32px));margin:0 auto;position:relative}.top{display:flex;justify-content:space-between;align-items:center;padding:25px 0;border-bottom:1px solid #4a3b2a;gap:16px}.brand{display:flex;align-items:center;gap:12px}.crown{height:44px;width:44px;border:1px solid #80652f;color:var(--gold);display:grid;place-items:center;border-radius:13px;background:linear-gradient(135deg,#282018,#17141a);font-size:24px}.brand small{display:block;letter-spacing:.2em;text-transform:uppercase;font-size:10px;color:var(--gold)}.brand strong{font:700 20px 'Playfair Display',serif;letter-spacing:.04em}.top-tag{font-size:11px;color:var(--gold);border:1px solid #65502b;padding:8px 11px;border-radius:999px;letter-spacing:.12em;text-transform:uppercase;white-space:nowrap}
+    .hero{padding:45px 0 30px;text-align:center}.eyebrow{font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold)}h1,h2,h3{font-family:'Playfair Display',serif}h1{font-size:clamp(42px,8vw,82px);line-height:.98;margin:13px 0;color:#f7e4af;text-shadow:0 8px 35px #c29b4438}h1 span{display:block;font-size:.35em;letter-spacing:.38em;margin-top:15px;color:#f7f2e8;font-family:'DM Sans',sans-serif;font-weight:500} .hero p{color:#c5bdc6;max-width:590px;line-height:1.7;margin:22px auto 0}
+    .grid{display:grid;grid-template-columns:1.05fr .95fr;gap:20px;align-items:start;margin:20px 0 60px}.panel{background:linear-gradient(160deg,#1b191fef,#111014f5);border:1px solid #40333b;border-radius:20px;padding:26px;box-shadow:0 20px 60px #0004}.panel h2{margin:0 0 8px;font-size:26px}.sub{color:var(--muted);font-size:13px;line-height:1.6;margin:0 0 20px}.label{display:block;font-size:12px;color:#e1d8c8;margin:14px 0 7px}.field{width:100%;border:1px solid #48404b;border-radius:11px;background:#0e0d11;color:var(--text);padding:13px 14px;font:inherit;outline:none}.field:focus{border-color:var(--gold);box-shadow:0 0 0 3px #e4bf6919}.button{appearance:none;border:0;border-radius:11px;padding:13px 16px;font:700 14px 'DM Sans',sans-serif;cursor:pointer;transition:transform .15s,filter .15s}.button:hover{filter:brightness(1.08);transform:translateY(-1px)}.button:disabled{opacity:.55;cursor:not-allowed;transform:none}.primary{background:linear-gradient(100deg,#f0d58d,#c39342);color:#21170a;width:100%;margin-top:18px}.secondary{background:#28232d;color:#f7e6bc;border:1px solid #5a4930}.danger{background:#312026;color:#ffc6c3;border:1px solid #71464a}.fine{font-size:11px;line-height:1.6;color:#928c98;margin-top:13px}.notice{border:1px solid #55482f;background:#211c16;color:#e7d2a1;padding:12px 14px;border-radius:11px;font-size:12px;line-height:1.5;margin-top:15px}.notice.error{border-color:#71464a;background:#28181b;color:#ffc5c1}.notice.success{border-color:#3a6144;background:#152219;color:#b6ebc3}.hidden{display:none!important}
+    .side-title{display:flex;align-items:center;justify-content:space-between;gap:10px}.pill{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);border:1px solid #65502b;border-radius:999px;padding:6px 9px}.feature{display:flex;gap:13px;padding:15px 0;border-top:1px solid #332e37}.feature:first-of-type{margin-top:13px}.feature .ico{width:37px;height:37px;display:grid;place-items:center;border-radius:11px;background:#2a231a;color:var(--gold);font-size:19px;flex-shrink:0}.feature strong{display:block;font-size:13px;margin:0 0 4px}.feature p{margin:0;color:var(--muted);font-size:12px;line-height:1.55}
+    .dashboard{margin:20px 0 60px}.dash-head{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}.dash-head h2{margin:0}.dash-actions{display:flex;gap:9px;flex-wrap:wrap}.timer-panel{display:grid;grid-template-columns:1fr auto;align-items:center;gap:18px;margin:20px 0;background:linear-gradient(110deg,#252018,#19151e);border:1px solid #6e572b;border-radius:17px;padding:22px}.timer-panel h3{font-size:21px;margin:0 0 5px}.timer-panel p{font-size:12px;color:#c2b8c9;margin:0;line-height:1.55}.timer{display:flex;gap:8px}.timebox{min-width:58px;text-align:center;padding:10px 8px;background:#0e0d11;border:1px solid #4e4026;border-radius:11px}.timebox strong{display:block;font-size:23px;font-variant-numeric:tabular-nums;color:var(--gold)}.timebox span{display:block;font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-top:4px}
+    .section-title{font:700 25px 'Playfair Display',serif;margin:28px 0 8px}.ballot-intro{font-size:13px;color:var(--muted);line-height:1.6;margin:0 0 17px}.cat-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}.cat{background:#17151b;border:1px solid #38313d;border-radius:14px;padding:16px;min-width:0}.cat-head{display:flex;gap:10px;align-items:flex-start;margin-bottom:13px}.cat-num{font-size:10px;color:#25190c;background:var(--gold);border-radius:7px;padding:6px 7px;font-weight:800}.cat h3{font-size:17px;margin:0 0 5px}.cat p{font-size:11px;color:var(--muted);margin:0;line-height:1.45}.cat select{width:100%;border-radius:9px;padding:11px;background:#0c0b0e;color:var(--text);border:1px solid #45404a;font:inherit;font-size:12px}.ballot-footer{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:18px}.ballot-footer .button{min-width:210px}.ballot-footer small{font-size:11px;color:var(--muted)}
+    .stats-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:18px 0}.stat{background:#0e0d11;border:1px solid #332e37;border-radius:13px;padding:14px}.stat strong{display:block;font-size:25px;color:var(--gold);font-variant-numeric:tabular-nums}.stat span{display:block;font-size:10px;color:var(--muted);margin-top:5px;text-transform:uppercase;letter-spacing:.08em}.tally-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.tally-card{background:#111014;border:1px solid #302b34;border-radius:13px;padding:14px}.tally-card h3{font-size:15px;margin:0 0 11px}.tally-row{display:flex;justify-content:space-between;gap:12px;font-size:12px;padding:7px 0;border-top:1px solid #28232c}.tally-row .count{color:var(--gold);font-weight:700;white-space:nowrap}.result-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:17px}.result{border:1px solid #504127;background:linear-gradient(140deg,#211d17,#151319);border-radius:13px;padding:16px}.result .winner{font-size:18px;color:#f2d997;font-family:'Playfair Display',serif;margin:8px 0}.result .votes{font-size:11px;color:var(--muted)}.foot{text-align:center;color:#726d78;font-size:11px;padding:0 0 30px;line-height:1.7}.loading{padding:22px;text-align:center;color:var(--muted)}
+    @media(max-width:760px){.grid{grid-template-columns:1fr}.hero{padding-top:34px}.panel{padding:21px}.timer-panel{grid-template-columns:1fr}.timer{justify-content:flex-start}.cat-grid,.tally-list,.result-grid{grid-template-columns:1fr}.stats-grid{grid-template-columns:repeat(3,1fr)}.timebox{flex:1;min-width:0}.top-tag{display:none}.dash-head{align-items:flex-start}.brand strong{font-size:17px}}
+
+    /* Identidade visual revisada: editorial urbana, inspirada na sinalização de São Paulo. */
+    :root{--bg:#111315;--panel:#191c1f;--panel2:#22262a;--gold:#f2c300;--gold2:#d1a900;--text:#f1f2f2;--muted:#a2a8ad;--line:#363b40;--red:#ff7777;--green:#7fd69a}
+    body{background:#111315;color:var(--text);font-family:'DM Sans',sans-serif}
+    body:before{opacity:.2;background-image:linear-gradient(to right,#292d31 1px,transparent 1px),linear-gradient(to bottom,#292d31 1px,transparent 1px);background-size:42px 42px;mask-image:linear-gradient(to bottom,black,transparent 72%)}
+    .wrap{width:min(1120px,calc(100% - 40px))}
+    .top{padding:19px 0;border-bottom:1px solid #3a3f43}
+    .brand{gap:13px}
+    .crown{height:44px;width:44px;border:0;border-radius:3px;background:var(--gold);color:#111315;font:800 17px 'Barlow Condensed',sans-serif;letter-spacing:-.03em}
+    .brand small{font-size:9px;letter-spacing:.17em;color:#c0c5c8}
+    .brand strong{font:700 23px 'Barlow Condensed',sans-serif;letter-spacing:.045em;color:#fff}
+    .top-tag{font-size:10px;color:#f2c300;border:1px solid #5c501a;border-radius:2px;padding:8px 10px;letter-spacing:.13em}
+    .hero{padding:53px 0 38px;text-align:left;border-bottom:1px solid #33383c}
+    .eyebrow{font-size:10px;letter-spacing:.2em;color:var(--gold);font-weight:700}
+    .eyebrow:before{content:'';display:inline-block;vertical-align:middle;width:22px;height:3px;background:var(--gold);margin:0 9px 3px 0}
+    h1,h2,h3,.section-title{font-family:'Barlow Condensed','DM Sans',sans-serif}
+    h1{font-size:clamp(54px,9vw,100px);line-height:.88;letter-spacing:-.02em;margin:18px 0;color:#f4f5f5;text-shadow:none;font-weight:800}
+    h1 span{font-size:13px;letter-spacing:.2em;margin-top:18px;color:var(--gold);font-weight:700}
+    .hero p{color:#b8bdc1;max-width:650px;line-height:1.75;margin:22px 0 0;font-size:15px}
+    .grid{grid-template-columns:1.06fr .94fr;gap:16px;margin:22px 0 58px}
+    .panel{background:rgba(25,28,31,.96);border:1px solid #393e42;border-radius:5px;padding:25px;box-shadow:none}
+    .panel h2{margin:0 0 8px;font-size:29px;letter-spacing:.005em}
+    .sub{color:#a7adb2;font-size:13px;line-height:1.7}
+    .label{color:#d1d5d7;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+    .field{border:1px solid #454b50;border-radius:3px;background:#101214;color:var(--text);padding:14px;font:inherit}
+    .field:focus{border-color:var(--gold);box-shadow:0 0 0 2px #f2c3001e}
+    .button{border-radius:3px;padding:13px 16px;font:700 13px 'DM Sans',sans-serif;letter-spacing:.015em;transition:background .15s,border-color .15s}
+    .button:hover{filter:none;transform:none}
+    .primary{background:var(--gold);color:#161718;box-shadow:none}
+    .primary:hover{background:#ffda31}
+    .secondary{background:#272b2f;color:#f2f3f3;border:1px solid #4b5055}
+    .danger{background:#2a2021;color:#ffc5c5;border:1px solid #6b4144}
+    .fine{color:#82898e;font-size:11px;line-height:1.65}
+    .notice{border:1px solid #5b4e16;background:#201f16;color:#e3d58d;border-radius:3px;padding:12px 14px;font-size:12px;line-height:1.65}
+    .notice.error{border-color:#71464a;background:#28181b;color:#ffc5c1}.notice.success{border-color:#3a6144;background:#152219;color:#b6ebc3}
+    .side-title{align-items:flex-start}.pill{font-size:9px;letter-spacing:.12em;color:var(--gold);border:1px solid #5a501d;border-radius:2px;padding:6px 8px;white-space:nowrap}
+    .feature{gap:12px;padding:14px 0;border-top:1px solid #303539}.feature .ico{width:35px;height:35px;border-radius:3px;background:var(--gold);color:#111315;font:700 13px 'Barlow Condensed',sans-serif;letter-spacing:.04em}.feature strong{font-size:13px;font-weight:700}.feature p{font-size:12px;color:#a7adb2;line-height:1.6}
+    .dashboard{margin:25px 0 60px}.dash-head h2{font-size:32px}.dash-actions{gap:7px}
+    .personal-message{margin-top:16px;border-left:4px solid var(--gold);background:#191c1f}.personal-message h3{font-size:20px;margin:5px 0 8px}.personal-message p{color:#e4e6e7;font-size:14px;line-height:1.7;margin:0;white-space:pre-wrap;overflow-wrap:anywhere}
+    .timer-panel{background:#1a1d20;border:1px solid #454a4f;border-left:4px solid var(--gold);border-radius:4px;padding:21px;margin:18px 0}.timer-panel h3{font-size:25px;letter-spacing:.005em}.timer-panel p{color:#aab0b4;font-size:12px}.timer{gap:6px}.timebox{min-width:60px;background:#101214;border:1px solid #3b4145;border-radius:3px;padding:10px 9px}.timebox strong{color:var(--gold);font:700 30px 'Barlow Condensed',sans-serif}.timebox span{font-size:9px;letter-spacing:.13em}
+    .section-title{font-size:31px;letter-spacing:.005em;margin:29px 0 9px}.ballot-intro{font-size:13px;color:#a7adb2;line-height:1.7}.cat-grid{gap:10px}.cat{background:#191c1f;border:1px solid #353a3e;border-radius:4px;padding:15px}.cat-head{gap:10px;margin-bottom:12px}.cat-num{font:700 12px 'Barlow Condensed',sans-serif;color:#111315;background:var(--gold);border-radius:2px;padding:5px 7px}.cat h3{font-size:20px;line-height:1.06;margin:0 0 5px;font-weight:700}.cat p{font-size:11px;color:#a4aaaf;line-height:1.55}.cat select{border-radius:3px;padding:11px;background:#101214;color:var(--text);border:1px solid #444a4f;font:inherit;font-size:12px}.ballot-footer{margin-top:17px}.ballot-footer .button{min-width:190px}.ballot-footer small{font-size:11px;color:#a2a8ad}
+    .stats-grid{gap:9px}.stat{background:#111315;border:1px solid #363b3f;border-radius:4px}.stat strong{font:700 31px 'Barlow Condensed',sans-serif;color:var(--gold)}.stat span{font-size:9px;letter-spacing:.11em}.tally-list{gap:10px}.tally-card{background:#121416;border:1px solid #33383c;border-radius:4px}.tally-card h3{font-size:19px}.tally-row{border-top:1px solid #292e32}.tally-row .count{color:var(--gold)}
+    .result-grid{gap:10px}.result{border:1px solid #3c4246;border-top:3px solid var(--gold);background:#191c1f;border-radius:4px;padding:16px}.result .winner{font:700 25px 'Barlow Condensed',sans-serif;color:#f2f3f3;margin:9px 0}.result .votes{font-size:11px;color:#a3aaae}
+    .foot{border-top:1px solid #33383c;padding:20px 0 30px;color:#81888d;font-size:10px;letter-spacing:.03em}
+    @media(max-width:760px){.wrap{width:min(100% - 28px,1120px)}.top{padding:15px 0}.brand strong{font-size:21px}.hero{padding:40px 0 28px}.hero p{font-size:14px}.grid{grid-template-columns:1fr}.panel{padding:21px}.timer-panel{grid-template-columns:1fr}.cat-grid,.tally-list,.result-grid{grid-template-columns:1fr}.stats-grid{grid-template-columns:repeat(3,1fr)}.timebox{flex:1;min-width:0}.timebox strong{font-size:27px}.top-tag{display:none}.dash-head{align-items:flex-start}.dash-head h2{font-size:28px}.section-title{font-size:29px}}
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important}}
+
+  
+    /* Seletor de candidatos: controles acessíveis, grandes para toque e compatíveis com navegadores comuns. */
+    .ballot-progress{background:#15181a;border:1px solid #343a3e;border-left:3px solid var(--gold);padding:13px 15px;margin:16px 0 20px}
+    .ballot-progress-top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:9px}
+    .ballot-progress-top span{font-size:9px;font-weight:700;letter-spacing:.16em;color:#aab0b4}
+    .ballot-progress-top strong{font-size:12px;color:#f5d52b}
+    .progress-track{height:5px;width:100%;background:#303438;overflow:hidden}
+    .progress-track span{display:block;height:100%;width:0;background:var(--gold);transition:width .28s ease}
+    .cat-grid{align-items:start;gap:13px}
+    .category-card{position:relative;min-width:0;transition:border-color .2s,background .2s,box-shadow .2s;animation:category-arrive .42s ease both}
+    .category-card:nth-child(3n+2){animation-delay:.035s}.category-card:nth-child(3n+3){animation-delay:.07s}
+    .category-card.is-selected{border-color:#b79a16;background:linear-gradient(145deg,#1c1e1e,#17191a);box-shadow:inset 3px 0 0 var(--gold)}
+    .category-card.is-open{z-index:4;border-color:#87741b}
+    .category-card .cat-head{min-height:55px}
+    .candidate-control{position:relative;min-width:0}
+    .candidate-picker{display:flex;align-items:center;width:100%;min-height:68px;gap:11px;text-align:left;padding:11px 12px;background:#101315;color:var(--text);border:1px solid #454b50;border-radius:4px;cursor:pointer;transition:border-color .18s,background .18s,transform .18s;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+    .candidate-picker:hover{border-color:#7c6c1c;background:#151719}
+    .candidate-picker:focus{outline:2px solid #f2c300;outline-offset:2px}
+    .candidate-picker:active{transform:scale(.995)}
+    .candidate-picker.has-selection{border-color:#a58b0c;background:#17180f}
+    .picker-avatar{display:grid;place-items:center;flex:0 0 42px;width:42px;height:42px;background:#2a2e31;border:1px solid #4b5155;color:#f3cf00;font:700 15px 'Barlow Condensed',sans-serif;letter-spacing:.02em}
+    .candidate-picker.has-selection .picker-avatar{background:var(--gold);color:#17191a;border-color:var(--gold)}
+    .picker-summary{display:flex;flex:1;min-width:0;flex-direction:column;gap:4px}
+    .picker-summary strong{display:block;font-size:13px;line-height:1.3;font-weight:700;overflow-wrap:anywhere}
+    .picker-summary small{font-size:10px;color:#929a9f;line-height:1.35}
+    .candidate-picker.has-selection .picker-summary small{color:#ded58d}
+    .picker-chevron{color:var(--gold);font-size:19px;line-height:1;transition:transform .18s;flex-shrink:0}
+    .candidate-picker[aria-expanded="true"] .picker-chevron{transform:rotate(180deg)}
+    .picker-panel{margin-top:9px;padding:11px;background:#111416;border:1px solid #494f53;box-shadow:0 13px 30px #0005;animation:picker-reveal .2s ease both}
+    .picker-panel[hidden]{display:none!important}
+    .candidate-search-label{display:block;margin:0 0 9px;color:#aab0b4;font-size:10px;letter-spacing:.08em;font-weight:700;text-transform:uppercase}
+    .candidate-search{display:block;width:100%;margin-top:6px;padding:12px 11px;min-height:44px;background:#090b0c;color:#f2f3f3;border:1px solid #454c50;border-radius:3px;font:inherit;font-size:13px;outline:none;-webkit-appearance:none;appearance:none}
+    .candidate-search:focus{border-color:var(--gold);box-shadow:0 0 0 2px #f2c30022}
+    .candidate-list{display:flex;flex-direction:column;gap:5px;max-height:285px;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:1px 2px 1px 0}
+    .candidate-option{display:flex;align-items:center;gap:10px;text-align:left;width:100%;min-height:48px;padding:7px 9px;background:#1b1f21;border:1px solid #303639;border-radius:3px;color:#e9ebec;font:500 12px 'DM Sans',sans-serif;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;transition:border-color .15s,background .15s,transform .15s}
+    .candidate-option:hover{background:#262a2c;border-color:#68602c}
+    .candidate-option:focus{outline:2px solid var(--gold);outline-offset:1px}
+    .candidate-option:active{transform:scale(.995)}
+    .candidate-option.is-selected{background:#29270e;border-color:#bea51e;color:#fff5b4}
+    .candidate-avatar{display:grid;place-items:center;flex:0 0 31px;width:31px;height:31px;background:#30363a;color:#f3cf00;font:700 12px 'Barlow Condensed',sans-serif}
+    .candidate-option-name{flex:1;min-width:0;overflow-wrap:anywhere;line-height:1.35}
+    .candidate-option-check{display:grid;place-items:center;flex:0 0 22px;width:22px;height:22px;border:1px solid #454b4f;color:#aeb5ba;font-size:13px}
+    .candidate-option.is-selected .candidate-option-check{background:var(--gold);border-color:var(--gold);color:#17191a;font-weight:800}
+    .candidate-empty{margin:9px 2px 3px;padding:12px;text-align:center;color:#a9afb3;font-size:12px;line-height:1.5;background:#191d1f;border:1px dashed #3b4145}
+    .clear-choice{margin-top:8px;display:flex;align-items:center;justify-content:center;width:100%;min-height:42px;background:transparent;color:#c3c9cc;border:1px dashed #4a5054;border-radius:3px;font:600 11px 'DM Sans',sans-serif;cursor:pointer;touch-action:manipulation}
+    .clear-choice:hover{color:#f4d52b;border-color:#9b8617}
+    .picker-hint{margin:10px 1px 0;color:#7f888d;font-size:10px;line-height:1.5}
+    .ranked-choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:2px}
+    .ranked-choice{min-width:0;background:#121517;border:1px solid #2f3538;padding:9px}
+    .ranked-choice-top{display:flex;justify-content:space-between;align-items:center;gap:6px;margin-bottom:7px}
+    .ranked-choice-top strong{font-size:10px;letter-spacing:.04em;text-transform:uppercase;color:#e5e7e9}
+    .ranked-choice-top span{font-size:10px;font-weight:800;color:#f2cf00;white-space:nowrap}
+    .ranked-choice .candidate-picker{min-height:58px;padding:8px;gap:7px}
+    .ranked-choice .picker-avatar{width:31px;height:31px;flex-basis:31px;font-size:12px}
+    .ranked-choice .picker-summary strong{font-size:11px}
+    .ranked-choice .picker-summary small{font-size:9px}
+    .ranked-choice .picker-panel{position:relative;z-index:8;padding:8px}
+    .ranked-choice .candidate-list{max-height:230px}
+    .ranked-choice .candidate-option{gap:7px;padding:6px;font-size:11px}
+    .ranked-choice .candidate-avatar{width:27px;height:27px;flex-basis:27px}
+    .ranked-choice .candidate-option:disabled{opacity:.4;cursor:not-allowed;background:#151719;border-color:#272c2f}
+    .ranked-choice .candidate-option:disabled .candidate-option-check{color:#666}
+    .ranked-choice .clear-choice{min-height:35px;font-size:10px}
+    .ranked-hint{margin:8px 1px 0;color:#d7bd59;font-size:10px;line-height:1.5}
+    .ranked-hint.hidden{display:none}
+    @keyframes category-arrive{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes picker-reveal{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+    @media(max-width:760px){.cat-grid{grid-template-columns:1fr;gap:10px}.category-card{padding:14px}.candidate-picker{min-height:70px}.candidate-list{max-height:260px}.ballot-progress{margin:14px 0 16px}.ballot-footer .button{width:100%;min-height:48px}.ballot-footer small{line-height:1.6}}
+    @media(max-width:500px){.ranked-choices{grid-template-columns:1fr}.ranked-choice{padding:10px}.ranked-choice .candidate-picker{min-height:62px}}
+    @media(max-width:390px){.wrap{width:calc(100% - 22px)}.panel{padding:16px}.cat h3{font-size:19px}.picker-summary strong{font-size:12px}.candidate-option{font-size:12px}}
+    @media(prefers-reduced-motion:reduce){.category-card,.picker-panel,.progress-track span{animation:none!important;transition:none!important}}
+
+
+    /* THE AMAZING PRIMEIRO A AWARDS — carnival neon, original visual language */
+    :root{--bg:#10091f;--panel:#1c1232;--panel2:#281746;--gold:#ffe45e;--gold2:#ffbd4a;--text:#fff9ff;--muted:#c3b7d7;--line:#52366f;--red:#ff6bba;--green:#68f5d0;--pink:#ff4fbb;--cyan:#53f5ff;--purple:#a78bfa}
+    html{scroll-behavior:smooth;background:var(--bg)}
+    body{position:relative;overflow-x:hidden;background:radial-gradient(ellipse at 50% -8%,#4b1d73 0,transparent 45rem),radial-gradient(circle at 0% 35%,#0b6672 0,transparent 24rem),radial-gradient(circle at 100% 65%,#64184e 0,transparent 28rem),#10091f;color:var(--text);font-family:'Baloo 2','DM Sans',sans-serif}
+    body:before{opacity:.24;background-image:radial-gradient(circle,#ffe45e 1px,transparent 1.5px),radial-gradient(circle,#ff4fbb 1px,transparent 1.5px),radial-gradient(circle,#53f5ff 1px,transparent 1.5px);background-size:47px 47px,73px 73px,101px 101px;background-position:0 0,23px 31px,12px 19px;mask-image:linear-gradient(to bottom,#000,transparent 88%);animation:star-drift 35s linear infinite}
+    body:after{content:'';position:fixed;z-index:0;pointer-events:none;inset:0;border:7px solid transparent;border-image:repeating-linear-gradient(135deg,#ff4fbb 0 14px,#ffe45e 14px 28px,#53f5ff 28px 42px,#a78bfa 42px 56px) 7;opacity:.34}
+    .wrap{width:min(1160px,calc(100% - 34px));z-index:1}
+    .top{position:relative;padding:20px 0 17px;border-bottom:2px solid transparent;border-image:linear-gradient(90deg,var(--pink),var(--gold),var(--cyan)) 1;gap:12px}
+    .brand{gap:12px;min-width:0}.crown{width:48px;height:48px;border-radius:50%;background:conic-gradient(from 45deg,var(--pink),var(--gold),var(--cyan),var(--purple),var(--pink));color:#211033;box-shadow:0 0 24px #ff4fbb55;font:900 28px 'Righteous',sans-serif;animation:badge-spin 18s linear infinite}
+    .brand small{color:var(--cyan);font-size:9px;letter-spacing:.16em}.brand strong{font:400 clamp(15px,2.3vw,24px) 'Righteous',sans-serif;letter-spacing:.01em;color:#fff;text-shadow:0 0 18px #ff4fbb4a;line-height:1.2;display:block}
+    .top-controls{display:flex;align-items:center;justify-content:flex-end;gap:8px;flex-wrap:wrap}.top-tag{color:var(--gold);border:1px solid #8c6ba8;border-radius:999px;background:#1c1232aa;letter-spacing:.08em}
+    .sound-toggle{min-height:38px;padding:8px 12px;border-radius:999px;border:1px solid #5f477f;background:#211537;color:#f7eaff;font:700 11px 'Baloo 2',sans-serif;cursor:pointer;transition:transform .2s,border-color .2s,box-shadow .2s;touch-action:manipulation}.sound-toggle:hover,.sound-toggle:focus-visible{border-color:var(--cyan);box-shadow:0 0 18px #53f5ff2e;outline:none}.sound-toggle[aria-pressed="true"]{background:linear-gradient(100deg,#47224f,#123d4a);border-color:var(--cyan);color:#e8ffff}
+    .hero{position:relative;isolation:isolate;overflow:hidden;margin-top:18px;padding:clamp(32px,6vw,68px) clamp(20px,5vw,58px) 34px;text-align:center;border:1px solid #735095;border-radius:30px;background:linear-gradient(145deg,#27143feF,#170f2cef 62%,#102c3bdf);box-shadow:0 25px 90px #0005,inset 0 1px #ffffff20}
+    .hero:before{content:'✦';position:absolute;z-index:-1;top:-54px;left:-15px;font-size:clamp(150px,28vw,330px);line-height:1;color:#ff4fbb13;transform:rotate(-15deg);animation:float-star 9s ease-in-out infinite}
+    .hero:after{content:'★';position:absolute;z-index:-1;right:4%;bottom:-62px;font-size:clamp(140px,24vw,260px);line-height:1;color:#53f5ff12;animation:float-star 12s ease-in-out infinite reverse}
+    .eyebrow{color:var(--cyan);font-size:11px;font-weight:800;letter-spacing:.2em}.eyebrow:before{background:var(--pink);height:4px;border-radius:4px}
+    h1,h2,h3,.section-title{font-family:'Righteous','Baloo 2',sans-serif;font-weight:400;letter-spacing:.01em}
+    h1{font-size:clamp(42px,8.6vw,96px);line-height:.99;letter-spacing:-.025em;margin:18px 0 14px;color:#fff;text-shadow:0 4px 0 #4a2167,0 0 32px #ff4fbb3a;overflow-wrap:anywhere}
+    h1 em{font-style:normal;display:block;background:linear-gradient(95deg,#ffe45e 0%,#ff83d0 38%,#53f5ff 75%,#c6a8ff 100%);background-clip:text;-webkit-background-clip:text;color:transparent;filter:drop-shadow(0 5px 0 #351849)}
+    h1 span{font:800 clamp(10px,1.8vw,14px) 'Baloo 2',sans-serif;letter-spacing:.17em;color:#f8eaff;margin-top:17px;line-height:1.6}
+    .hero p{max-width:650px;margin:18px auto 0;color:#d8cce9;font-size:clamp(14px,2vw,17px);line-height:1.8}
+    .hero-ribbon{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:25px}.hero-ribbon span{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border:1px solid #75528f;border-radius:999px;background:#170d2bbf;color:#f7eaff;font-size:10px;font-weight:800;letter-spacing:.08em}.hero-ribbon span:nth-child(3n+1){border-color:#b54c91;color:#ffb5e1}.hero-ribbon span:nth-child(3n+2){border-color:#8e7b32;color:#fff0a1}.hero-ribbon span:nth-child(3n){border-color:#3b9ba8;color:#a4fbff}
+    .grid{margin:23px 0 54px;gap:20px}.panel{position:relative;overflow:hidden;border:1px solid #60437d;border-radius:23px;background:linear-gradient(145deg,#25163def,#171026f5);box-shadow:0 18px 50px #0004,inset 0 1px #ffffff12;padding:clamp(19px,3vw,28px)}.panel:before{content:'';position:absolute;left:0;top:0;right:0;height:4px;background:linear-gradient(90deg,var(--pink),var(--gold),var(--cyan),var(--purple))}.panel h2{font-size:clamp(22px,3vw,30px);color:#fff}.sub,.fine,.feature p{color:#c1b4d4}.label{color:#f2e5ff;font-size:13px;font-weight:700}.field{background:#110a20;border:1px solid #5b4373;border-radius:12px;min-height:48px;color:#fff}.field:focus{border-color:var(--cyan);box-shadow:0 0 0 3px #53f5ff24}
+    .button{border-radius:12px;font-family:'Baloo 2',sans-serif;letter-spacing:.01em;transition:transform .18s,filter .18s,box-shadow .18s}.button:hover{transform:translateY(-2px);box-shadow:0 8px 22px #0003}.primary{background:linear-gradient(100deg,#ffe45e,#ffb95e 50%,#ff79c8);color:#24102f;box-shadow:0 5px 0 #8b3b7c,0 0 24px #ff4fbb22}.primary:hover{box-shadow:0 7px 0 #8b3b7c,0 0 30px #ff4fbb3b}.secondary{background:#2b1b43;color:#f8eaff;border-color:#6b4a8c}.danger{background:#3b1638;color:#ffc6e7;border-color:#994c88}.notice{border-radius:13px;background:#2a1d40;border-color:#8060a0;color:#f5e8ff}.notice.error{background:#3a142c;border-color:#ff5caa;color:#ffd3e8}.notice.success{background:#12382f;border-color:#47d8ad;color:#caffed}
+    .pill{border-color:#8b6aa7;color:var(--gold);background:#1c1232;border-radius:999px}.feature{border-color:#49345f}.feature .ico{border-radius:13px;background:linear-gradient(135deg,#42204e,#153c4b);color:var(--cyan);border:1px solid #63477b}.feature strong{color:#fff}
+    .timer-panel{border:1px solid #a15b9a;border-radius:20px;background:linear-gradient(110deg,#351640,#192644 70%,#10343a);box-shadow:0 15px 42px #0003}.timer-panel h3{font-size:clamp(21px,3vw,29px);color:#fff}.timebox{border-radius:13px;border-color:#6b4d84;background:#130b22;box-shadow:inset 0 1px #ffffff10}.timebox strong{color:var(--gold);text-shadow:0 0 16px #ffe45e22}
+    .section-title{font-size:clamp(23px,4vw,33px);color:#fff}.ballot-intro{color:#c9bddb;line-height:1.8}.ballot-progress{background:#1c1230;border:1px solid #62447b;border-radius:15px;padding:14px}.ballot-progress-top{color:#d8c6eb}.ballot-progress-top strong{color:var(--cyan)}.progress-track{background:#0f091c;border-radius:99px;overflow:hidden}.progress-track span{background:linear-gradient(90deg,var(--pink),var(--gold),var(--cyan));border-radius:99px;box-shadow:0 0 14px #ff4fbb50}
+    .cat,.category-card{border:1px solid #5a4076;border-radius:18px;background:linear-gradient(145deg,#241536,#181026);box-shadow:0 8px 20px #0002;transition:transform .22s,border-color .22s,box-shadow .22s}.category-card{animation:category-arrive .45s cubic-bezier(.2,.8,.2,1) both}.category-card:hover{transform:translateY(-2px);border-color:#9672ba;box-shadow:0 13px 26px #0003}.category-card.is-selected{border-color:var(--cyan);background:linear-gradient(145deg,#222044,#171026);box-shadow:inset 4px 0 0 var(--cyan),0 0 24px #53f5ff15}.category-card.is-open{z-index:5;border-color:var(--pink);box-shadow:0 0 0 2px #ff4fbb22,0 20px 40px #0004}.cat-num{background:linear-gradient(135deg,var(--gold),#ff9bcf);color:#281032;border-radius:9px;box-shadow:0 3px 0 #8b3b7c}.cat h3{font-size:clamp(16px,2.1vw,20px);color:#fff}.cat p{color:#c0b3d4}
+    .ranked-choice{border:1px solid #5b4076;border-radius:13px;background:#150d24;padding:10px}.ranked-choice-top strong{color:#f5e9ff}.ranked-choice-top span{color:var(--gold)}.candidate-picker{background:linear-gradient(120deg,#1a102a,#111e2c);border:1px solid #5b4776;border-radius:13px;min-height:66px}.candidate-picker:hover{border-color:var(--cyan);background:#211639}.candidate-picker:focus{outline:2px solid var(--cyan);outline-offset:2px}.candidate-picker.has-selection{border-color:var(--cyan);background:linear-gradient(110deg,#15383e,#281637);box-shadow:inset 0 0 0 1px #53f5ff35}.picker-avatar{border-radius:12px;background:linear-gradient(145deg,#4c2358,#183b4b);border:1px solid #8662a4;color:var(--gold);font-family:'Righteous',sans-serif}.candidate-picker.has-selection .picker-avatar{background:linear-gradient(135deg,var(--cyan),#b6fff6);color:#14233a;border-color:var(--cyan)}.picker-summary strong{color:#fff}.picker-summary small{color:#bbaed0}.picker-chevron{color:var(--pink)}
+    .picker-panel{border:1px solid #7b5a9a;border-radius:15px;background:#110a20;box-shadow:0 18px 45px #0007;animation:picker-reveal .22s ease both}.candidate-search{border-radius:11px;background:#0c0717;border-color:#60467c}.candidate-search:focus{border-color:var(--cyan);box-shadow:0 0 0 2px #53f5ff20}.candidate-list{gap:7px}.candidate-option{border-radius:11px;background:linear-gradient(110deg,#21132f,#14202e);border-color:#49345f;min-height:52px;font-family:'Baloo 2','DM Sans',sans-serif;font-size:13px}.candidate-option:hover{background:linear-gradient(110deg,#3b1c47,#16333d);border-color:var(--pink)}.candidate-option.is-selected{background:linear-gradient(100deg,#3d1940,#10363d);border-color:var(--cyan);color:#f9ffff;box-shadow:inset 3px 0 0 var(--cyan)}.candidate-avatar{border-radius:10px;background:linear-gradient(135deg,#ff4fbb,#a78bfa);color:#fff;font-family:'Righteous',sans-serif}.candidate-option-check{border-radius:50%;border-color:#73558c}.candidate-option.is-selected .candidate-option-check{background:var(--cyan);border-color:var(--cyan);color:#132032}.clear-choice{border-radius:10px;border-color:#60467c;color:#d7c9e8}.clear-choice:hover{border-color:var(--gold);color:var(--gold)}.ranked-hint{color:var(--gold)}
+    .stat,.tally-card{border-radius:15px;border-color:#5a4076;background:#160e25}.stat strong,.tally-row .count{color:var(--gold)}.tally-row{border-color:#3b294e}.result{border:1px solid #7b558b;border-radius:18px;background:linear-gradient(140deg,#32183b,#142c38)}.result .winner{font-family:'Righteous',sans-serif;color:#ffe9a1}.foot{color:#a998bc;padding-top:12px}.foot strong{font-family:'Righteous',sans-serif;font-weight:400;color:#ffe9a1;letter-spacing:.08em}
+    .personal-message{border-color:#d36fb3;background:linear-gradient(140deg,#35173f,#172c3c)}
+    @keyframes star-drift{from{background-position:0 0,23px 31px,12px 19px}to{background-position:0 500px,23px -400px,12px 300px}}
+    @keyframes badge-spin{to{transform:rotate(360deg)}}
+    @keyframes float-star{0%,100%{transform:translateY(0) rotate(-15deg)}50%{transform:translateY(-18px) rotate(7deg)}}
+    @media(max-width:760px){.wrap{width:calc(100% - 24px)}.top{align-items:flex-start}.top-controls{max-width:155px}.top-tag{display:none}.brand strong{font-size:16px}.brand small{font-size:8px}.hero{padding:35px 16px 25px;border-radius:22px}.hero-ribbon{gap:6px}.hero-ribbon span{font-size:9px;padding:6px 9px}.grid{margin-top:16px}.panel{border-radius:19px}.cat-grid,.tally-list,.result-grid{grid-template-columns:1fr}.ranked-choices{grid-template-columns:repeat(2,minmax(0,1fr))}.ranked-choice{padding:8px}.ranked-choice .candidate-picker{min-height:60px}.sound-toggle{font-size:10px;padding:7px 9px}.timer-panel{border-radius:17px}}
+    @media(max-width:430px){.top{gap:7px}.brand{gap:8px}.brand .crown{width:39px;height:39px;font-size:23px}.brand strong{font-size:13px;max-width:180px}.top-controls{max-width:128px}.sound-toggle{max-width:128px;white-space:normal;line-height:1.2}.hero h1{font-size:clamp(36px,12vw,54px)}.ranked-choices{grid-template-columns:1fr}.ranked-choice{padding:10px}.hero-ribbon span{font-size:8px}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}body:before,.crown,.hero:before,.hero:after,.category-card,.picker-panel{animation:none!important}.button,.category-card,.candidate-picker,.candidate-option{transition:none!important}}
+
+
+    /* FRUTIGER AERO — brilho aquático, vidro, céu e natureza. Sem personagens ou mascotes. */
+    :root{
+      --bg:#b8f0ff;--panel:#e9fbff;--panel2:#c9f1fc;--gold:#168bb1;--gold2:#0e739c;
+      --text:#123c55;--muted:#477589;--line:#8ed8e9;--red:#d65b67;--green:#108b70;
+      --pink:#4ed7e7;--cyan:#43cafa;--purple:#49c8a2;
+    }
+    html{scroll-behavior:smooth;background:#8cdcf4}
+    body{
+      color:#123c55;font-family:'Nunito','Trebuchet MS',sans-serif;
+      background:
+        radial-gradient(ellipse at 15% 8%,rgba(255,255,255,.96) 0,rgba(255,255,255,.48) 12%,transparent 30%),
+        radial-gradient(ellipse at 92% 20%,rgba(255,255,255,.85) 0,rgba(255,255,255,.2) 13%,transparent 29%),
+        radial-gradient(ellipse at 78% 46%,rgba(82,224,194,.55) 0,transparent 35%),
+        linear-gradient(180deg,#83dcff 0%,#c9f7ff 34%,#70dce7 68%,#2dbbb8 100%);
+      background-attachment:fixed;min-height:100vh;position:relative;overflow-x:hidden;
+    }
+    body:before{
+      content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.72;
+      background-image:
+        radial-gradient(circle at 8% 23%,rgba(255,255,255,.86) 0 4px,rgba(255,255,255,.27) 5px 13px,transparent 14px),
+        radial-gradient(circle at 89% 37%,rgba(255,255,255,.72) 0 7px,rgba(255,255,255,.16) 8px 22px,transparent 23px),
+        radial-gradient(circle at 73% 12%,rgba(255,255,255,.7) 0 3px,rgba(255,255,255,.15) 4px 10px,transparent 11px),
+        radial-gradient(circle at 24% 69%,rgba(255,255,255,.6) 0 5px,rgba(255,255,255,.14) 6px 17px,transparent 18px),
+        radial-gradient(ellipse at center,rgba(255,255,255,.28),transparent 68%);
+      background-size:310px 290px,390px 370px,240px 220px,430px 400px,100% 100%;
+      animation:aero-bubbles 24s ease-in-out infinite alternate;
+    }
+    body:after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;border:0;opacity:.3;
+      background:linear-gradient(125deg,transparent 0 27%,rgba(255,255,255,.48) 27.2%,transparent 28%,transparent 72%,rgba(255,255,255,.32) 72.2%,transparent 73%)}
+    @keyframes aero-bubbles{from{background-position:0 0,0 0,0 0,0 0,center}to{background-position:25px -32px,-20px 26px,16px -20px,30px 28px,center}}
+    .wrap{width:min(1160px,calc(100% - 34px));z-index:1}
+    .top{padding:19px 0 16px;border-bottom:1px solid rgba(255,255,255,.72);gap:12px;position:relative}
+    .brand{gap:12px;min-width:0}
+    .brand-orb{width:49px;height:49px;flex:0 0 49px;display:grid;place-items:center;border-radius:50%;font:900 27px 'Nunito',sans-serif;color:#fff;
+      background:radial-gradient(circle at 30% 20%,#fff 0 4%,#d8fbff 8%,#78ddf7 29%,#10a6d3 62%,#0871a3 100%);
+      border:1px solid rgba(255,255,255,.9);box-shadow:inset 0 3px 7px rgba(255,255,255,.9),inset 0 -5px 9px rgba(0,80,140,.24),0 5px 14px rgba(0,106,143,.2)}
+    .brand small{color:#176f8a;font-size:9px;letter-spacing:.16em;font-weight:900}
+    .brand strong{font:900 clamp(14px,2.1vw,22px) 'Nunito',sans-serif;letter-spacing:.015em;color:#075474;text-shadow:0 1px 0 #fff;line-height:1.2;display:block}
+    .top-controls{display:flex;align-items:center;justify-content:flex-end;gap:8px;flex-wrap:wrap}
+    .top-tag{color:#096a88;border:1px solid rgba(255,255,255,.9);border-radius:999px;background:linear-gradient(180deg,rgba(255,255,255,.94),rgba(194,243,255,.73));box-shadow:inset 0 1px 0 white,0 3px 9px rgba(0,107,151,.1);letter-spacing:.08em;font-weight:900}
+    .sound-toggle{min-height:38px;padding:8px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.95);background:linear-gradient(180deg,#ffffff,#bcefff 58%,#81d9f5);color:#075776;font:900 11px 'Nunito',sans-serif;cursor:pointer;box-shadow:inset 0 1px 0 white,0 4px 11px rgba(0,109,151,.18);transition:transform .2s,filter .2s;touch-action:manipulation}
+    .sound-toggle:hover,.sound-toggle:focus-visible{filter:brightness(1.04);transform:translateY(-1px);outline:2px solid #fff;outline-offset:2px}
+    .sound-toggle[aria-pressed="true"]{background:linear-gradient(180deg,#effff7,#a8f2d6 58%,#64d7b6);color:#075a50}
+    .hero{position:relative;isolation:isolate;overflow:hidden;margin-top:18px;padding:clamp(32px,6vw,68px) clamp(20px,5vw,58px) 34px;text-align:center;border:1px solid rgba(255,255,255,.95);border-radius:32px;
+      background:linear-gradient(140deg,rgba(255,255,255,.86),rgba(223,251,255,.64) 48%,rgba(151,233,244,.66));
+      box-shadow:0 17px 36px rgba(0,110,145,.14),inset 0 2px 0 rgba(255,255,255,.98),inset 0 -2px 0 rgba(70,190,216,.16);backdrop-filter:blur(12px)}
+    .hero:before{content:'';position:absolute;z-index:-1;top:-110px;left:-85px;width:340px;height:340px;border-radius:50%;background:radial-gradient(circle at 32% 26%,rgba(255,255,255,.96) 0 3%,rgba(255,255,255,.3) 4% 12%,rgba(91,222,255,.28) 39%,rgba(51,183,223,.04) 66%,transparent 68%);border:1px solid rgba(255,255,255,.65);box-shadow:inset 0 0 32px rgba(255,255,255,.48)}
+    .hero:after{content:'';position:absolute;z-index:-1;right:-65px;bottom:-120px;width:330px;height:330px;border-radius:50%;background:radial-gradient(circle at 31% 23%,rgba(255,255,255,.93) 0 3%,rgba(255,255,255,.25) 4% 13%,rgba(69,222,191,.3) 38%,rgba(28,169,183,.03) 68%,transparent 70%);border:1px solid rgba(255,255,255,.7);box-shadow:inset 0 0 28px rgba(255,255,255,.56)}
+    .eyebrow{color:#137c9b;font-size:11px;font-weight:1000;letter-spacing:.2em}
+    .eyebrow:before{background:linear-gradient(90deg,#4bd6df,#4fcfa5);height:4px;border-radius:4px}
+    h1,h2,h3,.section-title{font-family:'Nunito','Trebuchet MS',sans-serif;font-weight:900;letter-spacing:-.025em}
+    h1{font-size:clamp(40px,7.8vw,86px);line-height:1;letter-spacing:-.045em;margin:18px 0 14px;color:#0879a1;text-shadow:0 2px 0 #fff,0 5px 18px rgba(20,131,167,.13);overflow-wrap:anywhere}
+    h1 em{font-style:normal;display:block;background:linear-gradient(90deg,#0878ae 0%,#20afd5 43%,#15bba2 76%,#36b985 100%);background-clip:text;-webkit-background-clip:text;color:transparent;filter:drop-shadow(0 2px 0 rgba(255,255,255,.85))}
+    h1 span{font:900 clamp(10px,1.8vw,14px) 'Nunito',sans-serif;letter-spacing:.16em;color:#3a8297;margin-top:17px;line-height:1.6}
+    .hero p{max-width:650px;margin:18px auto 0;color:#326b7e;font-size:clamp(14px,2vw,17px);font-weight:700;line-height:1.8}
+    .hero-ribbon{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:25px}
+    .hero-ribbon span{display:inline-flex;align-items:center;gap:6px;padding:8px 13px;border:1px solid rgba(255,255,255,.96);border-radius:999px;background:linear-gradient(180deg,rgba(255,255,255,.92),rgba(185,242,255,.72));color:#167692;font-size:10px;font-weight:1000;letter-spacing:.08em;box-shadow:inset 0 1px 0 #fff,0 4px 12px rgba(0,122,158,.1)}
+    .hero-ribbon span:nth-child(3n+1){color:#087ca6}.hero-ribbon span:nth-child(3n+2){color:#16887e}.hero-ribbon span:nth-child(3n){color:#22875e}
+    .grid{margin:23px 0 54px;gap:20px}
+    .panel{position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.96);border-radius:23px;background:linear-gradient(145deg,rgba(255,255,255,.91),rgba(227,250,255,.78));box-shadow:0 15px 35px rgba(0,109,143,.13),inset 0 1px 0 #fff;padding:clamp(19px,3vw,28px);backdrop-filter:blur(12px)}
+    .panel:before{content:'';position:absolute;left:0;top:0;right:0;height:5px;background:linear-gradient(90deg,#75defd,#7ce4d0,#a1edb8)}
+    .panel h2{font-size:clamp(22px,3vw,30px);color:#0b668a}
+    .sub,.fine,.feature p{color:#4d7b8a}
+    .label{color:#17647d;font-size:13px;font-weight:900}
+    .field{background:rgba(255,255,255,.84);border:1px solid #a2deed;border-radius:12px;min-height:48px;color:#154b60;box-shadow:inset 0 2px 5px rgba(0,104,143,.05)}
+    .field::placeholder{color:#79a0ac}.field:focus{border-color:#35bcdc;box-shadow:0 0 0 3px rgba(47,190,223,.2),inset 0 1px 3px rgba(0,100,140,.08)}
+    .button{border-radius:12px;font-family:'Nunito',sans-serif;font-weight:1000;letter-spacing:.01em;transition:transform .18s,filter .18s,box-shadow .18s}
+    .button:hover{transform:translateY(-2px);box-shadow:0 7px 18px rgba(0,103,141,.16)}
+    .primary{background:linear-gradient(180deg,#f5ffff 0%,#9ce9ff 38%,#43c3e9 100%);color:#064f70;border:1px solid rgba(255,255,255,.98);box-shadow:inset 0 1px 0 white,0 5px 0 #2398bf,0 8px 18px rgba(0,131,173,.14)}
+    .primary:hover{box-shadow:inset 0 1px 0 white,0 6px 0 #2398bf,0 10px 21px rgba(0,131,173,.2)}
+    .secondary{background:linear-gradient(180deg,#fff,#cef4fc);color:#116b86;border:1px solid #a2deed}.danger{background:linear-gradient(180deg,#fff,#ffe5e8);color:#a84759;border:1px solid #f5bbc4}
+    .notice{border-radius:13px;background:linear-gradient(130deg,rgba(255,255,255,.93),rgba(209,249,236,.82));border:1px solid #96e4d0;color:#286b71}
+    .notice.error{background:#fff0f2;border-color:#f0aab7;color:#a1364a}.notice.success{background:#effff7;border-color:#8bdfb7;color:#176f56}
+    .pill{border:1px solid #a4e3ef;color:#147c98;background:linear-gradient(180deg,#fff,#d7f7ff);border-radius:999px;font-weight:1000}
+    .feature{border-color:rgba(69,169,191,.23)}.feature .ico{border-radius:13px;background:linear-gradient(145deg,#f9ffff,#bdeffd);color:#118aa9;border:1px solid #b5e6f0;box-shadow:inset 0 1px 0 white,0 3px 8px rgba(0,130,166,.08)}.feature strong{color:#195c72}
+    .timer-panel{border:1px solid rgba(255,255,255,.96);border-radius:20px;background:linear-gradient(120deg,rgba(240,254,255,.94),rgba(177,242,255,.86) 53%,rgba(163,242,217,.85));box-shadow:0 12px 30px rgba(0,108,139,.13),inset 0 1px 0 white}
+    .timer-panel h3{font-size:clamp(21px,3vw,29px);color:#0c6686}.timer-panel p{color:#467a8b}
+    .timebox{border-radius:13px;border:1px solid rgba(255,255,255,.98);background:linear-gradient(180deg,#faffff,#d4f7ff 65%,#b3eefe);box-shadow:inset 0 1px 0 #fff,0 4px 10px rgba(0,113,151,.1)}.timebox strong{color:#0c91b8;text-shadow:0 1px 0 #fff}.timebox span{color:#4d899b;font-weight:900}
+    .section-title{font-size:clamp(23px,4vw,33px);color:#0b668a}.ballot-intro{color:#477c8d;line-height:1.8}
+    .ballot-progress{background:linear-gradient(135deg,rgba(255,255,255,.9),rgba(218,249,255,.82));border:1px solid rgba(255,255,255,.95);border-radius:15px;padding:14px;box-shadow:inset 0 1px 0 white}.ballot-progress-top{color:#4e8291}.ballot-progress-top strong{color:#087ea3}.progress-track{background:#b9eaf4;border:1px solid #d8f8ff;border-radius:99px;overflow:hidden}.progress-track span{background:linear-gradient(90deg,#43c9f4,#65dfd2,#7bdd9d);border-radius:99px;box-shadow:0 0 12px rgba(64,192,213,.25)}
+    .cat,.category-card{border:1px solid rgba(255,255,255,.97);border-radius:18px;background:linear-gradient(145deg,rgba(255,255,255,.93),rgba(216,247,255,.78));box-shadow:0 7px 18px rgba(0,111,143,.09),inset 0 1px 0 white;transition:transform .22s,border-color .22s,box-shadow .22s}.category-card{animation:category-arrive .45s ease both}.category-card:hover{transform:translateY(-2px);border-color:#69d5e8;box-shadow:0 12px 24px rgba(0,130,160,.14)}.category-card.is-selected{border-color:#45c8d7;background:linear-gradient(145deg,#f3ffff,#c9f7f5);box-shadow:inset 4px 0 0 #39c6d8,0 0 0 2px rgba(57,198,216,.1),0 9px 18px rgba(0,130,160,.1)}.category-card.is-open{z-index:5;border-color:#51bddc;box-shadow:0 0 0 2px rgba(81,189,220,.17),0 16px 32px rgba(0,105,139,.14)}
+    .cat-num{background:linear-gradient(180deg,#fff,#9beafa);color:#116c8c;border:1px solid white;border-radius:9px;box-shadow:0 3px 0 #7dcfe1}.cat h3{font-size:clamp(16px,2.1vw,20px);color:#145e77}.cat p{color:#548293}
+    .ranked-choice{border:1px solid #b0e2ec;border-radius:13px;background:rgba(255,255,255,.72);padding:10px}.ranked-choice h4{color:#23798e}
+    .picker-panel{border:1px solid rgba(255,255,255,.98);border-radius:15px;background:linear-gradient(145deg,#faffff,#d6f7ff);box-shadow:0 18px 45px rgba(0,90,120,.18);animation:picker-reveal .22s ease both}.candidate-search{border-radius:11px;background:#fff;border-color:#a3deec;color:#15556e}.candidate-search:focus{border-color:#39bfde;box-shadow:0 0 0 2px rgba(57,191,222,.18)}.candidate-list{gap:7px}.candidate-option{border-radius:11px;background:linear-gradient(110deg,#faffff,#dff8ff);border-color:#b3e3ed;color:#175d75;min-height:52px;font-family:'Nunito',sans-serif;font-size:13px}.candidate-option:hover{background:linear-gradient(110deg,#fff,#c8f2fa);border-color:#65cfdf}.candidate-option.is-selected{background:linear-gradient(100deg,#e6fdff,#c7f5e5);border-color:#53cbbd;color:#145d68;box-shadow:inset 3px 0 0 #45c8bb}.candidate-avatar{border-radius:10px;background:radial-gradient(circle at 30% 20%,#fff,#76d7f4 40%,#149dc4 100%);color:#fff;font-family:'Nunito',sans-serif;box-shadow:inset 0 1px 0 rgba(255,255,255,.9)}.candidate-option-check{border-radius:50%;border-color:#92d6e5}.candidate-option.is-selected .candidate-option-check{background:#49cbbb;border-color:#49cbbb;color:#fff}.clear-choice{border-radius:10px;border-color:#a7deea;color:#337c90;background:#f7feff}.clear-choice:hover{border-color:#40c2d9;color:#087c99}
+    .ranked-hint{color:#4b8e99}.stat,.tally-card{border-radius:15px;border-color:rgba(255,255,255,.96);background:linear-gradient(145deg,rgba(255,255,255,.91),rgba(214,247,255,.77));box-shadow:inset 0 1px 0 #fff}.stat strong,.tally-row .count{color:#087ea5}.stat span{color:#548394}.tally-row{border-color:rgba(73,168,190,.22);color:#316e81}.result{border:1px solid rgba(255,255,255,.98);border-radius:18px;background:linear-gradient(140deg,#f5ffff,#d3f8f8 65%,#c5f2e0);box-shadow:0 9px 20px rgba(0,111,143,.1),inset 0 1px 0 white}.result .winner{font-family:'Nunito',sans-serif;color:#087b9f;font-weight:1000}.result .votes{color:#568394}
+    .foot{color:#39798d;padding-top:12px}.foot strong{font-family:'Nunito',sans-serif;font-weight:1000;color:#087398;letter-spacing:.055em;text-shadow:0 1px 0 #fff}
+    .personal-message{border-color:rgba(255,255,255,.98);background:linear-gradient(140deg,rgba(255,255,255,.95),rgba(208,248,238,.86))}
+    #adminSection{background:linear-gradient(140deg,rgba(255,255,255,.94),rgba(211,248,255,.83))}
+    @media(max-width:760px){.wrap{width:calc(100% - 24px)}.top{align-items:flex-start}.top-controls{max-width:155px}.top-tag{display:none}.brand strong{font-size:16px}.brand small{font-size:8px}.hero{padding:35px 16px 25px;border-radius:24px}.hero-ribbon{gap:6px}.hero-ribbon span{font-size:9px;padding:6px 9px}.grid{margin-top:16px}.panel{border-radius:19px}.cat-grid,.tally-list,.result-grid{grid-template-columns:1fr}.ranked-choices{grid-template-columns:repeat(2,minmax(0,1fr))}.ranked-choice{padding:8px}.ranked-choice .candidate-picker{min-height:60px}.sound-toggle{font-size:10px;padding:7px 9px}.timer-panel{border-radius:17px}}
+    @media(max-width:430px){.top{gap:7px}.brand{gap:8px}.brand-orb{width:39px;height:39px;flex-basis:39px;font-size:22px}.brand strong{font-size:13px;max-width:180px}.top-controls{max-width:128px}.sound-toggle{max-width:128px;white-space:normal;line-height:1.2}.hero h1{font-size:clamp(35px,11vw,52px)}.ranked-choices{grid-template-columns:1fr}.ranked-choice{padding:10px}.hero-ribbon span{font-size:8px}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}body:before,.brand-orb,.hero:before,.hero:after,.category-card,.picker-panel{animation:none!important}.button,.category-card,.candidate-picker,.candidate-option{transition:none!important}}
+
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="top">
+      <div class="brand"><div class="brand-orb" aria-hidden="true">A</div><div><small>PREMIAÇÃO DA TURMA · 2026</small><strong>THE AMAZING PRIMEIRO A AWARDS</strong></div></div>
+      <div class="top-controls"><div class="top-tag">PREMIAÇÃO DO 1ºA</div><button type="button" id="soundToggle" class="sound-toggle" aria-pressed="false" title="Ligar ou desligar a música e os efeitos sonoros">♫ Som ambiente: desligado</button></div>
+    </header>
+    <section class="hero">
+      <div class="eyebrow">BEM-VINDOS AO AWARDS DO 1ºA</div>
+      <h1>THE AMAZING <em>PRIMEIRO A</em> AWARDS <span>CONEXÃO · MEMÓRIAS · TURMA 2026</span></h1>
+      <p>Um lugar para celebrar as histórias, as personalidades e os momentos que fazem o 1ºA ser único. Escolha seus favoritos e participe dessa lembrança da nossa turma.</p>
+      <div class="hero-ribbon" aria-hidden="true"><span>PERSONALIDADES</span><span>MOMENTOS ICÔNICOS</span><span>21 CATEGORIAS</span><span>DUAS FASES</span></div>
+    </section>
+
+    <main id="loginView" class="grid">
+      <section class="panel">
+        <h2>Entre na votação</h2>
+        <p class="sub">Entre com seu nome completo e RA, sem o sufixo SP. O nome não diferencia maiúsculas, minúsculas ou acentos.</p>
+        <form id="loginForm">
+          <label class="label" for="fullName">Nome completo</label>
+          <input class="field" id="fullName" name="fullName" autocomplete="name" placeholder="Nome completo" required maxlength="120">
+          <label class="label" for="ra">RA (sem SP)</label>
+          <input class="field" id="ra" name="ra" type="password" inputmode="text" autocomplete="current-password" placeholder="RA sem SP" required maxlength="24">
+          <div id="adminCodeWrap" class="hidden">
+            <label class="label" for="adminCode">Código extra de ADM</label>
+            <input class="field" id="adminCode" name="adminCode" type="password" autocomplete="off" placeholder="Código de acesso da administração" maxlength="100">
+            <div class="fine">O código administrativo é independente do RA. Não compartilhe.</div>
+          </div>
+          <button class="button primary" id="loginButton" type="submit">Acessar votação</button>
+          <div id="loginMessage" aria-live="polite"></div>
+        </form>
+        <div class="fine">A validação acontece no servidor. Os RAs não ficam no código público; a administração acompanha totais por categoria, não escolhas individuais.</div>
+      </section>
+      <aside class="panel">
+        <div class="side-title"><h2>Como funciona</h2><span class="pill">21 CATEGORIAS</span></div>
+        <p class="sub">Personalidade, estilo, convivência e uma dose de polêmica. A resenha tem limite: nada de expor a intimidade dos colegas.</p>
+        <div class="feature"><div class="ico">01</div><div><strong>Polêmicas & sem filtro</strong><p>Fofocas, opiniões fortes, drama e histórias que rendem conversa.</p></div></div>
+        <div class="feature"><div class="ico">02</div><div><strong>Vida social & comportamento</strong><p>Jeitos de conviver, distrações, celular e organização da turma.</p></div></div>
+        <div class="feature"><div class="ico">03</div><div><strong>Clássicos & momentos memoráveis</strong><p>Estilo, situações icônicas, sobrevivência nas avaliações e sorte.</p></div></div>
+        <div class="feature"><div class="ico">04</div><div><strong>Apuração e divulgação</strong><p>10 dias de votação geral, 10 dias de final e resultados ao encerrar o prazo.</p></div></div>
+        <div class="notice">Na moral: é para brincar, não humilhar. Vote com respeito e não use a votação para atacar ou expor colegas.</div>
+      </aside>
+    </main>
+
+    <main id="dashboardView" class="dashboard hidden">
+      <div class="dash-head"><div><div class="eyebrow">ÁREA DO PARTICIPANTE</div><h2 id="welcomeTitle">Bem-vindo(a)!</h2><div id="statusLine" class="sub" style="margin:7px 0 0">Conectando ao sistema...</div></div><div class="dash-actions"><button id="refreshButton" class="button secondary">Atualizar dados</button><button id="logoutButton" class="button danger">Sair</button></div></div>
+      <section id="personalMessageCard" class="panel personal-message hidden" aria-live="polite"><div class="eyebrow">UM RECADO PRA VOCÊ</div><h3>Mensagem individual</h3><p id="personalMessageText"></p></section>
+      <section class="timer-panel"><div><h3 id="timerTitle">A contagem regressiva</h3><p id="timerDescription">Os resultados serão liberados depois de 20 dias.</p><div id="adminStartWrap" class="hidden" style="margin-top:14px"><button id="startCountdownButton" class="button primary" style="width:auto;margin:0">Abrir votação · iniciar prazo</button><p class="fine">A contagem começa uma única vez. O horário é registrado no servidor e vale para toda a turma.</p></div></div><div class="timer" id="timer"><div class="timebox"><strong id="days">20</strong><span>Dias</span></div><div class="timebox"><strong id="hours">00</strong><span>Horas</span></div><div class="timebox"><strong id="minutes">00</strong><span>Minutos</span></div><div class="timebox"><strong id="seconds">00</strong><span>Segundos</span></div></div></section>
+      <section id="votingSection" class="hidden"><h2 class="section-title" id="ballotTitle">Votação geral</h2><p class="ballot-intro" id="ballotIntro">Em cada categoria, escolha uma 1ª opção (1 ponto) e uma 2ª opção diferente (0,5 ponto). Você pode pular categorias. A cédula desta fase não pode ser alterada depois do envio.</p><div class="ballot-progress" aria-live="polite"><div class="ballot-progress-top"><span>PROGRESSO DA CÉDULA</span><strong id="ballotProgressText">0 de 42 opções escolhidas</strong></div><div class="progress-track" role="progressbar" aria-label="Categorias preenchidas" aria-valuemin="0" aria-valuemax="42" aria-valuenow="0" id="ballotProgressTrack"><span id="ballotProgressBar"></span></div></div><form id="ballotForm"><div id="categoriesGrid" class="cat-grid"></div><div class="ballot-footer"><button class="button primary" id="submitBallotButton" type="submit" style="width:auto;margin:0">Enviar cédula</button><small>Confira as escolhas antes de enviar. O envio é definitivo.</small></div><div id="voteMessage" aria-live="polite"></div></form></section>
+      <section id="alreadyVoted" class="panel hidden"><h2>Cédula registrada</h2><p id="alreadyVotedText" class="sub" style="margin-bottom:0">Sua cédula desta fase foi registrada. Você poderá participar da próxima fase quando ela abrir.</p></section>
+      <section id="resultsSection" class="hidden"><h2 class="section-title">Resultados oficiais</h2><p class="ballot-intro">A votação terminou após duas fases. Os resultados abaixo são calculados pela pontuação da final: 1 ponto para a primeira opção e 0,5 para a segunda. Em caso de empate, todos os nomes empatados aparecem como vencedores.</p><div id="resultsGrid" class="result-grid"></div></section>
+      <section id="adminSection" class="panel hidden" style="margin-top:28px"><div class="stats-head"><div><div class="eyebrow">ACESSO RESTRITO</div><h2 style="margin:8px 0 4px">Painel de administração</h2><p class="sub" style="margin:0">Acompanhe os totais por categoria e a participação. O painel não associa escolhas a alunos.</p></div><span class="pill">ADMIN</span></div><div id="adminStats" class="loading">Carregando apuração...</div><div class="fine">A apuração ao vivo é restrita à administração. A divulgação pública acontece após o encerramento do prazo.</div></section>
+      <div id="dashboardMessage" aria-live="polite"></div>
+    </main>
+    <footer class="foot"><strong>THE AMAZING PRIMEIRO A AWARDS</strong><br>UMA LEMBRANÇA DO 1ºA · 2026<br>Participe com respeito e mantenha seus dados de acesso privados.</footer>
+  </div>
+  <script src="config.js"></script>
+  <script>
+  (() => {
+    'use strict';
+    const categories = [
+      {id:'iconico',name:'Mais Bonito(a)',desc:'Tem uma beleza que chama a atenção da turma.',group:'Clássicos & momentos memoráveis'},
+      {id:'mais_fofoqueiro',name:'Mais Fofoqueiro(a)',desc:'Sempre sabe das novidades antes de todo mundo.',group:'Polêmicas & sem filtro'},
+      {id:'mais_sem_filtro',name:'MMais Feio(a)',desc:'Tem identidade própria e sabe montar combinações marcantes.',group:'Polêmicas & sem filtro'},
+      {id:'mais_dramatico',name:'Mais Dramático(a)',desc:'Transforma qualquer coisa em uma cena de novela.',group:'Polêmicas & sem filtro'},
+      {id:'mais_polemico',name:'Mais Polêmico(a)',desc:'Sempre tem uma opinião que rende discussão no grupo.',group:'Polêmicas & sem filtro'},
+      {id:'mais_enrolado',name:'Mais Enrolado(a)',desc:'Promete que vai fazer o trabalho e vai deixando para depois.',group:'Polêmicas & sem filtro'},
+      {id:'mais_mao_de_vaca',name:'Mais “Mão de Vaca”',desc:'Tenta economizar até o último centavo.',group:'Polêmicas & sem filtro'},
+      {id:'mais_sumido',name:'Mais Sumido(a)',desc:'Some do mapa e reaparece principalmente quando tem prova.',group:'Polêmicas & sem filtro'},
+      {id:'cabeca_de_vento',name:'Mais Cabeça de Vento',desc:'Esquece material, recados e às vezes até o que ia falar.',group:'Vida social & comportamento'},
+      {id:'mais_gado',name:'Mais “Gado(a)”',desc:'Curte tudo e às vezes insiste mesmo quando a conversa fica no vácuo.',group:'Vida social & comportamento'},
+      {id:'mais_carente',name:'Mais Carente',desc:'Adora atenção e gosta de estar sempre perto da galera.',group:'Vida social & comportamento'},
+      {id:'mais_intenso',name:'Mais Intenso(a)',desc:'Vive cada história e sentimento como se fosse temporada final.',group:'Vida social & comportamento'},
+      {id:'mais_celular',name:'Mais Viciado(a) no Celular',desc:'A mão parece colada na tela e sempre sabe das novidades online.',group:'Vida social & comportamento'},
+      {id:'mais_preguicoso',name:'Mais Preguiçoso(a)',desc:'Sempre procura o caminho mais fácil para resolver qualquer tarefa.',group:'Vida social & comportamento'},
+      {id:'pai_mae_turma',name:'Mais “Pai/Mãe da Turma”',desc:'Lembra os prazos, organiza os trabalhos e salva o grupo dos esquecimentos.',group:'Vida social & comportamento'},
+      {id:'mais_cringe',name:'Mais Cringe',desc:'Protagoniza momentos de vergonha alheia que viram história da turma.',group:'Clássicos & momentos memoráveis'},
+      {id:'mais_estiloso',name:'MMais Feio(a)',desc:'Tem identidade própria e sabe montar combinações marcantes.',group:'Clássicos & momentos memoráveis'},
+      {id:'mais_cola',name:'Mais “Cola”',desc:'O mestre da sobrevivência nas avaliações — categoria de brincadeira.',group:'Clássicos & momentos memoráveis'},
+      {id:'mais_gente_boa',name:'Mais Gente Boa',desc:'Trata os colegas bem e contribui para um clima leve na turma.',group:'Clássicos & momentos memoráveis'},
+      {id:'mais_sortudo',name:'Mais Sortudo(a)',desc:'Parece sempre acertar no chute ou se salvar na última questão.',group:'Clássicos & momentos memoráveis'},
+      {id:'mais_entrosa',name:'Mais Entrosa',desc:'Consegue puxar assunto, se enturmar e participar das conversas da sala.',group:'Vida social & comportamento'}
+    ];
+    const $ = id => document.getElementById(id);
+    const cfg = window.AWARDS_CONFIG || {};
+    const configReady = cfg.SUPABASE_URL && !cfg.SUPABASE_URL.includes('SEU-PROJETO') && cfg.SUPABASE_ANON_KEY && !cfg.SUPABASE_ANON_KEY.includes('COLE_');
+    let session = null, candidates = [], finalistsByCategory = {}, status = null, results = null, adminStats = null, lastReleased = null, lastPhase = null, polling = null, ticker = null, releaseRefreshPending = false, serverOffsetMs = 0;
+    function normalizeName(s){return (s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('pt-BR').replace(/[^a-z0-9 ]/g,' ').replace(/\s+/g,' ').trim();}
+    function h(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+    function apiUrl(){return cfg.SUPABASE_URL.replace(/\/$/,'') + '/functions/v1/awards-api';}
+    async function api(action, payload={}){
+      if(!configReady) throw new Error('Falta configurar docs/config.js com a URL do Supabase e a chave pública anon.');
+      const response = await fetch(apiUrl(), {method:'POST',headers:{'Content-Type':'application/json','apikey':cfg.SUPABASE_ANON_KEY},body:JSON.stringify({action,...payload})});
+      let data={}; try{data=await response.json()}catch(_){/* noop */}
+      if(!response.ok || data.error) throw new Error(data.error || `Falha na solicitação (${response.status}).`);
+      return data;
+    }
+    function message(el, text, type=''){el.className='notice'+(type?' '+type:'');el.textContent=text;el.classList.remove('hidden');}
+    function clearMessage(el){el.className='hidden';el.textContent='';}
+    function initials(name){return String(name||'').trim().split(/\s+/).filter(Boolean).slice(0,2).map(part=>Array.from(part)[0]||'').join('').toLocaleUpperCase('pt-BR')||'•';}
+    function updateBallotProgress(){
+      const filled=categories.reduce((count,category)=>count+['first','second'].filter(rank=>(($('vote_'+category.id+'_'+rank)||{}).value)).length,0);
+      const categoryCount=categories.reduce((count,category)=>count+(['first','second'].some(rank=>(($('vote_'+category.id+'_'+rank)||{}).value))?1:0),0);
+      const total=categories.length*2;
+      const pct=total?Math.round(filled/total*100):0;
+      $('ballotProgressText').textContent=`${filled} de ${total} opções escolhidas · ${categoryCount} categorias preenchidas`;
+      $('ballotProgressBar').style.width=pct+'%';
+      $('ballotProgressTrack').setAttribute('aria-valuemax',String(total));
+      $('ballotProgressTrack').setAttribute('aria-valuenow',String(filled));
+    }
+    function closeCandidatePickers(exceptId){
+      document.querySelectorAll('.candidate-picker[aria-expanded="true"]').forEach(button=>{
+        const id=button.getAttribute('data-picker-toggle');
+        if(id===exceptId)return;
+        button.setAttribute('aria-expanded','false');
+        const panel=$('picker_panel_'+id);
+        if(panel)panel.hidden=true;
+        const card=document.querySelector('[data-card-id="'+button.getAttribute('data-picker-category')+'"]');
+        if(card)card.classList.remove('is-open');
+      });
+    }
+    function refreshRankedOptions(categoryId){
+      for(const rank of ['first','second']){
+        const current=$('vote_'+categoryId+'_'+rank);
+        const other=$('vote_'+categoryId+'_'+(rank==='first'?'second':'first'));
+        const pickerId=categoryId+'_'+rank;
+        const selectedId=current?current.value:'';
+        const blockedId=other?other.value:'';
+        const button=document.querySelector('[data-picker-toggle="'+pickerId+'"]');
+        const panel=$('picker_panel_'+pickerId);
+        if(button){
+          const title=button.querySelector('.picker-summary strong');
+          const detail=button.querySelector('.picker-summary small');
+          const avatar=button.querySelector('.picker-avatar');
+          const hasOptions=button.getAttribute('data-has-options')==='true';
+          button.disabled=!hasOptions||(rank==='second'&&!((other||{}).value));
+          const selected=panel&&panel.querySelector('[data-pick-candidate="'+selectedId+'"]');
+          const selectedName=selected?selected.getAttribute('data-candidate-name'):'';
+          if(selectedId&&selectedName){title.textContent=selectedName;detail.textContent='Selecionado · toque para trocar';avatar.textContent=initials(selectedName);button.classList.add('has-selection');}
+          else{title.textContent=rank==='first'?'Escolha a 1ª opção':'Escolha a 2ª opção';detail.textContent=rank==='first'?'Vale 1 ponto':'Vale 0,5 ponto';avatar.textContent=rank==='first'?'1':'2';button.classList.remove('has-selection');}
+        }
+        if(panel){
+          panel.querySelectorAll('[data-pick-candidate]').forEach(option=>{
+            const id=option.getAttribute('data-pick-candidate');
+            const selected=!!selectedId&&id===selectedId;
+            const duplicate=!!blockedId&&id===blockedId&&!selected;
+            option.classList.toggle('is-selected',selected);
+            option.disabled=duplicate;
+            option.setAttribute('aria-disabled',String(duplicate));
+            const check=option.querySelector('.candidate-option-check');
+            if(check)check.textContent=selected?'✓':duplicate?'—':'+';
+            option.setAttribute('aria-pressed',String(selected));
+          });
+        }
+      }
+      const anyChoice=!!(($('vote_'+categoryId+'_first')||{}).value||($('vote_'+categoryId+'_second')||{}).value);
+      const card=document.querySelector('[data-card-id="'+categoryId+'"]');
+      if(card)card.classList.toggle('is-selected',anyChoice);
+    }
+    function setCandidateChoice(categoryId,rank,candidateId,candidateName){
+      const input=$('vote_'+categoryId+'_'+rank);
+      const card=document.querySelector('[data-card-id="'+categoryId+'"]');
+      const pickerId=categoryId+'_'+rank;
+      const button=document.querySelector('[data-picker-toggle="'+pickerId+'"]');
+      const panel=$('picker_panel_'+pickerId);
+      if(!input||!card||!button)return;
+      const otherRank=rank==='first'?'second':'first';
+      const otherInput=$('vote_'+categoryId+'_'+otherRank);
+      if(candidateId&&otherInput&&otherInput.value===candidateId){
+        const hint=card.querySelector('.ranked-hint');
+        if(hint){hint.textContent='As duas opções precisam ser pessoas diferentes.';hint.classList.remove('hidden');}
+        return;
+      }
+      input.value=candidateId||'';
+      if(candidateId)playSelectionSound();
+      const hint=card.querySelector('.ranked-hint');
+      if(rank==='first'&&!candidateId&&otherInput&&otherInput.value){
+        otherInput.value='';
+        if(hint){hint.textContent='A 2ª opção foi removida porque a 1ª opção foi limpa.';hint.classList.remove('hidden');}
+      }else if(hint){hint.textContent='';hint.classList.add('hidden');}
+      refreshRankedOptions(categoryId);
+      if(panel){
+        panel.hidden=true;
+        button.setAttribute('aria-expanded','false');
+        card.classList.remove('is-open');
+      }
+      updateBallotProgress();
+    }
+    $('categoriesGrid').addEventListener('click',event=>{
+      const target=event.target.closest('button');
+      if(!target)return;
+      if(target.hasAttribute('data-picker-toggle')){
+        const id=target.getAttribute('data-picker-toggle');
+        const panel=$('picker_panel_'+id);
+        if(!panel)return;
+        const opening=panel.hidden;
+        closeCandidatePickers(opening?id:null);
+        panel.hidden=!opening;
+        target.setAttribute('aria-expanded',String(opening));
+        const toggle=document.querySelector('[data-picker-toggle="'+id+'"]');
+        const card=toggle?document.querySelector('[data-card-id="'+toggle.getAttribute('data-picker-category')+'"]'):null;
+        if(card)card.classList.toggle('is-open',opening);
+        if(opening){
+          const search=panel.querySelector('[data-candidate-search]');
+          if(search){search.value='';search.dispatchEvent(new Event('input',{bubbles:true}));}
+        }
+        return;
+      }
+      if(target.hasAttribute('data-pick-candidate')){
+        setCandidateChoice(target.getAttribute('data-pick-category'),target.getAttribute('data-pick-rank'),target.getAttribute('data-pick-candidate'),target.getAttribute('data-candidate-name')||'');
+        return;
+      }
+      if(target.hasAttribute('data-clear-vote')){
+        setCandidateChoice(target.getAttribute('data-clear-vote'),target.getAttribute('data-clear-rank'),'','');
+        return;
+      }
+    });
+    $('categoriesGrid').addEventListener('input',event=>{
+      const search=event.target.closest('[data-candidate-search]');
+      if(!search)return;
+      const categoryId=search.getAttribute('data-candidate-search');
+      const list=document.querySelector('[data-candidate-list="'+categoryId+'"]');
+      const empty=document.querySelector('[data-candidate-empty="'+categoryId+'"]');
+      if(!list)return;
+      const query=normalizeName(search.value);
+      let shown=0;
+      list.querySelectorAll('[data-candidate-name]').forEach(option=>{
+        const match=!query||normalizeName(option.getAttribute('data-candidate-name')).includes(query);
+        option.classList.toggle('hidden',!match);
+        if(match)shown++;
+      });
+      if(empty){empty.classList.toggle('hidden',shown!==0);}
+    });
+    $('categoriesGrid').addEventListener('keydown',event=>{
+      if(event.key!=='Escape')return;
+      const panel=event.target.closest('.picker-panel');
+      if(!panel)return;
+      const id=panel.getAttribute('data-picker-panel');
+      closeCandidatePickers(null);
+      const button=document.querySelector('[data-picker-toggle="'+id+'"]');
+      if(button)button.focus();
+    });
+    $('fullName').addEventListener('input',()=>{
+      const isDavid = normalizeName($('fullName').value)==='david chrispim de melo';
+      $('adminCodeWrap').classList.toggle('hidden',!isDavid);
+    });
+    $('loginForm').addEventListener('submit', async e=>{
+      e.preventDefault(); const btn=$('loginButton'), msg=$('loginMessage');clearMessage(msg);btn.disabled=true;btn.textContent='Verificando...';
+      try{
+        const data=await api('login',{fullName:$('fullName').value,ra:$('ra').value,adminCode:$('adminCode').value});
+        session={token:data.token,name:data.fullName,studentId:data.studentId,isAdmin:!!data.isAdmin};
+        sessionStorage.setItem('firstA_session',JSON.stringify(session)); candidates=data.candidates||[];
+        $('loginView').classList.add('hidden');$('dashboardView').classList.remove('hidden');
+        await refreshAll(true);startPolling();
+      }catch(err){message(msg,err.message||'Não foi possível entrar. Confira o nome e o RA.','error');}
+      finally{btn.disabled=false;btn.textContent='Acessar votação';}
+    });
+    $('logoutButton').addEventListener('click',()=>{sessionStorage.removeItem('firstA_session');session=null;candidates=[];finalistsByCategory={};status=null;results=null;adminStats=null;lastPhase=null;if(polling)clearInterval(polling);if(ticker)clearInterval(ticker);$('categoriesGrid').innerHTML='';$('categoriesGrid').dataset.rendered='';$('dashboardView').classList.add('hidden');$('personalMessageCard').classList.add('hidden');$('personalMessageText').textContent='';$('loginView').classList.remove('hidden');$('ra').value='';$('adminCode').value='';});
+    $('refreshButton').addEventListener('click',()=>refreshAll(true).catch(showDashboardError));
+    $('startCountdownButton').addEventListener('click',async()=>{
+      const btn=$('startCountdownButton');btn.disabled=true;btn.textContent='Iniciando...';
+      try{await api('start_countdown',{session:session.token});await refreshAll(true);message($('dashboardMessage'),'Prazo iniciado: 10 dias de votação geral, seguidos de 10 dias de final.','success');}
+      catch(err){showDashboardError(err)}finally{btn.disabled=false;btn.textContent='Abrir votação · iniciar prazo';}
+    });
+    $('ballotForm').addEventListener('submit',async e=>{
+      e.preventDefault();const btn=$('submitBallotButton'),msg=$('voteMessage');clearMessage(msg);
+      const votes={};let firstChoices=0,secondChoices=0;
+      for(const c of categories){
+        const first=($('vote_'+c.id+'_first')||{}).value||'';
+        const second=($('vote_'+c.id+'_second')||{}).value||'';
+        if(second&&!first){message(msg,`Na categoria "${c.name}", escolha a primeira opção antes da segunda.`, 'error');document.querySelector('[data-card-id="'+c.id+'"]').scrollIntoView({behavior:'smooth',block:'center'});return;}
+        if(first&&second&&first===second){message(msg,`Na categoria "${c.name}", escolha duas pessoas diferentes.`, 'error');return;}
+        if(first||second){votes[c.id]={first:first||null,second:second||null};if(first)firstChoices++;if(second)secondChoices++;}
+      }
+      if(Object.keys(votes).length===0){message(msg,'Escolha ao menos uma primeira opção antes de enviar.','error');return;}
+      const faseNome=status.phase==='final'?'na final':'na votação geral';if(!confirm(`Você preencheu ${Object.keys(votes).length} categoria(s) ${faseNome}: ${firstChoices} primeira(s) opção(ões) (1 ponto cada) e ${secondChoices} segunda(s) opção(ões) (0,5 ponto cada). As duas opções precisam ser pessoas diferentes e a cédula não poderá ser alterada depois do envio. Confirmar?`))return;
+      btn.disabled=true;btn.textContent='Enviando voto...';
+      try{await api('submit_vote',{session:session.token,votes});status.hasVoted=true;if(status.phase==='general')status.hasVotedGeneral=true;if(status.phase==='final')status.hasVotedFinal=true;renderDashboard();message($('dashboardMessage'),status.phase==='general'?'Voto da primeira fase registrado. A final começa no 11º dia.':'Voto da final registrado. Os resultados serão liberados ao fim do 20º dia.','success');}
+      catch(err){message(msg,err.message||'Não foi possível registrar os votos.','error');}
+      finally{btn.disabled=false;btn.textContent='Enviar cédula';}
+    });
+    function showDashboardError(err){message($('dashboardMessage'),err.message||'Ocorreu um erro ao atualizar.','error');}
+    async function refreshAll(forceRender=false){
+      const previousPhase=status&&status.phase;
+      const previousReleased=status&&status.resultsReleased;
+      const s=await api('status',{session:session.token});
+      status=s;serverOffsetMs=s.serverNow?Date.parse(s.serverNow)-Date.now():0;
+      const phaseChanged=previousPhase!==status.phase;
+      if(!candidates.length||phaseChanged){
+        const c=await api('candidates',{session:session.token});
+        candidates=c.candidates||[];
+        finalistsByCategory=c.finalistsByCategory||{};
+        $('categoriesGrid').dataset.rendered='';
+        $('categoriesGrid').innerHTML='';
+      }
+      if(status.resultsReleased){const r=await api('results',{session:session.token});results=r.results||[];}
+      if(session.isAdmin){const a=await api('admin_stats',{session:session.token});adminStats=a;}
+      if(forceRender||phaseChanged||previousReleased!==status.resultsReleased||lastReleased!==status.resultsReleased){renderDashboard();lastReleased=status.resultsReleased;lastPhase=status.phase;}
+      else updateTimer();
+      if(session.isAdmin)renderAdminStats();
+    }
+    function renderDashboard(){
+      if(!session||!status)return;
+      $('welcomeTitle').textContent=`Olá, ${session.name.split(' ')[0]}.`;
+      $('statusLine').textContent=session.isAdmin?'Você está no modo administrador e pode acompanhar a votação e os totais da fase atual.':'Você está conectado à votação oficial da turma.';
+      const personalMessage = typeof status.personalMessage === 'string' ? status.personalMessage : '';
+      $('personalMessageCard').classList.toggle('hidden', !personalMessage);
+      $('personalMessageText').textContent = personalMessage;
+      $('adminSection').classList.toggle('hidden',!session.isAdmin);
+      $('adminStartWrap').classList.toggle('hidden',!session.isAdmin||!!status.deadline);
+      $('timer').classList.toggle('hidden',!status.deadline);
+      if(status.phase==='not_started'){
+        $('timerTitle').textContent='A contagem ainda não começou';
+        $('timerDescription').textContent=session.isAdmin?'Quando estiver tudo pronto, inicie os 20 dias: 10 de votação geral e 10 de final.':'A organização ainda não iniciou oficialmente a contagem regressiva.';
+        $('votingSection').classList.add('hidden');$('alreadyVoted').classList.add('hidden');$('resultsSection').classList.add('hidden');
+      }else if(status.phase==='closed'){
+        $('timerTitle').textContent='Votação encerrada';$('timerDescription').textContent='Os 20 dias terminaram. Os resultados oficiais da final estão disponíveis.';
+        $('votingSection').classList.add('hidden');$('alreadyVoted').classList.add('hidden');$('resultsSection').classList.remove('hidden');renderResults();
+      }else{
+        const general=status.phase==='general';
+        $('timerTitle').textContent=general?'Fase 1 — votação geral':'Fase 2 — final por categoria';
+        $('timerDescription').textContent=general
+          ?'Nos primeiros 10 dias, escolha 1ª opção (1 ponto) e 2ª opção diferente (0,5 ponto) por categoria. Os quatro com maior pontuação avançam para a final.'
+          :'Do 11º ao 20º dia, vote entre os quatro finalistas de cada categoria. Os resultados saem quando o prazo terminar.';
+        $('ballotTitle').textContent=general?'Votação geral':'Final por categoria';
+        $('ballotIntro').textContent=general
+          ?'Escolha uma 1ª opção (1 ponto) e uma 2ª opção diferente (0,5 ponto) por categoria. No 11º dia, os quatro mais votados em cada tema avançam para a final. Você pode pular categorias.'
+          :'Agora cada categoria mostra apenas os quatro finalistas da primeira fase. Escolha 1ª opção (1 ponto) e 2ª opção diferente (0,5 ponto). A cédula da final é independente da primeira.';
+        $('resultsSection').classList.add('hidden');
+        $('votingSection').classList.toggle('hidden',!!status.hasVoted);
+        $('alreadyVoted').classList.toggle('hidden',!status.hasVoted);
+        if(status.hasVoted){
+          $('alreadyVotedText').textContent=general
+            ?'Seu voto da votação geral já foi registrado. No 11º dia, você poderá votar de novo, agora entre os quatro finalistas de cada categoria.'
+            :'Seu voto da final já foi registrado. Os resultados oficiais serão liberados assim que terminar o 20º dia.';
+        }else{
+          $('submitBallotButton').textContent=general?'Enviar voto da primeira fase':'Enviar voto da final';
+          renderBallot();
+        }
+      }
+      updateTimer();renderAdminStats();
+    }
+    function renderBallot(){
+      if($('categoriesGrid').dataset.rendered==='true') return;
+      $('categoriesGrid').innerHTML=categories.map((c,i)=>{
+        const options=status&&status.phase==='final'?(finalistsByCategory[c.id]||[]):candidates;
+        const emptyText=options.length?'Nenhum nome encontrado. Tente buscar por outra parte do nome.':'Nenhum candidato disponível nesta categoria nesta fase.';
+        const makeChoiceControl=(rank,label,points)=>{
+          const pickerId=c.id+'_'+rank;
+          const candidateButtons=options.map(person=>{
+            const candidateName=person.full_name||person.name||'Participante';
+            const candidateId=String(person.id||'');
+            return `<button type="button" class="candidate-option" data-pick-category="${h(c.id)}" data-pick-rank="${rank}" data-pick-candidate="${h(candidateId)}" data-candidate-name="${h(candidateName)}" aria-pressed="false"><span class="candidate-avatar" aria-hidden="true">${h(initials(candidateName))}</span><span class="candidate-option-name">${h(candidateName)}</span><span class="candidate-option-check" aria-hidden="true">+</span></button>`;
+          }).join('');
+          return `<div class="ranked-choice"><div class="ranked-choice-top"><strong>${label}</strong><span>${points}</span></div><input type="hidden" id="vote_${h(c.id)}_${rank}" value=""><button type="button" class="candidate-picker" data-picker-toggle="${h(pickerId)}" data-picker-category="${h(c.id)}" data-picker-rank="${rank}" data-has-options="${options.length?'true':'false'}" aria-expanded="false" aria-controls="picker_panel_${h(pickerId)}" ${options.length&&rank==='first'?'':'disabled'}><span class="picker-avatar" aria-hidden="true">${rank==='first'?'1':'2'}</span><span class="picker-summary"><strong>${options.length?(rank==='first'?'Escolha a 1ª opção':'Escolha a 1ª opção primeiro'):'Sem candidatos disponíveis'}</strong><small>${rank==='first'?'Vale 1 ponto':(options.length?'Selecione a 1ª opção para desbloquear':'Vale 0,5 ponto')}</small></span><span class="picker-chevron" aria-hidden="true">⌄</span></button><div class="picker-panel" id="picker_panel_${h(pickerId)}" data-picker-panel="${h(pickerId)}" data-picker-category="${h(c.id)}" hidden><label class="candidate-search-label">Buscar candidato<input class="candidate-search" type="search" inputmode="search" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="Digite parte do nome…" aria-label="Buscar ${rank==='first'?'primeira':'segunda'} opção para ${h(c.name)}" data-candidate-search="${h(pickerId)}"></label><div class="candidate-list" data-candidate-list="${h(pickerId)}">${candidateButtons}</div><div class="candidate-empty hidden" data-candidate-empty="${h(pickerId)}">${h(emptyText)}</div><button type="button" class="clear-choice" data-clear-vote="${h(c.id)}" data-clear-rank="${rank}">Limpar esta opção</button><p class="picker-hint">A mesma pessoa não pode ocupar as duas posições.</p></div></div>`;
+        };
+        return `<article class="cat category-card" data-card-id="${h(c.id)}" style="animation-delay:${Math.min(i,12)*22}ms"><div class="cat-head"><span class="cat-num">${String(i+1).padStart(2,'0')}</span><div><h3>${h(c.name)}</h3><p>${h(c.desc)}</p></div></div><div class="ranked-choices">${makeChoiceControl('first','1ª OPÇÃO','1 PONTO')}${makeChoiceControl('second','2ª OPÇÃO','0,5 PONTO')}</div><p class="ranked-hint hidden" aria-live="polite"></p></article>`;
+      }).join('');
+      $('categoriesGrid').dataset.rendered='true';
+      updateBallotProgress();
+    }
+    function updateTimer(){
+      if(!status||!status.phaseDeadline)return;
+      const remaining=Math.max(0,new Date(status.phaseDeadline).getTime()-(Date.now()+serverOffsetMs));const total=Math.floor(remaining/1000);
+      $('days').textContent=String(Math.floor(total/86400)).padStart(2,'0');$('hours').textContent=String(Math.floor(total%86400/3600)).padStart(2,'0');$('minutes').textContent=String(Math.floor(total%3600/60)).padStart(2,'0');$('seconds').textContent=String(total%60).padStart(2,'0');
+      if(remaining===0&&!status.resultsReleased&&!releaseRefreshPending){releaseRefreshPending=true;refreshAll(true).catch(showDashboardError).finally(()=>{releaseRefreshPending=false;});}
+    }
+    function renderResults(){
+      const map=new Map((results||[]).map(x=>[x.categoryId,x]));
+      $('resultsGrid').innerHTML=categories.map(c=>{const item=map.get(c.id)||{votes:[]};const top=(item.votes||[]).filter(v=>v.count===Math.max(0,...(item.votes||[]).map(x=>x.count))&&v.count>0);const winners=top.length?top.map(t=>h(t.name)).join(' & '):'Sem votos';const n=top.length?top[0].count:0;return `<article class="result"><span class="pill">${h(c.group)}</span><h3>${h(c.name)}</h3><div class="winner">${winners}</div><div class="votes">${n?`${String(n).replace('.',',')} ponto(s) na liderança por vencedor`:'Nenhum voto nesta categoria'}</div></article>`}).join('');
+    }
+    function renderAdminStats(){
+      const root=$('adminStats');if(!session||!session.isAdmin||!root)return;
+      if(!adminStats){root.innerHTML='<div class="loading">Carregando apuração...</div>';return;}
+      const total=Number(adminStats.totalBallots||0), max=Number(adminStats.totalStudents||0), pct=max?Math.round(total/max*100):0;
+      const phases=adminStats.phaseCounts||{general:0,final:0};
+      const phaseName=adminStats.phase==='general'?'Votação geral':adminStats.phase==='final'?'Final por categoria':adminStats.phase==='closed'?'Encerrada':'Não iniciada';
+      root.innerHTML=`<div class="stats-grid"><div class="stat"><strong>${total}</strong><span>Cédulas nesta fase</span></div><div class="stat"><strong>${max}</strong><span>Participantes cadastrados</span></div><div class="stat"><strong>${pct}%</strong><span>Participação nesta fase</span></div></div><div class="notice">Fase: ${phaseName}. Cédulas na votação geral: ${Number(phases.general||0)} · Cédulas na final: ${Number(phases.final||0)}. ${status&&status.deadline?`Prazo final: ${new Date(status.deadline).toLocaleString('pt-BR')}`:'Contagem ainda não iniciada.'} ${status&&status.resultsReleased?'Resultados públicos liberados.':'Os totais abaixo são restritos à ADM até o fim do prazo.'}</div><h3 class="section-title" style="font-size:20px">Apuração ao vivo — ${adminStats.tallyPhase==='final'?'final por categoria':'votação geral'}</h3><div class="tally-list">${categories.map(c=>{const item=(adminStats.results||[]).find(x=>x.categoryId===c.id)||{votes:[]};const sorted=(item.votes||[]).slice().sort((a,b)=>b.count-a.count||a.name.localeCompare(b.name,'pt-BR')).filter(x=>x.count>0);return `<div class="tally-card"><h3>${h(c.name)}</h3>${sorted.length?sorted.slice(0,5).map(v=>`<div class="tally-row"><span>${h(v.name)}</span><span class="count">${Number(v.count).toLocaleString('pt-BR',{maximumFractionDigits:1})} pt</span></div>`).join(''):'<div class="tally-row"><span>Sem votos ainda</span><span class="count">0</span></div>'}</div>`}).join('')}</div>`;
+    }
+    function startPolling(){if(polling)clearInterval(polling);if(ticker)clearInterval(ticker);polling=setInterval(async()=>{if(!session)return;try{await refreshAll(false)}catch(e){/* polling quietly retries */}},20000);ticker=setInterval(updateTimer,1000);}
+    async function boot(){
+      if(!configReady){$('loginButton').disabled=true;message($('loginMessage'),'O site está pronto, mas falta a configuração do Supabase. Siga o LEIA-ME do projeto e preencha docs/config.js.','error');return;}
+      try{const saved=sessionStorage.getItem('firstA_session');if(!saved)return;session=JSON.parse(saved);$('loginView').classList.add('hidden');$('dashboardView').classList.remove('hidden');await refreshAll(true);startPolling();}
+      catch(err){sessionStorage.removeItem('firstA_session');session=null;$('dashboardView').classList.add('hidden');$('loginView').classList.remove('hidden');message($('loginMessage'),'Sua sessão expirou. Entre novamente.','error');}
+    }
+    // Música ambiente original, sintetizada localmente no navegador (sem arquivo externo).
+    // O som só começa após toque/clique explícito, conforme as regras de navegadores móveis.
+    let soundEnabled=false, audioCtx=null, musicTimer=null, musicStep=0;
+    const tune=[523.25,659.25,783.99,659.25,587.33,698.46,880,698.46,523.25,659.25,783.99,1046.5];
+    function getAudioContext(){
+      if(!audioCtx){const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return null;audioCtx=new AC();}
+      return audioCtx;
+    }
+    function tone(freq,duration=0.18,volume=0.018,type='sine',delay=0){
+      const ctx=getAudioContext();if(!ctx||!soundEnabled)return;
+      const osc=ctx.createOscillator(),gain=ctx.createGain(),start=ctx.currentTime+delay;
+      osc.type=type;osc.frequency.setValueAtTime(freq,start);
+      gain.gain.setValueAtTime(0.0001,start);gain.gain.exponentialRampToValueAtTime(Math.max(volume,0.0002),start+0.025);gain.gain.exponentialRampToValueAtTime(0.0001,start+duration);
+      osc.connect(gain);gain.connect(ctx.destination);osc.start(start);osc.stop(start+duration+0.03);
+    }
+    function playMusicStep(){
+      if(!soundEnabled)return;
+      const note=tune[musicStep%tune.length];tone(note,0.42,0.008,'sine');
+      if(musicStep%3===0)tone(note/2,0.48,0.004,'triangle',0.02);
+      musicStep++;
+    }
+    async function toggleSound(){
+      const button=$('soundToggle');
+      if(!soundEnabled){
+        const ctx=getAudioContext();if(!ctx){button.textContent='Som indisponível neste navegador';return;}
+        try{await ctx.resume();}catch(_){button.textContent='Toque para ativar o som';return;}
+        soundEnabled=true;button.setAttribute('aria-pressed','true');button.textContent='♫ Som ambiente: ligado';
+        playMusicStep();musicTimer=window.setInterval(playMusicStep,680);tone(659.25,0.22,0.018,'triangle');
+      }else{
+        soundEnabled=false;button.setAttribute('aria-pressed','false');button.textContent='♫ Som ambiente: desligado';
+        if(musicTimer){window.clearInterval(musicTimer);musicTimer=null;}
+        if(audioCtx){try{await audioCtx.suspend();}catch(_){}}
+      }
+    }
+    $('soundToggle').addEventListener('click',toggleSound);
+    function playSelectionSound(){if(!soundEnabled)return;tone(783.99,0.12,0.018,'triangle');tone(1046.5,0.2,0.014,'sine',0.08);}
+    boot();
+  })();
+  </script>
+</body>
+</html>
