@@ -12,7 +12,7 @@ const ADMIN_NAME = "david chrispim de melo";
 const DAY_MS = 24 * 60 * 60 * 1000;
 
 const categories = [
-  { id: "iconico", name: "Mais Bonito(A)" },
+  { id: "iconico", name: "Mais Bonito(a)" },
   { id: "mais_fofoqueiro", name: "Mais Fofoqueiro(a)" },
   { id: "mais_sem_filtro", name: "Mais Sem Filtro" },
   { id: "mais_dramatico", name: "Mais Dramático(a)" },
@@ -380,9 +380,9 @@ Deno.serve(async (req: Request) => {
         if (String(solveError.code ?? "") === "23505") return json({ error: "Você já concluiu o desafio de hoje." }, 409);
         throw solveError;
       }
-      const { data: ticket, error: ticketError } = await supabase.from("investigation_tickets").insert({ student_id: session.sid, source: "daily", source_ref: `personal:${today}:${challengeId}`, label: "Ticket VIP · Desafio do Dia", duration_hours: 6 }).select("id").single();
+      const { data: ticket, error: ticketError } = await supabase.from("investigation_tickets").insert({ student_id: session.sid, source: "daily", source_ref: `personal:${today}:${challengeId}`, label: "Ticket VIP · Pergunta diária", duration_hours: 1 }).select("id").single();
       if (ticketError) throw ticketError;
-      return json({ success: true, ticketId: ticket.id, message: "Resposta correta! Você ganhou um Ticket VIP de 6 horas. Ative quando quiser." });
+      return json({ success: true, ticketId: ticket.id, message: "Resposta correta! Você ganhou automaticamente um Ticket VIP de 1 hora. Não precisa de aprovação da ADM." });
     }
 
     if (action === "solve_investigation_puzzle") {
@@ -403,29 +403,6 @@ Deno.serve(async (req: Request) => {
         throw awardError;
       }
       return json({ success: true, ticketId, message: "Arquivo resolvido! Você ganhou um Ticket VIP de 6 horas." });
-    }
-
-    if (action === "submit_david_quiz") {
-      const session = await authenticatedSession(body.session);
-      const raw = body.answers && typeof body.answers === "object" ? body.answers : {};
-      const prompts: Record<string, string> = {
-        surname: "Complete: DAVID ______ DE MELO",
-        artist: "Qual é a artista favorita do David?",
-        friend: "Quem é o melhor amigo do David? O nome completo é Lucas Rafael.",
-        game: "Qual é o jogo favorito do David?",
-        sister: "Qual é o nome da irmã do David?",
-      };
-      const rows = Object.entries(prompts).map(([key, question]) => ({
-        question, suggested_answer: String(raw[key] ?? "").trim().slice(0, 160), student_id: session.sid,
-      })).filter((row) => row.suggested_answer.length > 0);
-      if (!rows.length) return json({ error: "Responda pelo menos uma pergunta. Pode deixar as outras em branco." }, 400);
-      const { data: pending, error: pendingError } = await supabase.from("investigation_submissions")
-        .select("id").eq("student_id", session.sid).eq("status", "pending");
-      if (pendingError) throw pendingError;
-      if ((pending ?? []).length + rows.length > 20) return json({ error: "Você tem muitas respostas aguardando avaliação. Espere a ADM revisar algumas." }, 429);
-      const { error } = await supabase.from("investigation_submissions").insert(rows);
-      if (error) throw error;
-      return json({ success: true, count: rows.length, message: `${rows.length} resposta(s) enviada(s) para a ADM revisar. Cada item será aprovado ou recusado separadamente; cada aprovação vale um Ticket VIP de 1 hora.` });
     }
 
     if (action === "submit_investigation_question") {
