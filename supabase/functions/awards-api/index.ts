@@ -66,6 +66,16 @@ function saoPauloDateString(date = new Date()): string {
   const get = (type: string) => parts.find((part) => part.type === type)?.value ?? "00";
   return `${get("year")}-${get("month")}-${get("day")}`;
 }
+function saoPauloMinutesIntoDay(date = new Date()): number {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/Sao_Paulo", hour: "2-digit", minute: "2-digit", hourCycle: "h23",
+  }).formatToParts(date);
+  const get = (type: string) => Number(parts.find((part) => part.type === type)?.value ?? "0");
+  return get("hour") * 60 + get("minute");
+}
+function saoPauloTwoHourSlot(date = new Date()): number {
+  return Math.floor(saoPauloMinutesIntoDay(date) / 120);
+}
 function acceptedAnswers(raw: unknown): string[] {
   return String(raw ?? "").split(/[|\n;]/).map((answer) => normalizeName(answer)).filter(Boolean).slice(0, 12);
 }
@@ -304,9 +314,10 @@ Deno.serve(async (req: Request) => {
     if (action === "investigation_data") {
       const session = await authenticatedSession(body.session);
       const today = saoPauloDateString();
-      // Uma pergunta aleatória fica fixa para cada participante durante o dia; no dia seguinte, sorteamos outra.
+      const slotIndex = saoPauloTwoHourSlot();
+      // Uma pergunta aleatória fica fixa por pessoa em cada bloco de 2 horas (horário de Brasília).
       let { data: personalAssignment, error: assignmentError } = await supabase.from("investigation_daily_assignments")
-        .select("student_id, challenge_date, stock_id").eq("student_id", session.sid).eq("challenge_date", today).maybeSingle();
+        .select("student_id, challenge_date, slot_index, stock_id").eq("student_id", session.sid).eq("challenge_date", today).eq("slot_index", slotIndex).maybeSingle();
       if (assignmentError) throw assignmentError;
       let assignmentNeedsRefresh = !personalAssignment;
       if (personalAssignment) {
@@ -316,13 +327,13 @@ Deno.serve(async (req: Request) => {
         assignmentNeedsRefresh = !assignedStock || !assignedStock.active;
       }
       if (assignmentNeedsRefresh) {
-        // A função SQL usa trava por data e renova atribuições que apontem para perguntas desativadas.
+        // O banco sorteia uma pergunta por pessoa e tenta evitar repetição no mesmo bloco de 2 horas.
         const { error: assignError } = await supabase.rpc("assign_daily_question", {
-          p_student_id: session.sid, p_challenge_date: today,
+          p_student_id: session.sid, p_challenge_date: today, p_slot_index: slotIndex,
         });
         if (assignError) throw assignError;
         const { data: stableAssignment, error: stableError } = await supabase.from("investigation_daily_assignments")
-          .select("student_id, challenge_date, stock_id").eq("student_id", session.sid).eq("challenge_date", today).maybeSingle();
+          .select("student_id, challenge_date, slot_index, stock_id").eq("student_id", session.sid).eq("challenge_date", today).eq("slot_index", slotIndex).maybeSingle();
         if (stableError) throw stableError;
         personalAssignment = stableAssignment;
       }
@@ -330,11 +341,11 @@ Deno.serve(async (req: Request) => {
       if (personalAssignment) {
         const [{ data: stockItem, error: stockItemError }, { data: personalSolve, error: personalSolveError }] = await Promise.all([
           supabase.from("investigation_question_stock").select("id, title, prompt, active").eq("id", personalAssignment.stock_id).eq("active", true).maybeSingle(),
-          supabase.from("investigation_daily_personal_solves").select("stock_id").eq("student_id", session.sid).eq("challenge_date", today).maybeSingle(),
+          supabase.from("investigation_daily_personal_solves").select("stock_id").eq("student_id", session.sid).eq("challenge_date", today).eq("slot_index", slotIndex).maybeSingle(),
         ]);
         if (stockItemError) throw stockItemError;
         if (personalSolveError) throw personalSolveError;
-        if (stockItem) daily = { id: String(stockItem.id), challenge_date: today, title: stockItem.title, prompt: stockItem.prompt, active: true, solved: Boolean(personalSolve) };
+        if (stockItem) daily = { id: String(stockItem.id), challenge_date: today, slot_index: slotIndex, next_change_in_minutes: 120 - (saoPauloMinutesIntoDay() % 120), title: stockItem.title, prompt: stockItem.prompt, active: true, solved: Boolean(personalSolve) };
       }
       const [{ data: puzzles, error: puzzlesError },
         { data: puzzleSolves, error: puzzleSolvesError },
@@ -365,22 +376,23 @@ Deno.serve(async (req: Request) => {
       const answer = normalizeName(body.answer);
       if (!challengeId || !answer || answer.length > 120) return json({ error: "Informe a resposta do desafio." }, 400);
       const today = saoPauloDateString();
+      const slotIndex = saoPauloTwoHourSlot();
       const [{ data: assignment, error: assignmentError }, { data: challenge, error: challengeError }, { data: solved, error: solvedError }] = await Promise.all([
-        supabase.from("investigation_daily_assignments").select("stock_id").eq("student_id", session.sid).eq("challenge_date", today).maybeSingle(),
+        supabase.from("investigation_daily_assignments").select("stock_id").eq("student_id", session.sid).eq("challenge_date", today).eq("slot_index", slotIndex).maybeSingle(),
         supabase.from("investigation_question_stock").select("id, accepted_answers").eq("id", challengeId).eq("active", true).maybeSingle(),
-        supabase.from("investigation_daily_personal_solves").select("stock_id").eq("student_id", session.sid).eq("challenge_date", today).maybeSingle(),
+        supabase.from("investigation_daily_personal_solves").select("stock_id").eq("student_id", session.sid).eq("challenge_date", today).eq("slot_index", slotIndex).maybeSingle(),
       ]);
       for (const error of [assignmentError, challengeError, solvedError]) if (error) throw error;
-      if (!assignment || String(assignment.stock_id) !== challengeId || !challenge) return json({ error: "Este desafio não está atribuído à sua conta hoje." }, 404);
-      if (solved) return json({ error: "Você já concluiu o desafio de hoje." }, 409);
+      if (!assignment || String(assignment.stock_id) !== challengeId || !challenge) return json({ error: "Este desafio não está atribuído à sua conta neste bloco de 2 horas." }, 404);
+      if (solved) return json({ error: "Você já concluiu a pergunta deste bloco de 2 horas." }, 409);
       const answers = Array.isArray(challenge.accepted_answers) ? challenge.accepted_answers : [];
       if (!answers.some((known: unknown) => normalizeName(known) === answer)) return json({ error: "Resposta incorreta. Revise as pistas e tente novamente." }, 401);
-      const { error: solveError } = await supabase.from("investigation_daily_personal_solves").insert({ student_id: session.sid, challenge_date: today, stock_id: challengeId });
+      const { error: solveError } = await supabase.from("investigation_daily_personal_solves").insert({ student_id: session.sid, challenge_date: today, slot_index: slotIndex, stock_id: challengeId });
       if (solveError) {
-        if (String(solveError.code ?? "") === "23505") return json({ error: "Você já concluiu o desafio de hoje." }, 409);
+        if (String(solveError.code ?? "") === "23505") return json({ error: "Você já concluiu a pergunta deste bloco de 2 horas." }, 409);
         throw solveError;
       }
-      const { data: ticket, error: ticketError } = await supabase.from("investigation_tickets").insert({ student_id: session.sid, source: "daily", source_ref: `personal:${today}:${challengeId}`, label: "Ticket VIP · Pergunta diária", duration_hours: 1 }).select("id").single();
+      const { data: ticket, error: ticketError } = await supabase.from("investigation_tickets").insert({ student_id: session.sid, source: "daily", source_ref: `personal:${today}:${slotIndex}:${challengeId}`, label: "Ticket VIP · ARG de 2 horas", duration_hours: 1 }).select("id").single();
       if (ticketError) throw ticketError;
       return json({ success: true, ticketId: ticket.id, message: "Resposta correta! Você ganhou automaticamente um Ticket VIP de 1 hora. Não precisa de aprovação da ADM." });
     }
