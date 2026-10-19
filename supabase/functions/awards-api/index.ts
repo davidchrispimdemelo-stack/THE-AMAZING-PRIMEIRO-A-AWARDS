@@ -12,7 +12,7 @@ const ADMIN_NAME = "david chrispim de melo";
 const DAY_MS = 24 * 60 * 60 * 1000;
 
 const categories = [
-  { id: "iconico", name: "Mais Icônico(a)" },
+  { id: "iconico", name: "Mais Bonito(a)" },
   { id: "mais_fofoqueiro", name: "Mais Fofoqueiro(a)" },
   { id: "mais_sem_filtro", name: "Mais Sem Filtro" },
   { id: "mais_dramatico", name: "Mais Dramático(a)" },
@@ -28,7 +28,7 @@ const categories = [
   { id: "mais_preguicoso", name: "Mais Preguiçoso(a)" },
   { id: "pai_mae_turma", name: "Mais “Pai/Mãe da Turma”" },
   { id: "mais_cringe", name: "Mais Cringe" },
-  { id: "mais_estiloso", name: "Mais Estiloso(a)" },
+  { id: "mais_estiloso", name: "Mais feio(a)" },
   { id: "mais_cola", name: "Mais “Cola”" },
   { id: "mais_gente_boa", name: "Mais Gente Boa" },
   { id: "mais_sortudo", name: "Mais Sortudo(a)" },
