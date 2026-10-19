@@ -12,7 +12,7 @@ const ADMIN_NAME = "david chrispim de melo";
 const DAY_MS = 24 * 60 * 60 * 1000;
 
 const categories = [
-  { id: "iconico", name: "Mais Bonito(a)" },
+  { id: "iconico", name: "Mais Icônico(a)" },
   { id: "mais_fofoqueiro", name: "Mais Fofoqueiro(a)" },
   { id: "mais_sem_filtro", name: "Mais Sem Filtro" },
   { id: "mais_dramatico", name: "Mais Dramático(a)" },
@@ -28,7 +28,7 @@ const categories = [
   { id: "mais_preguicoso", name: "Mais Preguiçoso(a)" },
   { id: "pai_mae_turma", name: "Mais “Pai/Mãe da Turma”" },
   { id: "mais_cringe", name: "Mais Cringe" },
-  { id: "mais_estiloso", name: "Mais feio(a)" },
+  { id: "mais_estiloso", name: "Mais Estiloso(a)" },
   { id: "mais_cola", name: "Mais “Cola”" },
   { id: "mais_gente_boa", name: "Mais Gente Boa" },
   { id: "mais_sortudo", name: "Mais Sortudo(a)" },
@@ -57,6 +57,17 @@ function normalizeName(value: unknown): string {
 }
 function normalizeRa(value: unknown): string {
   return String(value ?? "").replace(/\s+/g, "").toUpperCase().replace(/SP$/i, "");
+}
+
+function saoPauloDateString(date = new Date()): string {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/Sao_Paulo", year: "numeric", month: "2-digit", day: "2-digit",
+  }).formatToParts(date);
+  const get = (type: string) => parts.find((part) => part.type === type)?.value ?? "00";
+  return `${get("year")}-${get("month")}-${get("day")}`;
+}
+function acceptedAnswers(raw: unknown): string[] {
+  return String(raw ?? "").split(/[|\n;]/).map((answer) => normalizeName(answer)).filter(Boolean).slice(0, 12);
 }
 function toHex(bytes: ArrayBuffer): string {
   return Array.from(new Uint8Array(bytes)).map((b) => b.toString(16).padStart(2, "0")).join("");
@@ -97,6 +108,18 @@ function constantTimeEqual(a: string, b: string): boolean {
   return diff === 0;
 }
 type AwardsPhase = "not_started" | "general" | "final" | "closed";
+
+async function getMaintenanceState(): Promise<{ enabled: boolean; message: string }> {
+  const fallback = "O THE AMAZING PRIMEIRO A AWARDS está em manutenção. Voltaremos em breve.";
+  const { data, error } = await supabase.from("awards_site_maintenance")
+    .select("enabled, message").eq("id", 1).maybeSingle();
+  if (error) {
+    // Se a migração ainda não foi aplicada, não bloqueia o site; o controle ADM pedirá a migração.
+    console.error("Não foi possível ler o modo manutenção:", error.message);
+    return { enabled: false, message: fallback };
+  }
+  return { enabled: Boolean(data?.enabled), message: String(data?.message || fallback) };
+}
 
 async function getAwardsState(): Promise<{ deadline: string | null; phase: AwardsPhase }> {
   const { data, error } = await supabase
@@ -206,6 +229,39 @@ Deno.serve(async (req: Request) => {
     const body = await req.json();
     const action = String(body.action ?? "");
 
+    if (action === "maintenance_status") {
+      return json(await getMaintenanceState());
+    }
+
+    if (action === "admin_set_maintenance") {
+      const admin = await authenticatedSession(body.session, true);
+      const enabled = body.enabled === true;
+      const rawMessage = String(body.message ?? "").trim();
+      const message = rawMessage.slice(0, 240) || "O THE AMAZING PRIMEIRO A AWARDS está em manutenção. Voltaremos em breve.";
+      const { error } = await supabase.from("awards_site_maintenance").upsert({
+        id: 1, enabled, message, updated_at: new Date().toISOString(), updated_by: String(admin.sid),
+      }, { onConflict: "id" });
+      if (error) {
+        if (String(error.code ?? "") === "42P01") return json({ error: "A tabela de manutenção ainda não existe. Execute a migração ARG LUXO atualizada no SQL Editor." }, 409);
+        throw error;
+      }
+      return json({ success: true, enabled, message, updatedAt: new Date().toISOString() });
+    }
+
+    // O modo de manutenção é aplicado no servidor, não apenas escondendo elementos da página.
+    // O login ADM continua liberado para que a organização possa reabrir o site.
+    const maintenance = await getMaintenanceState();
+    if (maintenance.enabled && action !== "admin_login") {
+      if (action === "login") {
+        return json({ error: maintenance.message, maintenance: true }, 503);
+      }
+      let isAdminSession = false;
+      if (body.session) {
+        try { isAdminSession = (await verifySession(body.session)).admin === true; } catch { /* sessão ausente ou expirada */ }
+      }
+      if (!isAdminSession) return json({ error: maintenance.message, maintenance: true }, 503);
+    }
+
     if (action === "public_spoilers") {
       const { phase } = await getAwardsState();
       const slotMs = 15 * 60 * 1000;
@@ -243,6 +299,246 @@ Deno.serve(async (req: Request) => {
       }
 
       return json({ items, phase: tallyPhase, nextRefreshAt });
+    }
+
+    if (action === "investigation_data") {
+      const session = await authenticatedSession(body.session);
+      const today = saoPauloDateString();
+      const [{ data: daily, error: dailyError }, { data: puzzles, error: puzzlesError },
+        { data: dailySolves, error: dailySolvesError }, { data: puzzleSolves, error: puzzleSolvesError },
+        { data: tickets, error: ticketsError }, { data: submissions, error: submissionsError }, { data: easterClaim, error: easterError }] = await Promise.all([
+        supabase.from("investigation_daily_challenges").select("id, challenge_date, title, prompt, active")
+          .eq("challenge_date", today).eq("active", true).maybeSingle(),
+        supabase.from("investigation_puzzles").select("id, puzzle_order, title, prompt, active")
+          .eq("active", true).order("puzzle_order", { ascending: true }),
+        supabase.from("investigation_daily_solves").select("challenge_id").eq("student_id", session.sid),
+        supabase.from("investigation_puzzle_solves").select("puzzle_id").eq("student_id", session.sid),
+        supabase.from("investigation_tickets").select("id, source, label, duration_hours, category_id, created_at, activated_at, expires_at")
+          .eq("student_id", session.sid).order("created_at", { ascending: false }),
+        supabase.from("investigation_submissions").select("id, question, status, created_at, reviewed_at")
+          .eq("student_id", session.sid).order("created_at", { ascending: false }).limit(20),
+        supabase.from("investigation_easter_egg_claims").select("answer").eq("student_id", session.sid).maybeSingle(),
+      ]);
+      for (const error of [dailyError, puzzlesError, dailySolvesError, puzzleSolvesError, ticketsError, submissionsError, easterError]) if (error) throw error;
+      const dailySolvedIds = new Set((dailySolves ?? []).map((row: any) => String(row.challenge_id)));
+      const puzzleSolvedIds = new Set((puzzleSolves ?? []).map((row: any) => String(row.puzzle_id)));
+      const dailyChallenge = daily ? { ...daily, solved: dailySolvedIds.has(String(daily.id)) } : null;
+      const publicPuzzles = (puzzles ?? []).map((puzzle: any) => ({
+        id: String(puzzle.id), puzzle_order: puzzle.puzzle_order, title: puzzle.title,
+        prompt: puzzle.prompt, active: puzzle.active, solved: puzzleSolvedIds.has(String(puzzle.id)),
+        locked: (puzzles ?? []).some((prior: any) => prior.active && prior.puzzle_order < puzzle.puzzle_order && !puzzleSolvedIds.has(String(prior.id))),
+      }));
+      return json({ today, dailyChallenge, puzzles: publicPuzzles, tickets: tickets ?? [], submissions: submissions ?? [], easterEggClaimed: Boolean(easterClaim), easterEggAnswer: easterClaim?.answer ?? null, categories: categories.map(({ id, name }) => ({ id, name })) });
+    }
+
+    if (action === "solve_daily_challenge") {
+      const session = await authenticatedSession(body.session);
+      const challengeId = String(body.challengeId ?? "");
+      const answer = normalizeName(body.answer);
+      if (!challengeId || !answer || answer.length > 120) return json({ error: "Informe a resposta do desafio." }, 400);
+      const today = saoPauloDateString();
+      const { data: challenge, error } = await supabase.from("investigation_daily_challenges")
+        .select("id, accepted_answers").eq("id", challengeId).eq("challenge_date", today).eq("active", true).maybeSingle();
+      if (error) throw error;
+      if (!challenge) return json({ error: "Este desafio não está mais disponível." }, 404);
+      const answers = Array.isArray(challenge.accepted_answers) ? challenge.accepted_answers : [];
+      if (!answers.some((known: unknown) => normalizeName(known) === answer)) return json({ error: "Resposta incorreta. Revise as pistas e tente novamente." }, 401);
+      const { data: ticketId, error: awardError } = await supabase.rpc("complete_daily_challenge", { p_student_id: session.sid, p_challenge_id: challengeId });
+      if (awardError) {
+        const msg = String(awardError.message ?? "");
+        if (msg.includes("já concluiu")) return json({ error: "Você já concluiu o desafio de hoje." }, 409);
+        throw awardError;
+      }
+      return json({ success: true, ticketId, message: "Resposta correta! Você ganhou um Ticket VIP de 6 horas. Ative quando quiser." });
+    }
+
+    if (action === "solve_investigation_puzzle") {
+      const session = await authenticatedSession(body.session);
+      const puzzleId = String(body.puzzleId ?? "");
+      const answer = normalizeName(body.answer);
+      if (!puzzleId || !answer || answer.length > 120) return json({ error: "Informe a resposta do arquivo." }, 400);
+      const { data: puzzle, error } = await supabase.from("investigation_puzzles")
+        .select("id, accepted_answers, active").eq("id", puzzleId).eq("active", true).maybeSingle();
+      if (error) throw error;
+      if (!puzzle) return json({ error: "Este arquivo não está disponível." }, 404);
+      const answers = Array.isArray(puzzle.accepted_answers) ? puzzle.accepted_answers : [];
+      if (!answers.some((known: unknown) => normalizeName(known) === answer)) return json({ error: "A senha não confere. Releia o documento e tente novamente." }, 401);
+      const { data: ticketId, error: awardError } = await supabase.rpc("complete_investigation_puzzle", { p_student_id: session.sid, p_puzzle_id: puzzleId });
+      if (awardError) {
+        const msg = String(awardError.message ?? "");
+        if (msg.includes("já resolveu") || msg.includes("Resolva os arquivos anteriores")) return json({ error: msg }, 409);
+        throw awardError;
+      }
+      return json({ success: true, ticketId, message: "Arquivo resolvido! Você ganhou um Ticket VIP de 6 horas." });
+    }
+
+    if (action === "submit_investigation_question") {
+      const session = await authenticatedSession(body.session);
+      const question = String(body.question ?? "").trim();
+      const answer = String(body.answer ?? "").trim();
+      if (question.length < 12 || question.length > 240 || answer.length < 1 || answer.length > 160) {
+        return json({ error: "A pergunta precisa ter entre 12 e 240 caracteres, e a resposta até 160 caracteres." }, 400);
+      }
+      const normalizedQuestion = normalizeName(question);
+      if (/(^|\s)ra(\s|$)/.test(normalizedQuestion) || /senha|telefone|endereço|endereco|cpf|documento pessoal/i.test(`${question} ${answer}`)) {
+        return json({ error: "Envie uma curiosidade ou enigma sem dados pessoais, senhas ou informações privadas." }, 400);
+      }
+      const { data: pending, error: pendingError } = await supabase.from("investigation_submissions")
+        .select("id").eq("student_id", session.sid).eq("status", "pending");
+      if (pendingError) throw pendingError;
+      if ((pending ?? []).length >= 5) return json({ error: "Você já tem 5 perguntas aguardando avaliação. Espere a ADM revisar." }, 429);
+      const { error } = await supabase.from("investigation_submissions").insert({ student_id: session.sid, question, suggested_answer: answer });
+      if (error) throw error;
+      return json({ success: true, message: "Pergunta enviada para avaliação. Se for aprovada e publicada, você ganha um Ticket VIP." });
+    }
+
+    if (action === "claim_investigation_easter_egg") {
+      const session = await authenticatedSession(body.session);
+      const answer = normalizeName(body.answer);
+      if (!['sim', 'nao'].includes(answer)) return json({ error: "Escolha Sim ou Não." }, 400);
+      const { data: claim, error } = await supabase.rpc("complete_investigation_easter_egg", {
+        p_student_id: session.sid, p_answer: answer,
+      });
+      if (error) {
+        if (String(error.code ?? '') === '23505') return json({ error: "Você já descobriu este easter egg nesta conta." }, 409);
+        throw error;
+      }
+      const ticketGranted = Boolean(claim?.ticketGranted);
+      const secretReveal = Boolean(claim?.secretReveal);
+      return json({ success: true, ticketGranted, secretReveal,
+        message: ticketGranted ? 'Easter egg encontrado! Você ganhou um Ticket VIP de 3 horas.' : 'EASTER EGG DESBLOQUEADO: a trilha sonora secreta do evento está confirmada. O mistério continua…' });
+    }
+
+    if (action === "activate_investigation_ticket") {
+      const session = await authenticatedSession(body.session);
+      const ticketId = String(body.ticketId ?? "");
+      const categoryId = String(body.categoryId ?? "");
+      if (!ticketId || !categoryIds.has(categoryId)) return json({ error: "Escolha um ticket e uma categoria válida." }, 400);
+      const { data: ticket, error } = await supabase.from("investigation_tickets")
+        .select("id, duration_hours, label, activated_at, expires_at")
+        .eq("id", ticketId).eq("student_id", session.sid).maybeSingle();
+      if (error) throw error;
+      if (!ticket) return json({ error: "Este ticket não pertence à sua conta." }, 404);
+      if (ticket.activated_at) return json({ error: "Este ticket já foi ativado. Cada ticket só pode ser usado uma vez." }, 409);
+      const now = new Date();
+      const expiresAt = new Date(now.getTime() + Number(ticket.duration_hours) * 60 * 60 * 1000).toISOString();
+      const { data: updated, error: updateError } = await supabase.from("investigation_tickets")
+        .update({ category_id: categoryId, activated_at: now.toISOString(), expires_at: expiresAt })
+        .eq("id", ticketId).eq("student_id", session.sid).is("activated_at", null)
+        .select("id, category_id, activated_at, expires_at, duration_hours").maybeSingle();
+      if (updateError) throw updateError;
+      if (!updated) return json({ error: "Este ticket acabou de ser utilizado. Atualize os dados." }, 409);
+      const category = categories.find((item) => item.id === categoryId);
+      return json({ success: true, ticket: updated, categoryName: category?.name ?? "Categoria" });
+    }
+
+    if (action === "investigation_spoiler") {
+      const session = await authenticatedSession(body.session);
+      const categoryId = String(body.categoryId ?? "");
+      const category = categories.find((item) => item.id === categoryId);
+      if (!category) return json({ error: "Categoria não encontrada." }, 404);
+      const now = new Date().toISOString();
+      const { data: access, error } = await supabase.from("investigation_tickets")
+        .select("id, expires_at, duration_hours").eq("student_id", session.sid).eq("category_id", categoryId)
+        .not("activated_at", "is", null).gt("expires_at", now).limit(1).maybeSingle();
+      if (error) throw error;
+      if (!access) return json({ error: "Você precisa de um ticket ativo para investigar esta categoria." }, 403);
+      const { phase } = await getAwardsState();
+      const tallyPhase = phase === "final" || phase === "closed" ? "final" : "general";
+      const aggregate = await getAggregate(tallyPhase);
+      const result = aggregate.results.find((item) => item.categoryId === categoryId);
+      const ranking = (result?.votes ?? []).filter((person) => Number(person.count) > 0).map((person, index) => ({ ...person, rank: index + 1 }));
+      return json({ categoryId, categoryName: category.name, phase: tallyPhase, ranking, expiresAt: access.expires_at });
+    }
+
+    if (action === "investigation_admin_data") {
+      await authenticatedSession(body.session, true);
+      const [{ data: students, error: studentsError }, { data: messages, error: messagesError },
+        { data: daily, error: dailyError }, { data: puzzles, error: puzzlesError }, { data: submissions, error: submissionsError }] = await Promise.all([
+        supabase.from("students").select("id, full_name").order("full_name"),
+        supabase.from("student_messages").select("student_id, message, updated_at"),
+        supabase.from("investigation_daily_challenges").select("id, challenge_date, title, prompt, accepted_answers, active").order("challenge_date", { ascending: false }).limit(14),
+        supabase.from("investigation_puzzles").select("id, puzzle_order, title, prompt, accepted_answers, active").order("puzzle_order", { ascending: true }),
+        supabase.from("investigation_submissions").select("id, student_id, question, suggested_answer, status, created_at, students(full_name)").eq("status", "pending").order("created_at", { ascending: true }).limit(50),
+      ]);
+      for (const error of [studentsError, messagesError, dailyError, puzzlesError, submissionsError]) if (error) throw error;
+      return json({ students: students ?? [], messages: messages ?? [], dailyChallenges: daily ?? [], puzzles: puzzles ?? [], submissions: submissions ?? [], categories: categories.map(({ id, name }) => ({ id, name })) });
+    }
+
+    if (action === "investigation_admin_save_message") {
+      await authenticatedSession(body.session, true);
+      const studentId = String(body.studentId ?? "");
+      const messageText = String(body.message ?? "").trim();
+      if (!studentId || messageText.length > 1200) return json({ error: "Escolha um participante e escreva uma mensagem de até 1.200 caracteres." }, 400);
+      const { data: student, error: studentError } = await supabase.from("students").select("id").eq("id", studentId).maybeSingle();
+      if (studentError) throw studentError;
+      if (!student) return json({ error: "Participante não encontrado." }, 404);
+      if (!messageText) {
+        const { error } = await supabase.from("student_messages").delete().eq("student_id", studentId);
+        if (error) throw error;
+        return json({ success: true, message: "Mensagem individual removida." });
+      }
+      const { error } = await supabase.from("student_messages").upsert({ student_id: studentId, message: messageText, updated_at: new Date().toISOString() }, { onConflict: "student_id" });
+      if (error) throw error;
+      return json({ success: true, message: "Mensagem individual salva." });
+    }
+
+    if (action === "investigation_admin_save_daily") {
+      await authenticatedSession(body.session, true);
+      const date = String(body.date ?? "");
+      const title = String(body.title ?? "").trim();
+      const prompt = String(body.prompt ?? "").trim();
+      const answers = acceptedAnswers(body.answers);
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || !title || title.length > 90 || prompt.length < 8 || prompt.length > 500 || !answers.length) {
+        return json({ error: "Confira a data, título, pergunta e resposta correta. Separe respostas alternativas com |." }, 400);
+      }
+      const { data, error } = await supabase.from("investigation_daily_challenges")
+        .upsert({ challenge_date: date, title, prompt, accepted_answers: answers, active: true, updated_at: new Date().toISOString() }, { onConflict: "challenge_date" })
+        .select("id, challenge_date, title, prompt, active").single();
+      if (error) throw error;
+      return json({ success: true, challenge: data, message: "Desafio diário salvo. As respostas ficam somente no servidor." });
+    }
+
+    if (action === "investigation_admin_save_puzzle") {
+      await authenticatedSession(body.session, true);
+      const order = Number(body.order);
+      const title = String(body.title ?? "").trim();
+      const prompt = String(body.prompt ?? "").trim();
+      const answers = acceptedAnswers(body.answers);
+      if (!Number.isInteger(order) || order < 1 || order > 100 || !title || title.length > 100 || prompt.length < 8 || prompt.length > 500 || !answers.length) {
+        return json({ error: "Confira a ordem, título, enigma e resposta. Separe respostas alternativas com |." }, 400);
+      }
+      const { error } = await supabase.from("investigation_puzzles").insert({ puzzle_order: order, title, prompt, accepted_answers: answers, active: true });
+      if (error) {
+        if (String(error.code ?? '') === '23505') return json({ error: "Já existe um arquivo com essa ordem. Escolha outro número." }, 409);
+        throw error;
+      }
+      return json({ success: true, message: "Arquivo ARG publicado." });
+    }
+
+    if (action === "investigation_admin_review_submission") {
+      await authenticatedSession(body.session, true);
+      const submissionId = String(body.submissionId ?? "");
+      const decision = String(body.decision ?? "");
+      if (!submissionId || !["approve", "reject"].includes(decision)) return json({ error: "Decisão inválida." }, 400);
+      let normalizedAnswer = "";
+      if (decision === "approve") {
+        const { data: submission, error: lookupError } = await supabase.from("investigation_submissions")
+          .select("suggested_answer, status").eq("id", submissionId).maybeSingle();
+        if (lookupError) throw lookupError;
+        if (!submission || submission.status !== "pending") return json({ error: "Esta pergunta já foi avaliada ou não existe." }, 409);
+        normalizedAnswer = normalizeName(submission.suggested_answer);
+        if (!normalizedAnswer) return json({ error: "A resposta correta está vazia." }, 400);
+      }
+      const { data, error } = await supabase.rpc("review_investigation_submission", {
+        p_submission_id: submissionId, p_decision: decision, p_normalized_answer: normalizedAnswer,
+      });
+      if (error) {
+        const msg = String(error.message ?? "");
+        if (msg.includes("já foi avaliada") || msg.includes("não existe")) return json({ error: msg }, 409);
+        throw error;
+      }
+      return json(data ?? { success: true, message: decision === "approve" ? "Pergunta publicada como arquivo ARG; o autor ganhou um Ticket VIP." : "Pergunta recusada." });
     }
 
     if (action === "setup_roster") {
