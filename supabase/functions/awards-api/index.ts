@@ -28,7 +28,7 @@ const categories = [
   { id: "mais_preguicoso", name: "Mais Preguiçoso(a)" },
   { id: "pai_mae_turma", name: "Mais “Pai/Mãe da Turma”" },
   { id: "mais_cringe", name: "Mais Cringe" },
-  { id: "mais_estiloso", name: "Mais Feio(a)" },
+  { id: "mais_estiloso", name: "Mais Estiloso(a)" },
   { id: "mais_cola", name: "Mais “Cola”" },
   { id: "mais_gente_boa", name: "Mais Gente Boa" },
   { id: "mais_sortudo", name: "Mais Sortudo(a)" },
