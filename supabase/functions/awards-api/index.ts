@@ -304,14 +304,36 @@ Deno.serve(async (req: Request) => {
     if (action === "investigation_data") {
       const session = await authenticatedSession(body.session);
       const today = saoPauloDateString();
-      const [{ data: daily, error: dailyError }, { data: puzzles, error: puzzlesError },
-        { data: dailySolves, error: dailySolvesError }, { data: puzzleSolves, error: puzzleSolvesError },
+      // Uma pergunta aleatória fica fixa para cada participante durante o dia; no dia seguinte, sorteamos outra.
+      let { data: personalAssignment, error: assignmentError } = await supabase.from("investigation_daily_assignments")
+        .select("student_id, challenge_date, stock_id").eq("student_id", session.sid).eq("challenge_date", today).maybeSingle();
+      if (assignmentError) throw assignmentError;
+      if (!personalAssignment) {
+        // A função SQL usa trava por data para evitar sortear a mesma pergunta para duas pessoas ao mesmo tempo.
+        const { error: assignError } = await supabase.rpc("assign_daily_question", {
+          p_student_id: session.sid, p_challenge_date: today,
+        });
+        if (assignError) throw assignError;
+        const { data: stableAssignment, error: stableError } = await supabase.from("investigation_daily_assignments")
+          .select("student_id, challenge_date, stock_id").eq("student_id", session.sid).eq("challenge_date", today).maybeSingle();
+        if (stableError) throw stableError;
+        personalAssignment = stableAssignment;
+      }
+      let daily: any = null;
+      if (personalAssignment) {
+        const [{ data: stockItem, error: stockItemError }, { data: personalSolve, error: personalSolveError }] = await Promise.all([
+          supabase.from("investigation_question_stock").select("id, title, prompt, active").eq("id", personalAssignment.stock_id).eq("active", true).maybeSingle(),
+          supabase.from("investigation_daily_personal_solves").select("stock_id").eq("student_id", session.sid).eq("challenge_date", today).maybeSingle(),
+        ]);
+        if (stockItemError) throw stockItemError;
+        if (personalSolveError) throw personalSolveError;
+        if (stockItem) daily = { id: String(stockItem.id), challenge_date: today, title: stockItem.title, prompt: stockItem.prompt, active: true, solved: Boolean(personalSolve) };
+      }
+      const [{ data: puzzles, error: puzzlesError },
+        { data: puzzleSolves, error: puzzleSolvesError },
         { data: tickets, error: ticketsError }, { data: submissions, error: submissionsError }, { data: easterClaim, error: easterError }] = await Promise.all([
-        supabase.from("investigation_daily_challenges").select("id, challenge_date, title, prompt, active")
-          .eq("challenge_date", today).eq("active", true).maybeSingle(),
         supabase.from("investigation_puzzles").select("id, puzzle_order, title, prompt, active")
           .eq("active", true).order("puzzle_order", { ascending: true }),
-        supabase.from("investigation_daily_solves").select("challenge_id").eq("student_id", session.sid),
         supabase.from("investigation_puzzle_solves").select("puzzle_id").eq("student_id", session.sid),
         supabase.from("investigation_tickets").select("id, source, label, duration_hours, category_id, created_at, activated_at, expires_at")
           .eq("student_id", session.sid).order("created_at", { ascending: false }),
@@ -319,10 +341,9 @@ Deno.serve(async (req: Request) => {
           .eq("student_id", session.sid).order("created_at", { ascending: false }).limit(20),
         supabase.from("investigation_easter_egg_claims").select("answer").eq("student_id", session.sid).maybeSingle(),
       ]);
-      for (const error of [dailyError, puzzlesError, dailySolvesError, puzzleSolvesError, ticketsError, submissionsError, easterError]) if (error) throw error;
-      const dailySolvedIds = new Set((dailySolves ?? []).map((row: any) => String(row.challenge_id)));
+      for (const error of [puzzlesError, puzzleSolvesError, ticketsError, submissionsError, easterError]) if (error) throw error;
       const puzzleSolvedIds = new Set((puzzleSolves ?? []).map((row: any) => String(row.puzzle_id)));
-      const dailyChallenge = daily ? { ...daily, solved: dailySolvedIds.has(String(daily.id)) } : null;
+      const dailyChallenge = daily;
       const publicPuzzles = (puzzles ?? []).map((puzzle: any) => ({
         id: String(puzzle.id), puzzle_order: puzzle.puzzle_order, title: puzzle.title,
         prompt: puzzle.prompt, active: puzzle.active, solved: puzzleSolvedIds.has(String(puzzle.id)),
@@ -337,19 +358,24 @@ Deno.serve(async (req: Request) => {
       const answer = normalizeName(body.answer);
       if (!challengeId || !answer || answer.length > 120) return json({ error: "Informe a resposta do desafio." }, 400);
       const today = saoPauloDateString();
-      const { data: challenge, error } = await supabase.from("investigation_daily_challenges")
-        .select("id, accepted_answers").eq("id", challengeId).eq("challenge_date", today).eq("active", true).maybeSingle();
-      if (error) throw error;
-      if (!challenge) return json({ error: "Este desafio não está mais disponível." }, 404);
+      const [{ data: assignment, error: assignmentError }, { data: challenge, error: challengeError }, { data: solved, error: solvedError }] = await Promise.all([
+        supabase.from("investigation_daily_assignments").select("stock_id").eq("student_id", session.sid).eq("challenge_date", today).maybeSingle(),
+        supabase.from("investigation_question_stock").select("id, accepted_answers").eq("id", challengeId).eq("active", true).maybeSingle(),
+        supabase.from("investigation_daily_personal_solves").select("stock_id").eq("student_id", session.sid).eq("challenge_date", today).maybeSingle(),
+      ]);
+      for (const error of [assignmentError, challengeError, solvedError]) if (error) throw error;
+      if (!assignment || String(assignment.stock_id) !== challengeId || !challenge) return json({ error: "Este desafio não está atribuído à sua conta hoje." }, 404);
+      if (solved) return json({ error: "Você já concluiu o desafio de hoje." }, 409);
       const answers = Array.isArray(challenge.accepted_answers) ? challenge.accepted_answers : [];
       if (!answers.some((known: unknown) => normalizeName(known) === answer)) return json({ error: "Resposta incorreta. Revise as pistas e tente novamente." }, 401);
-      const { data: ticketId, error: awardError } = await supabase.rpc("complete_daily_challenge", { p_student_id: session.sid, p_challenge_id: challengeId });
-      if (awardError) {
-        const msg = String(awardError.message ?? "");
-        if (msg.includes("já concluiu")) return json({ error: "Você já concluiu o desafio de hoje." }, 409);
-        throw awardError;
+      const { error: solveError } = await supabase.from("investigation_daily_personal_solves").insert({ student_id: session.sid, challenge_date: today, stock_id: challengeId });
+      if (solveError) {
+        if (String(solveError.code ?? "") === "23505") return json({ error: "Você já concluiu o desafio de hoje." }, 409);
+        throw solveError;
       }
-      return json({ success: true, ticketId, message: "Resposta correta! Você ganhou um Ticket VIP de 6 horas. Ative quando quiser." });
+      const { data: ticket, error: ticketError } = await supabase.from("investigation_tickets").insert({ student_id: session.sid, source: "daily", source_ref: `personal:${today}:${challengeId}`, label: "Ticket VIP · Desafio do Dia", duration_hours: 6 }).select("id").single();
+      if (ticketError) throw ticketError;
+      return json({ success: true, ticketId: ticket.id, message: "Resposta correta! Você ganhou um Ticket VIP de 6 horas. Ative quando quiser." });
     }
 
     if (action === "solve_investigation_puzzle") {
@@ -454,15 +480,17 @@ Deno.serve(async (req: Request) => {
     if (action === "investigation_admin_data") {
       await authenticatedSession(body.session, true);
       const [{ data: students, error: studentsError }, { data: messages, error: messagesError },
-        { data: daily, error: dailyError }, { data: puzzles, error: puzzlesError }, { data: submissions, error: submissionsError }] = await Promise.all([
+        { data: daily, error: dailyError }, { data: puzzles, error: puzzlesError }, { data: submissions, error: submissionsError },
+        { data: stockQuestions, error: stockQuestionsError }] = await Promise.all([
         supabase.from("students").select("id, full_name").order("full_name"),
         supabase.from("student_messages").select("student_id, message, updated_at"),
         supabase.from("investigation_daily_challenges").select("id, challenge_date, title, prompt, accepted_answers, active").order("challenge_date", { ascending: false }).limit(14),
         supabase.from("investigation_puzzles").select("id, puzzle_order, title, prompt, accepted_answers, active").order("puzzle_order", { ascending: true }),
         supabase.from("investigation_submissions").select("id, student_id, question, suggested_answer, status, created_at, students(full_name)").eq("status", "pending").order("created_at", { ascending: true }).limit(50),
+        supabase.from("investigation_question_stock").select("id, title, prompt, accepted_answers, active").order("title", { ascending: true }),
       ]);
-      for (const error of [studentsError, messagesError, dailyError, puzzlesError, submissionsError]) if (error) throw error;
-      return json({ students: students ?? [], messages: messages ?? [], dailyChallenges: daily ?? [], puzzles: puzzles ?? [], submissions: submissions ?? [], categories: categories.map(({ id, name }) => ({ id, name })) });
+      for (const error of [studentsError, messagesError, dailyError, puzzlesError, submissionsError, stockQuestionsError]) if (error) throw error;
+      return json({ students: students ?? [], messages: messages ?? [], dailyChallenges: daily ?? [], puzzles: puzzles ?? [], stockQuestions: stockQuestions ?? [], submissions: submissions ?? [], categories: categories.map(({ id, name }) => ({ id, name })) });
     }
 
     if (action === "investigation_admin_save_message") {
@@ -481,6 +509,37 @@ Deno.serve(async (req: Request) => {
       const { error } = await supabase.from("student_messages").upsert({ student_id: studentId, message: messageText, updated_at: new Date().toISOString() }, { onConflict: "student_id" });
       if (error) throw error;
       return json({ success: true, message: "Mensagem individual salva." });
+    }
+
+    if (action === "admin_reset_student_vote") {
+      await authenticatedSession(body.session, true);
+      const fullName = String(body.fullName ?? "").trim();
+      const normalized = normalizeName(fullName);
+      if (normalized.length < 5) return json({ error: "Digite o nome completo da pessoa." }, 400);
+      const { data: student, error: studentError } = await supabase.from("students").select("id, full_name, has_voted_general, has_voted_final, is_admin").eq("normalized_name", normalized).maybeSingle();
+      if (studentError) throw studentError;
+      if (!student) return json({ error: "Não encontrei uma pessoa com esse nome completo. Confira a grafia." }, 404);
+      if (student.is_admin) return json({ error: "A liberação de nova cédula não pode ser usada na conta ADM." }, 400);
+      const { error } = await supabase.from("students").update({ has_voted_general: false, has_voted_final: false, has_voted: false }).eq("id", student.id);
+      if (error) throw error;
+      return json({ success: true, fullName: student.full_name, message: `Nova cédula liberada para ${student.full_name}. IMPORTANTE: a cédula anterior é anônima e continua contabilizada; o sistema não consegue identificar qual cédula antiga pertence a essa pessoa para removê-la sem quebrar o anonimato.` });
+    }
+
+    if (action === "investigation_admin_add_stock_question") {
+      await authenticatedSession(body.session, true);
+      const title = String(body.title ?? "").trim();
+      const prompt = String(body.prompt ?? "").trim();
+      const answers = acceptedAnswers(body.answers);
+      if (!title || title.length > 90 || prompt.length < 8 || prompt.length > 500 || !answers.length) {
+        return json({ error: "Confira o título, a pergunta e a resposta correta. Separe respostas alternativas com |." }, 400);
+      }
+      const { data, error } = await supabase.from("investigation_question_stock")
+        .insert({ title, prompt, accepted_answers: answers, active: true }).select("id, title, prompt, active").single();
+      if (error) {
+        if (String(error.code ?? "") === "23505") return json({ error: "Já existe uma pergunta com esse título no estoque. Use outro título." }, 409);
+        throw error;
+      }
+      return json({ success: true, question: data, message: "Pergunta adicionada ao estoque. Ela poderá ser sorteada automaticamente nos próximos desafios diários." });
     }
 
     if (action === "investigation_admin_save_daily") {
@@ -656,7 +715,8 @@ Deno.serve(async (req: Request) => {
       await authenticatedSession(body.session, true);
       const current = await getAwardsState();
       if (current.phase !== "not_started") return json({ deadline: current.deadline, alreadyStarted: true });
-      const deadline = new Date(Date.now() + 10 * DAY_MS).toISOString();
+      // Prazo fixo: 29/10/2026 às 23:59:59 no horário de Brasília.
+      const deadline = "2026-10-30T02:59:59.000Z";
       const { data, error } = await supabase.from("awards_config")
         .update({ deadline, phase: "general" })
         .eq("id", 1).is("deadline", null).eq("phase", "not_started")
@@ -682,7 +742,8 @@ Deno.serve(async (req: Request) => {
         return json({ error: `Ainda são necessárias 20 cédulas da primeira fase. Recebidas: ${total}/20.` }, 409);
       }
 
-      const deadline = new Date(Date.now() + 10 * DAY_MS).toISOString();
+      // Prazo fixo: 08/11/2026 às 23:59:59 no horário de Brasília.
+      const deadline = "2026-11-09T02:59:59.000Z";
       const { data, error } = await supabase.from("awards_config")
         .update({ deadline, phase: "final" })
         .eq("id", 1).eq("phase", "general").eq("deadline", current.deadline)
@@ -697,6 +758,7 @@ Deno.serve(async (req: Request) => {
       const { deadline, phase } = await getAwardsState();
       if (phase === "not_started") return json({ error: "A votação ainda não foi aberta pela organização." }, 409);
       if (phase === "closed") return json({ error: "O prazo da fase atual terminou. Atualize a página para conferir os resultados." }, 409);
+      if (phase === "general" && deadline && Date.now() >= new Date(deadline).getTime()) return json({ error: "A Fase 1 terminou em 29/10. Aguarde a ADM abrir a Fase 2." }, 409);
       const rawVotes = body.votes;
       if (!rawVotes || typeof rawVotes !== "object" || Array.isArray(rawVotes)) return json({ error: "Cédula de votação inválida." }, 400);
       const entries = Object.entries(rawVotes as Record<string, unknown>);

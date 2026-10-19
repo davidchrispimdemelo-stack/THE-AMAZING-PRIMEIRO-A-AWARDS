@@ -37,6 +37,11 @@
     .hero{padding:53px 0 38px;text-align:left;border-bottom:1px solid #33383c}
     .eyebrow{font-size:10px;letter-spacing:.2em;color:var(--gold);font-weight:700}
     .eyebrow:before{content:'';display:inline-block;vertical-align:middle;width:22px;height:3px;background:var(--gold);margin:0 9px 3px 0}
+    /* Referências discretas a palco, futebol, pixels e zona segura — sem logos ou personagens. */
+    body:before{content:'';position:fixed;inset:0;pointer-events:none;z-index:-1;opacity:.2;background:radial-gradient(circle at 12% 18%,#6f55a6 0,transparent 20rem),radial-gradient(circle at 90% 12%,#b88d42 0,transparent 18rem),linear-gradient(135deg,transparent 48%,#ffffff05 49%,transparent 50%);}
+    .culture-strip{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px;justify-content:center}
+    .culture-strip span{font-size:10px;letter-spacing:.14em;text-transform:uppercase;padding:8px 11px;border:1px solid #3b4147;background:#151719;color:#c5c9cc;border-radius:3px}
+    .culture-strip span:nth-child(1){border-color:#594878;color:#d8c7ff}.culture-strip span:nth-child(2){border-color:#5b4a29;color:#f0d69a}.culture-strip span:nth-child(3){border-color:#3b5964;color:#aee1ed}.culture-strip span:nth-child(4){border-color:#51466b;color:#d2c1f8}
     h1,h2,h3,.section-title{font-family:'Barlow Condensed','DM Sans',sans-serif}
     h1{font-size:clamp(54px,9vw,100px);line-height:.88;letter-spacing:-.02em;margin:18px 0;color:#f4f5f5;text-shadow:none;font-weight:800}
     h1 span{font-size:13px;letter-spacing:.2em;margin-top:18px;color:var(--gold);font-weight:700}
@@ -336,6 +341,7 @@
       <div class="eyebrow">UMA NOITE · UMA TURMA · UMA HISTÓRIA</div>
       <h1>THE AMAZING <em>PRIMEIRO A</em> AWARDS <span>CONEXÃO · MEMÓRIAS · TURMA 2026</span></h1>
       <p>As cortinas estão prestes a se abrir. Entre na premiação, acompanhe os arquivos secretos e descubra os mistérios que cercam a edição de 2026.</p>
+      <div class="culture-strip" aria-label="Referências visuais"><span>Backstage</span><span>Match day</span><span>Pixel mode</span><span>Safe zone</span></div>
       <div class="hero-ribbon" aria-hidden="true"><span>✦ PERSONALIDADES</span><span>✦ ARQUIVO DOURADO</span><span>✦ 21 CATEGORIAS</span><span>✦ A GRANDE REVELAÇÃO</span></div>
     </section>
 
@@ -386,7 +392,7 @@
         <div class="feature"><div class="ico">01</div><div><strong>Polêmicas & sem filtro</strong><p>Fofocas, opiniões fortes, drama e histórias que rendem conversa.</p></div></div>
         <div class="feature"><div class="ico">02</div><div><strong>Vida social & comportamento</strong><p>Jeitos de conviver, distrações, celular e organização da turma.</p></div></div>
         <div class="feature"><div class="ico">03</div><div><strong>Clássicos & momentos memoráveis</strong><p>Estilo, situações icônicas, sobrevivência nas avaliações e sorte.</p></div></div>
-        <div class="feature"><div class="ico">04</div><div><strong>Apuração e divulgação</strong><p>A primeira fase recebe votos; com 20 cédulas, a ADM pode iniciar a final por mais 10 dias.</p></div></div>
+        <div class="feature"><div class="ico">04</div><div><strong>Apuração e divulgação</strong><p>A Fase 1 termina em 29/10; a Fase 2 termina em 08/11. Com 20 cédulas, a ADM pode abrir a final.</p></div></div>
         <div class="notice">Na moral: é para brincar, não humilhar. Vote com respeito e não use a votação para atacar ou expor colegas.</div>
       </aside>
     </main>
@@ -406,13 +412,13 @@
           <article class="investigation-card" style="margin-top:15px"><div class="investigation-heading" style="margin-bottom:10px"><div><span class="case-stamp">05 · SUA CONTRIBUIÇÃO</span><h3 style="margin:2px 0">Caixa de perguntas</h3></div><span class="pill">Curadoria ADM</span></div><p>Envie uma pergunta e a resposta correta. Se for aprovada, ela será publicada como um arquivo de investigação e você receberá um Ticket VIP. Não inclua dados privados, acusações ou informações que possam constranger alguém.</p><form id="questionBoxForm"><label class="label" for="submittedQuestion">Sua pergunta ou enigma</label><textarea class="field" id="submittedQuestion" rows="3" maxlength="240" placeholder="Escreva uma pergunta divertida ou um enigma original…" required style="resize:vertical"></textarea><label class="label" for="submittedAnswer">Resposta correta</label><input class="field" id="submittedAnswer" maxlength="160" placeholder="Resposta que a ADM usará para validar" required><div class="investigation-actions"><button class="button primary" type="submit" id="submitQuestionButton">Enviar para avaliação</button></div><div id="questionBoxMessage" aria-live="polite"></div></form><div id="myQuestionSubmissions"></div></article>
         </div>
       </section>
-      <section class="timer-panel"><div><h3 id="timerTitle">A contagem regressiva</h3><p id="timerDescription">A primeira fase dura até 10 dias; a final dura 10 dias após ser iniciada pela ADM.</p><div id="adminStartWrap" class="hidden" style="margin-top:14px"><button id="startCountdownButton" class="button primary" style="width:auto;margin:0">Abrir votação · iniciar prazo</button><p class="fine">A contagem começa uma única vez. O horário é registrado no servidor e vale para toda a turma.</p></div></div><div class="timer" id="timer"><div class="timebox"><strong id="days">20</strong><span>Dias</span></div><div class="timebox"><strong id="hours">00</strong><span>Horas</span></div><div class="timebox"><strong id="minutes">00</strong><span>Minutos</span></div><div class="timebox"><strong id="seconds">00</strong><span>Segundos</span></div></div></section>
+      <section class="timer-panel"><div><h3 id="timerTitle">A contagem regressiva</h3><p id="timerDescription">Fase 1 termina em 29/10/2026. Fase 2 termina em 08/11/2026.</p><div id="adminStartWrap" class="hidden" style="margin-top:14px"><button id="startCountdownButton" class="button primary" style="width:auto;margin:0">Abrir votação · iniciar prazo</button><p class="fine">A contagem começa uma única vez. O horário é registrado no servidor e vale para toda a turma.</p></div></div><div class="timer" id="timer"><div class="timebox"><strong id="days">20</strong><span>Dias</span></div><div class="timebox"><strong id="hours">00</strong><span>Horas</span></div><div class="timebox"><strong id="minutes">00</strong><span>Minutos</span></div><div class="timebox"><strong id="seconds">00</strong><span>Segundos</span></div></div></section>
       <section id="votingSection" class="hidden"><h2 class="section-title" id="ballotTitle">Votação geral</h2><p class="ballot-intro" id="ballotIntro">Em cada categoria, escolha uma 1ª opção (1 ponto) e uma 2ª opção diferente (0,5 ponto). Você pode pular categorias. A cédula desta fase não pode ser alterada depois do envio.</p><div class="ballot-progress" aria-live="polite"><div class="ballot-progress-top"><span>PROGRESSO DA CÉDULA</span><strong id="ballotProgressText">0 de 42 opções escolhidas</strong></div><div class="progress-track" role="progressbar" aria-label="Categorias preenchidas" aria-valuemin="0" aria-valuemax="42" aria-valuenow="0" id="ballotProgressTrack"><span id="ballotProgressBar"></span></div></div><form id="ballotForm"><div id="categoriesGrid" class="cat-grid"></div><div class="ballot-footer"><button class="button primary" id="submitBallotButton" type="submit" style="width:auto;margin:0">Enviar cédula</button><small>Confira as escolhas antes de enviar. O envio é definitivo.</small></div><div id="voteMessage" aria-live="polite"></div></form></section>
       <section id="alreadyVoted" class="panel hidden"><h2>Cédula registrada</h2><p id="alreadyVotedText" class="sub" style="margin-bottom:0">Sua cédula desta fase foi registrada. Você poderá participar da próxima fase quando ela abrir.</p></section>
       <section id="resultsSection" class="hidden"><h2 class="section-title">Resultados oficiais</h2><p class="ballot-intro">A votação terminou após as duas fases. Os resultados abaixo usam a pontuação da final: 1 ponto para a primeira opção e 0,5 para a segunda. Em caso de empate, todos os nomes empatados aparecem como vencedores.</p><div id="resultsGrid" class="result-grid"></div></section>
       <section id="adminSection" class="panel hidden" style="margin-top:28px"><div class="stats-head"><div><div class="eyebrow">ACESSO RESTRITO</div><h2 style="margin:8px 0 4px">Painel de administração</h2><p class="sub" style="margin:0">Acompanhe os totais por categoria e a participação. O painel não associa escolhas a alunos.</p></div><span class="pill">ADMIN</span></div><div id="adminFinalWrap" class="hidden" style="margin:18px 0;padding:15px;border:1px solid #5b4b20;background:#171819">
         <h3 style="margin:0 0 7px;font-size:20px">Começar a segunda fase</h3>
-        <p class="sub" style="margin:0 0 12px">Quando houver 20 cédulas da primeira fase, este botão ficará liberado. Ao clicar, o cronômetro reinicia para 10 dias. Os votos anteriores serão preservados.</p>
+        <p class="sub" style="margin:0 0 12px">Quando houver 20 cédulas da primeira fase, este botão ficará liberado. Ao clicar, a Fase 2 terá prazo fixo até 08/11/2026. Os votos anteriores serão preservados.</p>
         <button id="startFinalButton" class="button primary" type="button" style="width:auto;margin:0" disabled>Iniciar 2ª fase (0/20 cédulas)</button>
         <div id="startFinalMessage" aria-live="polite"></div>
       </div><div id="adminStats" class="loading">Carregando apuração...</div><div class="fine">A apuração completa é restrita à administração. Três spoilers públicos mostram destaques aleatórios a cada 15 minutos.</div>
@@ -426,9 +432,10 @@
         </div>
         <div id="adminInvestigationTools" class="investigation-admin">
           <div class="investigation-heading"><div><div class="investigation-kicker">CONTROLE DE PRODUÇÃO</div><h3 style="margin:4px 0">Central do Arquivo Dourado</h3><p class="sub" style="margin:0">Edite recados privados, publique o desafio de cada dia, crie arquivos e avalie sugestões.</p></div><span class="case-stamp">SOMENTE ADM</span></div>
+          <div class="investigation-entry" style="margin:14px 0;border-color:#76534a"><h4>Liberação de nova cédula</h4><p>Digite o nome completo para liberar a pessoa a votar novamente. Como as cédulas são anônimas, a cédula antiga não pode ser localizada nem removida individualmente; ela continuará nos totais.</p><form id="adminResetVoteForm"><label class="label" for="adminResetVoteName">Nome completo da pessoa</label><input id="adminResetVoteName" class="field" maxlength="120" autocomplete="off" placeholder="Nome completo, igual ao cadastro" required><div class="investigation-actions"><button type="submit" class="button danger" id="adminResetVoteButton">Liberar nova cédula</button></div><div id="adminResetVoteResult" aria-live="polite"></div></form></div>
           <div class="investigation-admin-grid">
             <form id="adminMessageForm" class="investigation-entry"><h4>Mensagens individuais</h4><label class="label" for="adminMessageStudent">Participante</label><select id="adminMessageStudent" class="field" required><option value="">Carregando participantes…</option></select><label class="label" for="adminPersonalMessage">Mensagem privada</label><textarea id="adminPersonalMessage" class="field" rows="4" maxlength="1200" placeholder="Escreva um recado só para essa pessoa…" style="resize:vertical"></textarea><div class="investigation-actions"><button type="submit" class="button primary">Salvar mensagem</button><button type="button" id="loadSelectedMessageButton" class="button secondary">Carregar atual</button></div><p class="fine">Deixe o campo vazio e salve para remover a mensagem atual.</p><div id="adminMessageResult" aria-live="polite"></div></form>
-            <form id="adminDailyForm" class="investigation-entry"><h4>Programar pergunta diária</h4><label class="label" for="adminDailyDate">Data (horário de Brasília)</label><input type="date" id="adminDailyDate" class="field" required><label class="label" for="adminDailyTitle">Título do desafio</label><input id="adminDailyTitle" class="field" maxlength="90" placeholder="DESAFIO 003 · O DETALHE" required><label class="label" for="adminDailyPrompt">Pergunta</label><textarea id="adminDailyPrompt" class="field" rows="2" maxlength="500" required placeholder="Escreva a pergunta…" style="resize:vertical"></textarea><label class="label" for="adminDailyAnswers">Resposta(s) correta(s)</label><input id="adminDailyAnswers" class="field" maxlength="300" required placeholder="Resposta correta | alternativa"><div class="investigation-actions"><button type="submit" class="button primary">Publicar desafio</button></div><div id="adminDailyResult" aria-live="polite"></div></form>
+            <form id="adminDailyForm" class="investigation-entry"><h4>Adicionar pergunta ao estoque aleatório</h4><p class="fine">O sistema sorteia uma pergunta diferente para cada participante por dia, sem repetir a mesma pergunta entre as pessoas enquanto houver opções disponíveis.</p><label class="label" for="adminDailyTitle">Título curto</label><input id="adminDailyTitle" class="field" maxlength="90" placeholder="DROP 043 · NOVA PERGUNTA" required><label class="label" for="adminDailyPrompt">Pergunta</label><textarea id="adminDailyPrompt" class="field" rows="2" maxlength="500" required placeholder="Escreva a pergunta…" style="resize:vertical"></textarea><label class="label" for="adminDailyAnswers">Resposta(s) correta(s)</label><input id="adminDailyAnswers" class="field" maxlength="300" required placeholder="Resposta correta | alternativa"><div class="investigation-actions"><button type="submit" class="button primary">Adicionar ao estoque</button></div><div id="adminDailyResult" aria-live="polite"></div></form>
             <form id="adminPuzzleForm" class="investigation-entry"><h4>Criar próximo arquivo ARG</h4><label class="label" for="adminPuzzleOrder">Número da etapa</label><input type="number" id="adminPuzzleOrder" class="field" min="1" max="100" required><label class="label" for="adminPuzzleTitle">Título do arquivo</label><input id="adminPuzzleTitle" class="field" maxlength="100" required placeholder="ARQUIVO 002 · ..."><label class="label" for="adminPuzzlePrompt">Enigma / pista</label><textarea id="adminPuzzlePrompt" class="field" rows="3" maxlength="500" required placeholder="Pista que os participantes verão…" style="resize:vertical"></textarea><label class="label" for="adminPuzzleAnswers">Resposta(s) correta(s)</label><input id="adminPuzzleAnswers" class="field" maxlength="300" required placeholder="Resposta | alternativa"><div class="investigation-actions"><button type="submit" class="button primary">Publicar arquivo</button></div><div id="adminPuzzleResult" aria-live="polite"></div></form>
             <div class="investigation-entry"><h4>Caixa de perguntas · avaliação</h4><p>Ao aprovar, a pergunta se torna um arquivo ARG e o autor recebe automaticamente um Ticket VIP.</p><div id="adminSubmissionList"><p>Carregando sugestões…</p></div><div id="adminReviewResult" aria-live="polite"></div></div>
           </div>
@@ -756,7 +763,6 @@
     });
     updateLoginMode();
     $('maintenanceToggleButton').addEventListener('click',toggleMaintenanceMode);
-    $('adminDailyDate').value=localDateString();
     $('refreshButton').addEventListener('click',()=>refreshAll(true).catch(showDashboardError));
     $('dailyChallengeForm').addEventListener('submit',onDailyChallengeSubmit);
     $('investigationPuzzleList').addEventListener('submit',onPuzzleSubmit);
@@ -765,6 +771,7 @@
     $('easterNoButton').addEventListener('click',()=>claimEasterEgg('nao'));
     $('questionBoxForm').addEventListener('submit',submitQuestionBox);
     $('adminMessageForm').addEventListener('submit',saveAdminMessage);
+    $('adminResetVoteForm').addEventListener('submit',async e=>{e.preventDefault();const name=$('adminResetVoteName').value.trim();if(!confirm(`Liberar uma nova cédula para ${name}? A cédula anterior é anônima e continuará contabilizada.`))return;const btn=$('adminResetVoteButton'),msg=$('adminResetVoteResult');btn.disabled=true;try{const data=await api('admin_reset_student_vote',{session:session.token,fullName:name});message(msg,data.message,'success');$('adminResetVoteForm').reset();await refreshAll(true);}catch(err){message(msg,err.message||'Não foi possível liberar a nova cédula.','error');}finally{btn.disabled=false;}});
     $('adminDailyForm').addEventListener('submit',saveAdminDaily);
     $('adminPuzzleForm').addEventListener('submit',saveAdminPuzzle);
     $('loadSelectedMessageButton').addEventListener('click',()=>{if(!investigationAdmin)return;const id=$('adminMessageStudent').value;const row=(investigationAdmin.messages||[]).find(item=>String(item.student_id)===String(id));$('adminPersonalMessage').value=row?row.message:'';});
@@ -778,13 +785,13 @@
     $('startFinalButton').addEventListener('click',async()=>{
       const btn=$('startFinalButton'),msg=$('startFinalMessage');
       clearMessage(msg);
-      if(!confirm('Começar a segunda fase agora? O cronômetro será reiniciado para 10 dias. Os votos da primeira fase serão preservados.'))return;
+      if(!confirm('Começar a segunda fase agora? O prazo da Fase 2 terminará em 08/11/2026. Os votos da primeira fase serão preservados.'))return;
       btn.disabled=true;btn.textContent='Iniciando segunda fase...';
       try{
         const data=await api('start_final',{session:session.token});
         await refreshAll(true);
         await refreshPublicSpoilers();
-        message($('dashboardMessage'),`A segunda fase começou! Foram recebidas ${data.totalGeneralBallots} cédulas na primeira fase. O cronômetro foi reiniciado para 10 dias.`,'success');
+        message($('dashboardMessage'),`A segunda fase começou! Foram recebidas ${data.totalGeneralBallots} cédulas na primeira fase. O prazo final está fixado em 08/11/2026.`,'success');
       }catch(err){message(msg,err.message||'Não foi possível iniciar a segunda fase.','error');}
       finally{btn.disabled=false;renderAdminStats();}
     });
@@ -851,12 +858,12 @@
       if(selector.dataset.loaded!=='true'){
         selector.innerHTML='<option value="">Selecione um participante…</option>'+(data.students||[]).map(p=>`<option value="${h(p.id)}">${h(p.full_name)}</option>`).join('');selector.dataset.loaded='true';
       }
-      const today=localDateString();if(!$('adminDailyDate').value)$('adminDailyDate').value=today;
+      
       const nextOrder=Math.max(0,...(data.puzzles||[]).map(p=>Number(p.puzzle_order)||0))+1;if(!$('adminPuzzleOrder').value)$('adminPuzzleOrder').value=nextOrder;
       const submissions=data.submissions||[];const submitRoot=$('adminSubmissionList');
       submitRoot.innerHTML=submissions.length?submissions.map(item=>{const name=item.students&&(item.students.full_name||(Array.isArray(item.students)&&item.students[0]&&item.students[0].full_name))||'Participante';return `<article class="admin-review-item"><strong>${h(name)}</strong><p><b>Pergunta:</b> ${h(item.question)}</p><p><b>Resposta sugerida:</b> ${h(item.suggested_answer)}</p><div class="investigation-actions"><button type="button" class="button primary" data-review-submission="${h(item.id)}" data-review-decision="approve">Aprovar + publicar</button><button type="button" class="button secondary" data-review-submission="${h(item.id)}" data-review-decision="reject">Recusar</button></div></article>`;}).join(''):'<p class="fine">Nenhuma pergunta aguardando avaliação.</p>';
       const daily=(data.dailyChallenges||[]).slice(0,8);const puzzles=data.puzzles||[];
-      $('adminPublishedArchives').innerHTML='<div class="investigation-list">'+daily.map(c=>`<article class="investigation-entry"><span class="case-stamp">${h(c.challenge_date)}</span><h4>${h(c.title)}</h4><p>${h(c.prompt)}</p><p><b>Resposta:</b> ${h((c.accepted_answers||[]).join(' | '))}</p></article>`).join('')+puzzles.map(p=>`<article class="investigation-entry"><span class="case-stamp">ARQUIVO ${String(p.puzzle_order).padStart(3,'0')}</span><h4>${h(p.title)}</h4><p>${h(p.prompt)}</p><p><b>Resposta:</b> ${h((p.accepted_answers||[]).join(' | '))}</p></article>`).join('')+'</div>';
+      const stock=(data.stockQuestions||[]).filter(q=>q.active);$('adminPublishedArchives').innerHTML='<div class="investigation-list">'+stock.map(q=>`<article class="investigation-entry"><span class="case-stamp">ESTOQUE · SORTEIO DIÁRIO</span><h4>${h(q.title)}</h4><p>${h(q.prompt)}</p><p><b>Resposta:</b> ${h((q.accepted_answers||[]).join(' | '))}</p></article>`).join('')+daily.map(c=>`<article class="investigation-entry"><span class="case-stamp">${h(c.challenge_date)}</span><h4>${h(c.title)}</h4><p>${h(c.prompt)}</p><p><b>Resposta:</b> ${h((c.accepted_answers||[]).join(' | '))}</p></article>`).join('')+puzzles.map(p=>`<article class="investigation-entry"><span class="case-stamp">ARQUIVO ${String(p.puzzle_order).padStart(3,'0')}</span><h4>${h(p.title)}</h4><p>${h(p.prompt)}</p><p><b>Resposta:</b> ${h((p.accepted_answers||[]).join(' | '))}</p></article>`).join('')+'</div>';
     }
     async function refreshInvestigation(){
       if(!session)return;
@@ -888,7 +895,7 @@
     async function viewVipSpoiler(categoryId){try{const data=await api('investigation_spoiler',{session:session.token,categoryId});renderInvestigationSpoiler(data);$('vipSpoilerResults').scrollIntoView({behavior:'smooth',block:'center'});}catch(err){showDashboardError(err);}}
     async function reviewSubmission(submissionId,decision){const msg=$('adminReviewResult');clearMessage(msg);try{const data=await api('investigation_admin_review_submission',{session:session.token,submissionId,decision});message(msg,data.message,'success');await refreshInvestigation();}catch(err){message(msg,err.message||'Não foi possível avaliar essa pergunta.','error');}}
     async function saveAdminMessage(e){e.preventDefault();const msg=$('adminMessageResult');clearMessage(msg);try{const data=await api('investigation_admin_save_message',{session:session.token,studentId:$('adminMessageStudent').value,message:$('adminPersonalMessage').value});message(msg,data.message,'success');await refreshInvestigation();}catch(err){message(msg,err.message||'Não foi possível salvar a mensagem.','error');}}
-    async function saveAdminDaily(e){e.preventDefault();const msg=$('adminDailyResult');clearMessage(msg);try{const data=await api('investigation_admin_save_daily',{session:session.token,date:$('adminDailyDate').value,title:$('adminDailyTitle').value,prompt:$('adminDailyPrompt').value,answers:$('adminDailyAnswers').value});message(msg,data.message,'success');$('adminDailyForm').reset();$('adminDailyDate').value=localDateString();await refreshInvestigation();}catch(err){message(msg,err.message||'Não foi possível publicar o desafio.','error');}}
+    async function saveAdminDaily(e){e.preventDefault();const msg=$('adminDailyResult');clearMessage(msg);try{const data=await api('investigation_admin_add_stock_question',{session:session.token,title:$('adminDailyTitle').value,prompt:$('adminDailyPrompt').value,answers:$('adminDailyAnswers').value});message(msg,data.message,'success');$('adminDailyForm').reset();await refreshInvestigation();}catch(err){message(msg,err.message||'Não foi possível adicionar ao estoque.','error');}}
     async function saveAdminPuzzle(e){e.preventDefault();const msg=$('adminPuzzleResult');clearMessage(msg);try{const data=await api('investigation_admin_save_puzzle',{session:session.token,order:$('adminPuzzleOrder').value,title:$('adminPuzzleTitle').value,prompt:$('adminPuzzlePrompt').value,answers:$('adminPuzzleAnswers').value});message(msg,data.message,'success');$('adminPuzzleForm').reset();await refreshInvestigation();}catch(err){message(msg,err.message||'Não foi possível publicar o arquivo.','error');}}
     function showDashboardError(err){message($('dashboardMessage'),err.message||'Ocorreu um erro ao atualizar.','error');}
     async function refreshAll(forceRender=false){
@@ -932,16 +939,20 @@
         const general=status.phase==='general';
         $('timerTitle').textContent=general?'Fase 1 — votação geral':'Fase 2 — final por categoria';
         $('timerDescription').textContent=general
-          ?'Vote na primeira fase. Quando houver pelo menos 20 cédulas, a ADM poderá iniciar a final manualmente. Se o relógio zerar antes disso, a primeira fase continua aberta.'
-          :'A segunda fase está aberta por 10 dias. Vote entre os quatro finalistas de cada categoria; os resultados saem quando o prazo terminar.';
+          ?'Vote na primeira fase. Quando houver pelo menos 20 cédulas, a ADM poderá iniciar a final manualmente. A votação da Fase 1 encerra em 29/10/2026 às 23h59 (Brasília).'
+          :'A Fase 2 termina em 08/11/2026 às 23h59 (Brasília). Vote entre os quatro finalistas de cada categoria; os resultados saem quando o prazo terminar.';
         $('ballotTitle').textContent=general?'Votação geral':'Final por categoria';
         $('ballotIntro').textContent=general
           ?'Escolha uma 1ª opção (1 ponto) e uma 2ª opção diferente (0,5 ponto) por categoria. Quando houver 20 cédulas gerais, a ADM poderá iniciar a final. Você pode pular categorias.'
           :'Agora cada categoria mostra apenas os quatro finalistas da primeira fase. Escolha 1ª opção (1 ponto) e 2ª opção diferente (0,5 ponto). A cédula da final é independente da primeira.';
         $('resultsSection').classList.add('hidden');
-        $('votingSection').classList.toggle('hidden',!!status.hasVoted);
-        $('alreadyVoted').classList.toggle('hidden',!status.hasVoted);
-        if(status.hasVoted){
+        const generalDeadlinePassed = general && !!status.phaseDeadline && new Date(status.phaseDeadline).getTime() <= (Date.now()+serverOffsetMs);
+        $('votingSection').classList.toggle('hidden',!!status.hasVoted||generalDeadlinePassed);
+        $('alreadyVoted').classList.toggle('hidden',!status.hasVoted&&!generalDeadlinePassed);
+        $('alreadyVoted').querySelector('h2').textContent = generalDeadlinePassed ? 'Fase 1 encerrada' : 'Cédula registrada';
+        if(generalDeadlinePassed){
+          $('alreadyVotedText').textContent='O prazo da Fase 1 terminou em 29/10/2026 às 23h59. Aguarde a ADM iniciar a Fase 2.';
+        }else if(status.hasVoted){
           $('alreadyVotedText').textContent=general
             ?'Seu voto da primeira fase já foi registrado. Quando a ADM iniciar a final, você poderá votar novamente entre os quatro finalistas de cada categoria.'
             :'Seu voto da final já foi registrado. Os resultados oficiais serão liberados quando terminar o prazo da segunda fase.';
