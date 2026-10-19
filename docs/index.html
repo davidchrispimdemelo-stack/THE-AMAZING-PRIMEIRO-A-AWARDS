@@ -402,12 +402,12 @@
       <section id="personalMessageCard" class="panel personal-message hidden" aria-live="polite"><div class="eyebrow">UM RECADO PRA VOCÊ</div><h3>Mensagem individual</h3><p id="personalMessageText"></p></section>
       <section id="investigationPanel" class="panel investigation-shell" aria-labelledby="investigationTitle">
         <div style="padding:clamp(18px,3vw,27px)">
-          <div class="investigation-heading"><div><div class="investigation-kicker">ARQUIVO CONFIDENCIAL · EDIÇÃO 2026</div><h2 id="investigationTitle">O Arquivo Dourado</h2><p class="sub" style="margin:0;max-width:680px">ARG do 1ºA e do David: uma pergunta aleatória por pessoa a cada 2 horas. Acerte e ganhe um Ticket VIP de 1 hora; a página atualiza sozinha.</p></div><span class="case-stamp">MODO INVESTIGAÇÃO</span></div>
+          <div class="investigation-heading"><div><div class="investigation-kicker">ARQUIVO CONFIDENCIAL · EDIÇÃO 2026</div><h2 id="investigationTitle">O Arquivo Dourado</h2><p class="sub" style="margin:0;max-width:680px">Enigmas em etapas, desafios diários e tickets VIP. Resolva os mistérios; escolha quando usar sua recompensa.</p></div><span class="case-stamp">MODO INVESTIGAÇÃO</span></div>
           <div class="investigation-grid">
             <article class="investigation-card"><span class="case-stamp">01 · ARG ROTATIVO · 2 HORAS</span><h3 id="dailyChallengeTitle">A pergunta do momento</h3><p id="dailyChallengePrompt">Carregando pergunta…</p><p class="fine">O sorteio muda a cada 2 horas no horário de Brasília. As perguntas sobre a sala e sobre o David fazem parte da mesma rotação. Cada resposta correta rende 1 ticket de 1 hora.</p><form id="dailyChallengeForm" class="hidden"><label class="label" for="dailyChallengeAnswer">Sua resposta</label><input class="field" id="dailyChallengeAnswer" maxlength="120" autocomplete="off" placeholder="Decifre a resposta…" required><div class="investigation-actions"><button class="button primary" id="solveDailyButton" type="submit">Validar resposta</button></div></form><div id="dailyChallengeMessage" aria-live="polite"></div></article>
-            <article class="investigation-card hidden"><span class="case-stamp">02 · EASTER EGG</span><h3>Um segredo sobre o organizador</h3><p>Uma pergunta de brincadeira sobre música pode revelar uma surpresa. Não existe punição por escolher uma resposta.</p><p style="color:#f0dca9;font-weight:700">O David é fã de Olivia Rodrigo?</p><div class="investigation-actions"><button type="button" id="easterYesButton" class="button secondary">Sim</button><button type="button" id="easterNoButton" class="button secondary">Não</button></div><div id="easterEggMessage" aria-live="polite"></div></article>
+
           </div>
-          <article class="investigation-card" style="margin-top:15px"><div class="investigation-heading" style="margin-bottom:10px"><div><span class="case-stamp">03 · ENIGMAS EM ETAPAS</span><h3 style="margin:2px 0">Arquivos de investigação</h3></div><span class="pill">Desbloqueie na ordem</span></div><div id="investigationPuzzleList" class="investigation-list"><div class="investigation-entry"><p>Carregando os arquivos…</p></div></div><div id="puzzleActionMessage" aria-live="polite"></div></article>
+
           <article class="investigation-card" style="margin-top:15px"><div class="investigation-heading" style="margin-bottom:10px"><div><span class="case-stamp">04 · RECOMPENSAS</span><h3 style="margin:2px 0">Seus tickets VIP</h3></div><span class="pill">Acesso temporário</span></div><p>Ative um ticket quando quiser. Escolha uma categoria e veja o ranking agregado durante o prazo do ticket: 1, 3 ou 6 horas.</p><div id="investigationTickets" class="investigation-list"><div class="investigation-entry"><p>Carregando tickets…</p></div></div><div id="vipSpoilerResults" class="hidden" aria-live="polite"></div></article>
           <article class="investigation-card" style="margin-top:15px"><div class="investigation-heading" style="margin-bottom:10px"><div><span class="case-stamp">05 · SUA CONTRIBUIÇÃO</span><h3 style="margin:2px 0">Caixa de perguntas</h3></div><span class="pill">Curadoria ADM</span></div><p>As perguntas diárias sobre o 1ºA Grotkowsky e sobre o David ficam na rotação acima. Se você acertar a pergunta do dia, ganha automaticamente um Ticket VIP de 1 hora — sem precisar de aprovação. A aprovação da ADM é necessária somente para perguntas novas enviadas por vocês. Não envie dados privados, acusações ou algo feito para constranger colegas.</p><form id="questionBoxForm"><h4>Enviar uma pergunta nova sobre o 1ºA</h4><label class="label" for="submittedQuestion">Pergunta sobre a sala ou o David</label><textarea class="field" id="submittedQuestion" rows="3" maxlength="240" placeholder="Escreva uma pergunta sobre o 1ºA Grotkowsky…" required style="resize:vertical"></textarea><label class="label" for="submittedAnswer">Resposta correta</label><input class="field" id="submittedAnswer" maxlength="160" placeholder="Resposta que a ADM usará para validar" required><div class="investigation-actions"><button class="button primary" type="submit" id="submitQuestionButton">Enviar para avaliação</button></div><div id="questionBoxMessage" aria-live="polite"></div></form><div id="myQuestionSubmissions"></div></article>
         </div>
@@ -765,10 +765,7 @@
     $('maintenanceToggleButton').addEventListener('click',toggleMaintenanceMode);
     $('refreshButton').addEventListener('click',()=>refreshAll(true).catch(showDashboardError));
     $('dailyChallengeForm').addEventListener('submit',onDailyChallengeSubmit);
-    $('investigationPuzzleList').addEventListener('submit',onPuzzleSubmit);
     $('investigationTickets').addEventListener('click',event=>{const activate=event.target.closest('[data-activate-ticket]');if(activate){activateTicket(activate.getAttribute('data-activate-ticket'));return;}const view=event.target.closest('[data-view-vip]');if(view)viewVipSpoiler(view.getAttribute('data-view-vip'));});
-    $('easterYesButton').addEventListener('click',()=>claimEasterEgg('sim'));
-    $('easterNoButton').addEventListener('click',()=>claimEasterEgg('nao'));
     $('questionBoxForm').addEventListener('submit',submitQuestionBox);
     $('adminMessageForm').addEventListener('submit',saveAdminMessage);
     $('adminResetVoteForm').addEventListener('submit',async e=>{e.preventDefault();const name=$('adminResetVoteName').value.trim();if(!confirm(`Liberar uma nova cédula para ${name}? A cédula anterior é anônima e continuará contabilizada.`))return;const btn=$('adminResetVoteButton'),msg=$('adminResetVoteResult');btn.disabled=true;try{const data=await api('admin_reset_student_vote',{session:session.token,fullName:name});message(msg,data.message,'success');$('adminResetVoteForm').reset();await refreshAll(true);}catch(err){message(msg,err.message||'Não foi possível liberar a nova cédula.','error');}finally{btn.disabled=false;}});
@@ -822,14 +819,6 @@
       $('dailyChallengeTitle').textContent=c.title||'Pergunta do momento';$('dailyChallengePrompt').textContent=c.prompt||'Leia a pergunta com atenção.';
       if(c.solved){message($('dailyChallengeMessage'),'Você já acertou a pergunta deste bloco de 2 horas. Seu Ticket VIP está na seção de recompensas.','success');return;}
       form.classList.remove('hidden');if(previousChallengeId!==String(c.id||''))$('dailyChallengeAnswer').value='';
-    }
-    function renderPuzzles(){
-      const root=$('investigationPuzzleList');const puzzles=(investigationState&&investigationState.puzzles)||[];
-      if(!puzzles.length){root.innerHTML='<div class="investigation-entry"><p>Nenhum arquivo foi liberado ainda.</p></div>';return;}
-      root.innerHTML=puzzles.map(p=>{
-        const lock=p.locked;const solved=p.solved;
-        return `<article class="investigation-entry"><span class="case-stamp">ARQUIVO ${String(p.puzzle_order).padStart(3,'0')} · ${solved?'CONCLUÍDO':lock?'BLOQUEADO':'ABERTO'}</span><h4>${h(p.title)}</h4><p>${h(p.prompt)}</p>${solved?'<div class="notice success">Arquivo resolvido. Seu ticket já foi emitido.</div>':lock?'<div class="notice">Resolva os arquivos anteriores para abrir este.</div>':`<form data-puzzle-form="${h(p.id)}"><label class="label" for="puzzleAnswer_${h(p.id)}">Senha do arquivo</label><input class="field" id="puzzleAnswer_${h(p.id)}" maxlength="120" required autocomplete="off" placeholder="Digite a resposta…"><div class="investigation-actions"><button class="button primary" type="submit" data-puzzle-submit="${h(p.id)}">Decifrar</button></div></form>`}</article>`;
-      }).join('');
     }
     function renderTickets(){
       const root=$('investigationTickets');const tickets=(investigationState&&investigationState.tickets)||[];const categoryList=categories.map(c=>`<option value="${h(c.id)}">${h(c.name)}</option>`).join('');
@@ -887,9 +876,7 @@
       if(!session)return;
       try{
         investigationState=await api('investigation_data',{session:session.token});
-        renderDailyChallenge();renderPuzzles();renderTickets();renderMySubmissions();
-        if(investigationState.easterEggClaimed){$('easterYesButton').disabled=true;$('easterNoButton').disabled=true;message($('easterEggMessage'),investigationState.easterEggAnswer==='nao'?'Easter egg concluído. Confira seu Ticket VIP.':'Easter egg já descoberto. O segredo está registrado.','success');if(investigationState.easterEggAnswer==='sim'&&!$('easterEggMessage').querySelector('.easter-egg-reveal'))$('easterEggMessage').insertAdjacentHTML('beforeend','<div class="cinema-reveal easter-egg-reveal" style="margin-top:12px"><div class="seal">✦</div><h3>ARQUIVO SONORO LIBERADO</h3><p>Você encontrou o easter egg. A trilha dourada continua tocando nos bastidores.</p></div>');}
-        else{$('easterYesButton').disabled=false;$('easterNoButton').disabled=false;}
+        renderDailyChallenge();renderTickets();renderMySubmissions();
         if(session.isAdmin){investigationAdmin=await api('investigation_admin_data',{session:session.token});renderAdminInvestigation();}
       }catch(err){
         message($('dailyChallengeMessage'),'O Arquivo Dourado ainda não está configurado no banco. O organizador precisa executar MIGRACAO_ARG_TICKETS_VIP.sql no Supabase. Seus votos não são afetados.','error');
@@ -901,13 +888,6 @@
       catch(err){message($('dailyChallengeMessage'),err.message||'Não foi possível validar a resposta.','error');}
       finally{btn.disabled=false;}
     }
-    async function onPuzzleSubmit(e){
-      const form=e.target.closest('form[data-puzzle-form]');if(!form)return;e.preventDefault();const id=form.getAttribute('data-puzzle-form');const input=$('puzzleAnswer_'+id);const btn=form.querySelector('button[type="submit"]');if(btn)btn.disabled=true;
-      try{const data=await api('solve_investigation_puzzle',{session:session.token,puzzleId:id,answer:input.value});message($('puzzleActionMessage'),data.message||'Arquivo resolvido.','success');await refreshInvestigation();}
-      catch(err){message($('puzzleActionMessage'),err.message||'Não foi possível validar a resposta.','error');}
-      finally{if(btn)btn.disabled=false;}
-    }
-    async function claimEasterEgg(answer){const yes=$('easterYesButton'),no=$('easterNoButton');yes.disabled=true;no.disabled=true;try{await api('claim_investigation_easter_egg',{session:session.token,answer});await refreshInvestigation();}catch(err){message($('easterEggMessage'),err.message||'Easter egg já concluído.','error');yes.disabled=true;no.disabled=true;}}
     async function submitQuestionBox(e){e.preventDefault();const btn=$('submitQuestionButton');btn.disabled=true;try{const data=await api('submit_investigation_question',{session:session.token,question:$('submittedQuestion').value,answer:$('submittedAnswer').value});message($('questionBoxMessage'),data.message,'success');$('questionBoxForm').reset();await refreshInvestigation();}catch(err){message($('questionBoxMessage'),err.message||'Não foi possível enviar a pergunta.','error');}finally{btn.disabled=false;}}
     async function activateTicket(ticketId){const select=$('ticketCategory_'+ticketId);try{const data=await api('activate_investigation_ticket',{session:session.token,ticketId,categoryId:select.value});message($('dashboardMessage'),`Ticket VIP ativado para ${data.categoryName}. O prazo termina em ${fmtDate(data.ticket.expires_at)}.`,'success');await refreshInvestigation();const spoiler=await api('investigation_spoiler',{session:session.token,categoryId:select.value});renderInvestigationSpoiler(spoiler);}catch(err){showDashboardError(err);}}
     async function viewVipSpoiler(categoryId){try{const data=await api('investigation_spoiler',{session:session.token,categoryId});renderInvestigationSpoiler(data);$('vipSpoilerResults').scrollIntoView({behavior:'smooth',block:'center'});}catch(err){showDashboardError(err);}}
