@@ -28,7 +28,7 @@ const categories = [
   { id: "mais_preguicoso", name: "Mais Preguiçoso(a)" },
   { id: "pai_mae_turma", name: "Mais “Pai/Mãe da Turma”" },
   { id: "mais_cringe", name: "Mais Cringe" },
-  { id: "mais_estiloso", name: "Mais feio(a)" },
+  { id: "mais_estiloso", name: "Mais Feio(a)" },
   { id: "mais_cola", name: "Mais “Cola”" },
   { id: "mais_gente_boa", name: "Mais Gente Boa" },
   { id: "mais_sortudo", name: "Mais Sortudo(a)" },
@@ -308,8 +308,15 @@ Deno.serve(async (req: Request) => {
       let { data: personalAssignment, error: assignmentError } = await supabase.from("investigation_daily_assignments")
         .select("student_id, challenge_date, stock_id").eq("student_id", session.sid).eq("challenge_date", today).maybeSingle();
       if (assignmentError) throw assignmentError;
-      if (!personalAssignment) {
-        // A função SQL usa trava por data para evitar sortear a mesma pergunta para duas pessoas ao mesmo tempo.
+      let assignmentNeedsRefresh = !personalAssignment;
+      if (personalAssignment) {
+        const { data: assignedStock, error: assignedStockError } = await supabase.from("investigation_question_stock")
+          .select("id, active").eq("id", personalAssignment.stock_id).maybeSingle();
+        if (assignedStockError) throw assignedStockError;
+        assignmentNeedsRefresh = !assignedStock || !assignedStock.active;
+      }
+      if (assignmentNeedsRefresh) {
+        // A função SQL usa trava por data e renova atribuições que apontem para perguntas desativadas.
         const { error: assignError } = await supabase.rpc("assign_daily_question", {
           p_student_id: session.sid, p_challenge_date: today,
         });
@@ -398,6 +405,29 @@ Deno.serve(async (req: Request) => {
       return json({ success: true, ticketId, message: "Arquivo resolvido! Você ganhou um Ticket VIP de 6 horas." });
     }
 
+    if (action === "submit_david_quiz") {
+      const session = await authenticatedSession(body.session);
+      const raw = body.answers && typeof body.answers === "object" ? body.answers : {};
+      const prompts: Record<string, string> = {
+        surname: "Complete: DAVID ______ DE MELO",
+        artist: "Qual é a artista favorita do David?",
+        friend: "Quem é o melhor amigo do David? O nome completo é Lucas Rafael.",
+        game: "Qual é o jogo favorito do David?",
+        sister: "Qual é o nome da irmã do David?",
+      };
+      const rows = Object.entries(prompts).map(([key, question]) => ({
+        question, suggested_answer: String(raw[key] ?? "").trim().slice(0, 160), student_id: session.sid,
+      })).filter((row) => row.suggested_answer.length > 0);
+      if (!rows.length) return json({ error: "Responda pelo menos uma pergunta. Pode deixar as outras em branco." }, 400);
+      const { data: pending, error: pendingError } = await supabase.from("investigation_submissions")
+        .select("id").eq("student_id", session.sid).eq("status", "pending");
+      if (pendingError) throw pendingError;
+      if ((pending ?? []).length + rows.length > 20) return json({ error: "Você tem muitas respostas aguardando avaliação. Espere a ADM revisar algumas." }, 429);
+      const { error } = await supabase.from("investigation_submissions").insert(rows);
+      if (error) throw error;
+      return json({ success: true, count: rows.length, message: `${rows.length} resposta(s) enviada(s) para a ADM revisar. Cada item será aprovado ou recusado separadamente; cada aprovação vale um Ticket VIP de 1 hora.` });
+    }
+
     if (action === "submit_investigation_question") {
       const session = await authenticatedSession(body.session);
       const question = String(body.question ?? "").trim();
@@ -412,10 +442,10 @@ Deno.serve(async (req: Request) => {
       const { data: pending, error: pendingError } = await supabase.from("investigation_submissions")
         .select("id").eq("student_id", session.sid).eq("status", "pending");
       if (pendingError) throw pendingError;
-      if ((pending ?? []).length >= 5) return json({ error: "Você já tem 5 perguntas aguardando avaliação. Espere a ADM revisar." }, 429);
+      if ((pending ?? []).length >= 20) return json({ error: "Você já tem 20 itens aguardando avaliação. Espere a ADM revisar." }, 429);
       const { error } = await supabase.from("investigation_submissions").insert({ student_id: session.sid, question, suggested_answer: answer });
       if (error) throw error;
-      return json({ success: true, message: "Pergunta enviada para avaliação. Se for aprovada e publicada, você ganha um Ticket VIP." });
+      return json({ success: true, message: "Pergunta enviada para avaliação. Se for aprovada, entra na rotação diária e você ganha um Ticket VIP de 1 hora." });
     }
 
     if (action === "claim_investigation_easter_egg") {
