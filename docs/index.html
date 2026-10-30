@@ -709,6 +709,24 @@
       *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
     }
 
+  
+    /* Exportação da apuração em imagem, sem dependências externas. */
+    .results-image-tools{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px 20px;align-items:center;margin:22px 0;padding:20px;border:1px solid #8e5680;border-radius:18px;background:linear-gradient(135deg,#251334,#17101f 65%,#2c1731);box-shadow:0 14px 38px #05000866,inset 0 1px #ffffff18}
+    .results-image-copy h3{font:800 25px 'Barlow Condensed',sans-serif;letter-spacing:.04em;color:#fff;margin:5px 0}
+    .results-image-copy p{font-size:12px;line-height:1.65;color:#d9c9dd;margin:0;max-width:650px}
+    .results-image-tools>.button{white-space:nowrap;min-width:245px;margin:0}
+    .results-image-message{grid-column:1/-1;font-size:12px;color:#f2d9a0;min-height:0}
+    .results-image-message:empty{display:none}
+    .results-image-preview-wrap{grid-column:1/-1;border-top:1px solid #ffffff20;padding-top:15px;display:grid;gap:12px}
+    .results-image-preview{display:block;width:min(100%,560px);height:auto;margin:0 auto;border:1px solid #b78a5a;border-radius:12px;background:#160d1b;box-shadow:0 12px 32px #0008}
+    .results-image-preview-actions{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap}
+    .results-image-preview-actions .button{margin:0;text-decoration:none;display:inline-flex;align-items:center;justify-content:center}
+    .results-image-preview-actions span{font-size:11px;color:#c9b8cf}
+    body.minimal-mode .results-image-tools{background:#17191d!important;border:1px solid #8f7a3c!important;box-shadow:none!important}
+    body.minimal-mode .results-image-copy h3{color:#fff!important;text-shadow:none!important}
+    body.minimal-mode .results-image-copy p,body.minimal-mode .results-image-preview-actions span{color:#d0d4da!important}
+    @media(max-width:760px){.results-image-tools{grid-template-columns:1fr;padding:16px}.results-image-tools>.button{width:100%;min-width:0}.results-image-message,.results-image-preview-wrap{grid-column:1}.results-image-preview-actions{align-items:stretch;flex-direction:column}.results-image-preview-actions .button{width:100%}}
+
   </style>
 </head>
 <body>
@@ -808,7 +826,17 @@
       </div><div class="admin-phase-controls">
           <div class="admin-control-card"><div><span class="admin-kicker">CONTROLE DE FASE</span><h3>Reabrir votação geral</h3><p>Libera por 10 minutos quem ainda não enviou a cédula. Os votos já registrados permanecem intactos.</p></div><button id="reopenGeneralButton" class="button secondary" type="button">Reabrir por 10 minutos</button><div id="reopenGeneralMessage" aria-live="polite"></div></div>
         </div>
-        <section id="categoryAdminEditor" class="category-admin-editor"><div class="admin-editor-heading"><div><span class="admin-kicker">IDENTIDADE DA PREMIAÇÃO</span><h3>Editar categorias</h3><p>O nome original fica visível para a ADM como referência. O novo nome aparece para os participantes.</p></div><button id="saveCategoriesButton" class="button primary" type="button">Salvar categorias</button></div><div id="categoryEditorList" class="category-editor-list"></div><div id="categoryEditorMessage" aria-live="polite"></div></section><div id="adminStats" class="loading">Carregando apuração...</div><div class="fine">A apuração completa é restrita à administração. Três spoilers públicos mostram destaques aleatórios a cada 15 minutos.</div>
+        <section id="categoryAdminEditor" class="category-admin-editor"><div class="admin-editor-heading"><div><span class="admin-kicker">IDENTIDADE DA PREMIAÇÃO</span><h3>Editar categorias</h3><p>O nome original fica visível para a ADM como referência. O novo nome aparece para os participantes.</p></div><button id="saveCategoriesButton" class="button primary" type="button">Salvar categorias</button></div><div id="categoryEditorList" class="category-editor-list"></div><div id="categoryEditorMessage" aria-live="polite"></div></section>
+        <section id="resultsImageTools" class="results-image-tools" aria-label="Criar imagem da apuração">
+          <div class="results-image-copy"><span class="admin-kicker">COMPARTILHAR A APURAÇÃO</span><h3>Transformar a votação em imagem</h3><p>Gere uma arte PNG com a participação e os cinco primeiros colocados de cada categoria, incluindo empates. A imagem usa somente os totais agregados, sem mostrar quem votou.</p></div>
+          <button id="generateResultsImageButton" class="button primary" type="button"><span aria-hidden="true">✦</span> Criar imagem da votação</button>
+          <div id="resultsImageMessage" class="results-image-message" aria-live="polite"></div>
+          <div id="resultsImagePreviewWrap" class="results-image-preview-wrap hidden">
+            <img id="resultsImagePreview" class="results-image-preview" alt="Prévia da imagem da apuração do Primeiro A Awards">
+            <div class="results-image-preview-actions"><a id="downloadResultsImageLink" class="button secondary" href="#" download="apuracao-primeiro-a-awards.png">Baixar imagem PNG</a><span>Em celular, também é possível pressionar a imagem para salvá-la.</span></div>
+          </div>
+        </section>
+        <div id="adminStats" class="loading">Carregando apuração...</div><div class="fine">A apuração completa é restrita à administração. Três spoilers públicos mostram destaques aleatórios a cada 15 minutos.</div>
         <div class="investigation-entry" id="maintenanceAdminControls" style="margin-top:16px">
           <div class="investigation-heading"><div><div class="investigation-kicker">CONTROLE DE DISPONIBILIDADE</div><h3 style="margin:4px 0">Modo manutenção</h3><p class="sub" style="margin:0">Congela a área pública e bloqueia ações de participantes no servidor. A ADM continua podendo entrar e reabrir o site.</p></div><span class="case-stamp">SOMENTE ADM</span></div>
           <p id="maintenanceStatusLabel" class="notice" style="margin:14px 0">Verificando estado do site…</p>
@@ -1193,6 +1221,7 @@
     $('maintenanceToggleButton').addEventListener('click',toggleMaintenanceMode);
     $('reopenGeneralButton').addEventListener('click',async()=>{const b=$('reopenGeneralButton');b.disabled=true;try{const d=await api('admin_reopen_general',{session:session.token});message($('reopenGeneralMessage'),d.message||'Votação geral reaberta por 10 minutos. Os votos existentes foram preservados.','success');await refreshAll(true);}catch(e){message($('reopenGeneralMessage'),e.message||'Não foi possível reabrir.','error');}finally{b.disabled=false;}});
     $('saveCategoriesButton').addEventListener('click',saveCategorySettings);
+    $('generateResultsImageButton').addEventListener('click',generateResultsImage);
     $('refreshButton').addEventListener('click',()=>refreshAll(true).catch(showDashboardError));
     $('dailyChallengeForm').addEventListener('submit',onDailyChallengeSubmit);
     $('investigationTickets').addEventListener('click',event=>{const activate=event.target.closest('[data-activate-ticket]');if(activate){activateTicket(activate.getAttribute('data-activate-ticket'));return;}const view=event.target.closest('[data-view-vip]');if(view)viewVipSpoiler(view.getAttribute('data-view-vip'));});
@@ -1435,6 +1464,99 @@
     function renderResults(){
       const map=new Map((results||[]).map(x=>[x.categoryId,x]));
       $('resultsGrid').innerHTML=categories.map(c=>{const item=map.get(c.id)||{votes:[]};const top=(item.votes||[]).filter(v=>v.count===Math.max(0,...(item.votes||[]).map(x=>x.count))&&v.count>0);const winners=top.length?top.map(t=>h(t.name)).join(' & '):'Sem votos';const n=top.length?top[0].count:0;return `<article class="result"><span class="pill">${h(c.group)}</span><h3>${h(c.name)}</h3><div class="winner">${winners}</div><div class="votes">${n?`${String(n).replace('.',',')} ponto(s) na liderança por vencedor`:'Nenhum voto nesta categoria'}</div></article>`}).join('');
+    }
+    function canvasRoundRect(ctx,x,y,w,h,r,fill,stroke){
+      const radius=Math.min(r,w/2,h/2);
+      ctx.beginPath();
+      ctx.moveTo(x+radius,y);ctx.arcTo(x+w,y,x+w,y+h,radius);ctx.arcTo(x+w,y+h,x,y+h,radius);ctx.arcTo(x,y+h,x,y,radius);ctx.arcTo(x,y,x+w,y,radius);ctx.closePath();
+      if(fill){ctx.fillStyle=fill;ctx.fill();}if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=1.5;ctx.stroke();}
+    }
+    function canvasTextFit(ctx,text,x,y,maxWidth,font,colour,align='left'){
+      let value=String(text??'');ctx.font=font;ctx.fillStyle=colour;ctx.textAlign=align;
+      while(value.length>1&&ctx.measureText(value).width>maxWidth)value=value.slice(0,-2)+'…';
+      ctx.fillText(value,x,y);
+    }
+    function canvasPhaseLabel(){
+      const phase=adminStats&&adminStats.tallyPhase==='final'?'FINAL POR CATEGORIA':'VOTAÇÃO GERAL';
+      return phase;
+    }
+    function buildResultsImageCanvas(){
+      if(!adminStats||!Array.isArray(adminStats.results))throw new Error('A apuração ainda não foi carregada. Atualize o painel ADM e tente novamente.');
+      const width=1200, margin=58, inner=width-margin*2, gap=18;
+      const resultsMap=new Map(adminStats.results.map(row=>[row.categoryId,row]));
+      const blocks=categories.map(category=>{
+        const source=resultsMap.get(category.id);
+        const sorted=(source&&Array.isArray(source.votes)?source.votes:[]).map(row=>({name:String(row.name||'Participante'),count:Number(row.count)||0})).filter(row=>row.count>0).sort((a,b)=>b.count-a.count||a.name.localeCompare(b.name,'pt-BR'));
+        let previous=null, previousRank=0;
+        const ranked=sorted.map((row,index)=>{
+          const rank=row.count===previous?previousRank:index+1;previous=row.count;previousRank=rank;return {...row,rank};
+        }).filter(row=>row.rank<=5);
+        return {category,ranked,height:112+Math.max(1,ranked.length)*54};
+      });
+      const headerHeight=535, footerHeight=128;
+      const height=headerHeight+blocks.reduce((sum,block)=>sum+block.height,0)+Math.max(0,blocks.length-1)*gap+footerHeight+margin;
+      if(height>16000)throw new Error('A apuração ficou grande demais para uma única imagem. Reduza a quantidade de categorias ou gere a imagem novamente após filtrar a apuração.');
+      const canvas=document.createElement('canvas');canvas.width=width;canvas.height=height;
+      const ctx=canvas.getContext('2d');if(!ctx)throw new Error('Este navegador não conseguiu criar a imagem. Tente outro navegador.');
+      const bg=ctx.createLinearGradient(0,0,width,height);bg.addColorStop(0,'#130b1c');bg.addColorStop(.5,'#21102a');bg.addColorStop(1,'#0e1118');ctx.fillStyle=bg;ctx.fillRect(0,0,width,height);
+      // Luzes abstratas de palco e pequenos brilhos, sem imagens de pessoas.
+      const glow=ctx.createRadialGradient(width*.5,40,20,width*.5,40,760);glow.addColorStop(0,'rgba(232,115,195,.24)');glow.addColorStop(1,'rgba(232,115,195,0)');ctx.fillStyle=glow;ctx.fillRect(0,0,width,550);
+      ctx.save();ctx.globalAlpha=.12;ctx.fillStyle='#f2d38b';
+      for(let i=0;i<38;i++){const x=(i*193+73)%width,y=(i*317+29)%Math.max(1,height-80);ctx.beginPath();ctx.arc(x,y,(i%3)+1.4,0,Math.PI*2);ctx.fill();}
+      ctx.restore();
+      ctx.fillStyle='#e6b9d7';ctx.fillRect(margin,54,74,5);ctx.fillStyle='#e9c875';ctx.fillRect(margin+82,54,28,5);
+      ctx.textAlign='left';ctx.fillStyle='#e9c875';ctx.font='700 24px "Barlow Condensed",sans-serif';ctx.fillText('THE AMAZING',margin,105);
+      ctx.fillStyle='#fff5e7';ctx.font='900 72px "Barlow Condensed",sans-serif';ctx.fillText('PRIMEIRO A',margin-2,178);
+      ctx.fillStyle='#f2c9e6';ctx.font='900 64px "Barlow Condensed",sans-serif';ctx.fillText('AWARDS',margin-2,242);
+      ctx.fillStyle='#e9c875';ctx.fillRect(margin,270,inner,2);
+      ctx.fillStyle='#f8edf7';ctx.font='700 27px "DM Sans",sans-serif';ctx.fillText('APURAÇÃO DA VOTAÇÃO',margin,315);
+      const phase=canvasPhaseLabel();canvasRoundRect(ctx,width-390,286,332,48,23,'#39213e','#bb78aa');ctx.textAlign='center';ctx.fillStyle='#ffe3f5';ctx.font='800 18px "DM Sans",sans-serif';ctx.fillText(phase,width-224,317);
+      const total=Number(adminStats.totalBallots||0),students=Number(adminStats.totalStudents||0),participation=students?Math.round(total/students*100):0;
+      const statY=390,statW=(inner-28)/3;
+      const stats=[['CÉDULAS',String(total)],['PARTICIPANTES',String(students)],['PARTICIPAÇÃO',participation+'%']];
+      stats.forEach((stat,index)=>{const x=margin+index*(statW+14);canvasRoundRect(ctx,x,statY,statW,102,'#21172a','#624263');ctx.textAlign='left';ctx.fillStyle='#c9b2cb';ctx.font='700 16px "DM Sans",sans-serif';ctx.fillText(stat[0],x+20,statY+32);ctx.fillStyle='#ffe1a5';ctx.font='900 42px "Barlow Condensed",sans-serif';ctx.fillText(stat[1],x+20,statY+78);});
+      let y=headerHeight;
+      blocks.forEach((block,index)=>{
+        canvasRoundRect(ctx,margin,y,inner,block.height,'#1a1422','#664568');
+        ctx.fillStyle='#c878ae';ctx.fillRect(margin,y,7,block.height);
+        ctx.textAlign='left';ctx.fillStyle='#d7b3d2';ctx.font='700 15px "DM Sans",sans-serif';ctx.fillText(String(block.category.group||'CATEGORIA').toLocaleUpperCase('pt-BR'),margin+28,y+32);
+        canvasTextFit(ctx,block.category.name,margin+28,y+70,inner-56,'800 31px "Barlow Condensed",sans-serif','#fff4e8');
+        if(!block.ranked.length){canvasRoundRect(ctx,margin+24,y+84,inner-48,44,10,'#241c2a','#49334c');ctx.fillStyle='#c8b9cb';ctx.font='500 18px "DM Sans",sans-serif';ctx.fillText('Ainda não há pontos nesta categoria.',margin+42,y+112);}
+        else block.ranked.forEach((row,rowIndex)=>{
+          const rowY=y+88+rowIndex*54;
+          const rowFill=rowIndex%2===0?'#271d2e':'#211a29';canvasRoundRect(ctx,margin+22,rowY,inner-44,46,9,rowFill,'#44304a');
+          const rankLabel=String(row.rank)+'º';ctx.textAlign='center';ctx.fillStyle=row.rank===1?'#281b0c':'#ffe5f3';
+          canvasRoundRect(ctx,margin+33,rowY+6,42,34,8,row.rank===1?'#e9c875':'#583653',row.rank===1?'#f7df9b':'#8b5b82');ctx.font='900 18px "Barlow Condensed",sans-serif';ctx.fillText(rankLabel,margin+54,rowY+29);
+          canvasTextFit(ctx,row.name,margin+91,rowY+29,inner-300,'700 20px "DM Sans",sans-serif','#fff7ef');
+          ctx.textAlign='right';ctx.fillStyle='#f0ce83';ctx.font='800 19px "DM Sans",sans-serif';ctx.fillText(row.count.toLocaleString('pt-BR',{maximumFractionDigits:1})+' pt',width-margin-42,rowY+29);
+        });
+        y+=block.height+gap;
+      });
+      const footerY=height-footerHeight;
+      ctx.fillStyle='#e7c77c';ctx.fillRect(margin,footerY,inner,2);
+      ctx.textAlign='left';ctx.fillStyle='#fff0dc';ctx.font='800 23px "Barlow Condensed",sans-serif';ctx.fillText('UMA PREMIAÇÃO PARA ENTRAR NA HISTÓRIA',margin,footerY+42);
+      ctx.fillStyle='#c7b7ca';ctx.font='500 15px "DM Sans",sans-serif';ctx.fillText('Apuração agregada · cinco primeiras posições por categoria, incluindo empates',margin,footerY+72);
+      ctx.fillStyle='#a58fa9';ctx.font='500 14px "DM Sans",sans-serif';ctx.fillText('Imagem criada em '+new Date().toLocaleString('pt-BR')+' · The Amazing Primeiro A Awards',margin,footerY+101);
+      return canvas;
+    }
+    async function generateResultsImage(){
+      const button=$('generateResultsImageButton'),messageBox=$('resultsImageMessage'),previewWrap=$('resultsImagePreviewWrap'),preview=$('resultsImagePreview'),download=$('downloadResultsImageLink');
+      if(!session||!session.isAdmin){message(messageBox,'Somente a ADM pode gerar a imagem da apuração.','error');return;}
+      button.disabled=true;button.textContent='Criando imagem...';messageBox.textContent='';
+      try{
+        const canvas=buildResultsImageCanvas();
+        const blob=await new Promise((resolve,reject)=>canvas.toBlob(result=>result?resolve(result):reject(new Error('Não foi possível converter a apuração em PNG.')),'image/png'));
+        if(!blob)throw new Error('Não foi possível gerar o arquivo PNG.');
+        if(preview.dataset.objectUrl)URL.revokeObjectURL(preview.dataset.objectUrl);
+        const objectUrl=URL.createObjectURL(blob);preview.dataset.objectUrl=objectUrl;preview.src=objectUrl;
+        const phaseSlug=adminStats.tallyPhase==='final'?'final':'votacao-geral';
+        const dateSlug=new Date().toISOString().slice(0,10);
+        download.href=objectUrl;download.download=`apuracao-primeiro-a-${phaseSlug}-${dateSlug}.png`;
+        previewWrap.classList.remove('hidden');
+        const automaticLink=document.createElement('a');automaticLink.href=objectUrl;automaticLink.download=download.download;automaticLink.style.display='none';document.body.appendChild(automaticLink);automaticLink.click();automaticLink.remove();
+        message(messageBox,'Imagem criada! A prévia está logo abaixo. Se o download não começar automaticamente, toque em “Baixar imagem PNG”.','success');
+      }catch(error){message(messageBox,error.message||'Não foi possível criar a imagem da votação.','error');}
+      finally{button.disabled=false;button.innerHTML='<span aria-hidden="true">✦</span> Criar imagem da votação';}
     }
     function renderAdminStats(){
       const root=$('adminStats');if(!session||!session.isAdmin||!root)return;
