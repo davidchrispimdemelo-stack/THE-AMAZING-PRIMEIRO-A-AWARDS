@@ -131,6 +131,13 @@ async function getMaintenanceState(): Promise<{ enabled: boolean; message: strin
   return { enabled: Boolean(data?.enabled), message: String(data?.message || fallback) };
 }
 
+const GENERAL_PHASE_ORIGINAL_DEADLINE = "2026-10-30T02:59:59.000Z";
+function isLegacyClosedGeneralPhase(deadline: string | null, storedPhase: string): boolean {
+  if (storedPhase !== "closed" || !deadline) return false;
+  // Compatibilidade com versões antigas que marcavam a Fase 1 como encerrada ao zerar o relógio.
+  const difference = Math.abs(Date.parse(deadline) - Date.parse(GENERAL_PHASE_ORIGINAL_DEADLINE));
+  return Number.isFinite(difference) && difference <= 15 * 60 * 1000;
+}
 async function getAwardsState(): Promise<{ deadline: string | null; phase: AwardsPhase }> {
   const { data, error } = await supabase
     .from("awards_config")
@@ -142,8 +149,9 @@ async function getAwardsState(): Promise<{ deadline: string | null; phase: Award
   const deadline = data?.deadline ?? null;
   const storedPhase = String(data?.phase ?? (deadline ? "general" : "not_started"));
   if (!deadline || storedPhase === "not_started") return { deadline, phase: "not_started" };
-  // A fase geral continua aberta até a ADM iniciar a final, mesmo se o relógio zerar.
-  if (storedPhase === "general") return { deadline, phase: "general" };
+  // A Fase 1 não se encerra sozinha: a ADM decide quando iniciar a final.
+  // Também recupera registros que uma versão antiga deixou como "closed" ao vencer o prazo geral.
+  if (storedPhase === "general" || isLegacyClosedGeneralPhase(deadline, storedPhase)) return { deadline, phase: "general" };
   if (storedPhase === "final" && Date.now() >= new Date(deadline).getTime()) return { deadline, phase: "closed" };
   if (storedPhase === "final") return { deadline, phase: "final" };
   return { deadline, phase: "closed" };
@@ -785,11 +793,17 @@ Deno.serve(async (req: Request) => {
 
     if (action === "admin_reopen_general") {
       await authenticatedSession(body.session, true);
-      const current = await getAwardsState();
-      if (current.phase !== "general") return json({ error: "A votação geral só pode ser reaberta antes do início da final." }, 409);
+      const { data: config, error: configError } = await supabase.from("awards_config")
+        .select("deadline, phase").eq("id", 1).single();
+      if (configError) throw configError;
+      const storedPhase = String(config?.phase ?? "not_started");
+      const currentDeadline = config?.deadline ?? null;
+      const canReopen = storedPhase === "general" || isLegacyClosedGeneralPhase(currentDeadline, storedPhase);
+      if (!canReopen) return json({ error: "A votação geral só pode ser reaberta antes do início da final." }, 409);
       const deadline = new Date(Date.now() + 10 * 60 * 1000).toISOString();
       const { data, error } = await supabase.from("awards_config")
-        .update({ deadline, phase: "general" }).eq("id", 1).eq("phase", "general")
+        .update({ deadline, phase: "general" }).eq("id", 1).eq("phase", storedPhase)
+        .eq("deadline", currentDeadline)
         .select("deadline, phase").maybeSingle();
       if (error) throw error;
       if (!data) return json({ error: "Não foi possível atualizar o prazo. Atualize a página e tente novamente." }, 409);
@@ -798,9 +812,14 @@ Deno.serve(async (req: Request) => {
 
     if (action === "start_final") {
       await authenticatedSession(body.session, true);
-      const current = await getAwardsState();
-      if (current.phase !== "general" || !current.deadline) {
-        return json({ error: "A segunda fase só pode começar enquanto a primeira estiver aberta." }, 409);
+      const { data: config, error: configError } = await supabase.from("awards_config")
+        .select("deadline, phase").eq("id", 1).single();
+      if (configError) throw configError;
+      const storedPhase = String(config?.phase ?? "not_started");
+      const currentDeadline = config?.deadline ?? null;
+      const canStartFinal = storedPhase === "general" || isLegacyClosedGeneralPhase(currentDeadline, storedPhase);
+      if (!canStartFinal || !currentDeadline) {
+        return json({ error: "A segunda fase só pode começar enquanto a primeira ainda não tiver sido substituída pela final." }, 409);
       }
 
       const { data: ballots, error: ballotsError } = await supabase
@@ -815,7 +834,7 @@ Deno.serve(async (req: Request) => {
       const deadline = "2026-11-09T02:59:59.000Z";
       const { data, error } = await supabase.from("awards_config")
         .update({ deadline, phase: "final" })
-        .eq("id", 1).eq("phase", "general").eq("deadline", current.deadline)
+        .eq("id", 1).eq("phase", storedPhase).eq("deadline", currentDeadline)
         .select("deadline, phase").maybeSingle();
       if (error) throw error;
       if (!data) return json({ error: "A fase mudou enquanto você iniciava a final. Atualize a página." }, 409);
