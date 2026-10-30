@@ -1,0 +1,7 @@
+// EXEMPLO DE CONFIGURAÇÃO DO THE AMAZING PRIMEIRO A AWARDS
+// Copie este arquivo para "config.js" e preencha os dados do SEU projeto Supabase.
+// Não substitua um config.js existente que já esteja funcionando.
+window.AWARDS_CONFIG = {
+  SUPABASE_URL: "https://SEU-PROJETO.supabase.co",
+  SUPABASE_ANON_KEY: "COLE_A_CHAVE_PUBLICA_ANON_DO_SUPABASE"
+};
