@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#100d0a">
-  <meta name="description" content="The Amazing Primeiro A Awards — uma premiação cinematográfica de luxo com enigmas, investigação e tickets VIP.">
+  <meta name="description" content="The Amazing Primeiro A Awards — uma premiação interativa do 1ºA.">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <title>The Amazing Primeiro A Awards</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -329,6 +329,25 @@
     .maintenance-screen p{max-width:510px;margin:0 auto;color:#c0c2c4;line-height:1.8}
     .maintenance-rule{display:flex;align-items:center;justify-content:center;gap:12px;color:var(--gold);font-size:10px;letter-spacing:.22em;margin:28px 0}
     .maintenance-rule span{width:45px;height:1px;background:#66532b}
+  
+    /* THE AMAZING PRIMEIRO A AWARDS — palco pop de reality-show e performance musical */
+    :root{--bg:#100b1c;--panel:#1b1230;--panel2:#27163f;--gold:#f4e95b;--gold2:#ffb6e6;--text:#fff9ff;--muted:#d0b8dc;--line:#56366f;--red:#ff6fae;--green:#b9ff85}
+    body{background:radial-gradient(ellipse at 12% 0%,#64266d 0,transparent 36rem),radial-gradient(ellipse at 88% 8%,#1e6d78 0,transparent 31rem),linear-gradient(145deg,#100b1c,#1a0c2b 58%,#080c20)!important;color:#fff9ff!important;overflow-x:hidden}
+    body:before{opacity:.25;background-image:radial-gradient(#fff 0.65px,transparent .65px),linear-gradient(115deg,transparent 45%,#ff72cb12 50%,transparent 55%);background-size:19px 19px,100% 100%;mask-image:linear-gradient(to bottom,#000,transparent 85%)}
+    .top{border-bottom:1px solid #b55ecb55}.brand-orb,.crown{background:linear-gradient(145deg,#fff17a,#ff7bc8 55%,#9d6cff)!important;color:#231034!important;box-shadow:0 0 25px #ff75d455,0 0 50px #8b64ff22!important;border:1px solid #fff8!important}
+    .brand strong{font-family:'Nunito',sans-serif!important;font-weight:1000!important;letter-spacing:.055em!important;text-shadow:0 0 18px #ff7bc866}.brand small,.eyebrow,.admin-kicker,.admin-phase-controls .admin-kicker{color:#f5ed75!important}
+    .hero{position:relative;text-align:center!important;border:0!important;padding:clamp(34px,7vw,76px) 0 32px!important}.hero h1{font-family:'Nunito',sans-serif!important;font-weight:1000!important;letter-spacing:-.055em!important;color:#fff!important;text-shadow:0 4px 0 #7d3ca2,0 0 28px #ff6acb88,0 0 60px #6d6dff55!important}.hero h1 em{color:#f8ed72!important;font-style:normal}.hero h1 span{color:#ffd2f1!important;letter-spacing:.24em!important}
+    .hero:before,.hero:after{content:'✦';position:absolute;color:#fff18b;font-size:30px;animation:twinkle 2.4s ease-in-out infinite alternate;pointer-events:none}.hero:before{left:7%;top:22%}.hero:after{right:8%;bottom:18%;animation-delay:.8s}@keyframes twinkle{from{opacity:.35;transform:scale(.7) rotate(0)}to{opacity:1;transform:scale(1.25) rotate(25deg)}}
+    .hero p{color:#f2d9f8!important}.culture-strip span,.hero-ribbon span,.top-tag{border:1px solid #ffb7ed88!important;background:#27123b!important;color:#ffe7fb!important;box-shadow:0 0 15px #d44bba22}.panel,#adminSection,.timer-panel,.spoilers-section{background:linear-gradient(145deg,#29163feF,#160e2cf7)!important;border:1px solid #a85bc977!important;border-radius:22px!important;box-shadow:0 22px 70px #05000d88,inset 0 1px #ffffff22!important;backdrop-filter:blur(14px)}
+    .button{border-radius:999px!important;box-shadow:0 7px 0 #10091b88,0 0 22px #e85bc733!important}.primary{background:linear-gradient(100deg,#f8f078,#ff8fc9 55%,#b48aff)!important;color:#241032!important}.secondary{background:linear-gradient(120deg,#45225f,#263d69)!important;border:1px solid #db9bff!important;color:white!important}.danger{background:linear-gradient(120deg,#662044,#391b49)!important;border:1px solid #ff83b9!important;color:#ffe4f2!important}
+    .cat,.category-card,.tally-card,.result,.stat,.spoiler-card{background:linear-gradient(145deg,#2a1742,#160f2b)!important;border:1px solid #9b5ac6!important;border-radius:18px!important;box-shadow:inset 0 1px #ffffff20,0 12px 25px #07000d44!important}.category-card:hover{transform:translateY(-4px) scale(1.01)!important;box-shadow:0 0 0 1px #ffb4eb,0 15px 34px #a942c955!important}.category-card.is-selected{border-color:#f5ed75!important;box-shadow:inset 4px 0 #f5ed75,0 0 25px #f5ed7530!important}.cat-num{background:linear-gradient(135deg,#f7f078,#ff88c8)!important;color:#2c1239!important;border-radius:10px!important}.cat h3,.category-card h3{color:#fff!important}.cat p,.category-card p{color:#e5c8ef!important}.candidate-picker,.candidate-option,.picker-panel{background:#1b1230!important;border-color:#b66bd2!important;color:#fff!important}.candidate-option:hover,.candidate-option.is-selected{background:#54266d!important;border-color:#f6ed79!important}
+    .section-title{font-family:'Nunito',sans-serif!important;font-weight:1000!important;color:#fff!important;text-shadow:0 0 18px #ff74c855}.spoilers-section{border-left:4px solid #f5ed75!important}.spoiler-card{border-top:3px solid #f5ed75!important}.spoiler-card .spoiler-points{color:#f5ed75!important}.timebox{background:#160d2b!important;border-color:#b15acb!important}.timebox strong{color:#f5ed75!important}
+    .admin-phase-controls{margin:20px 0}.admin-control-card{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px;align-items:center;padding:18px;border:1px solid #ff9bd6;border-radius:18px;background:linear-gradient(120deg,#391b50,#1a1942);box-shadow:0 12px 35px #0005}.admin-control-card h3,.admin-editor-heading h3{margin:5px 0;color:#fff;font-size:22px}.admin-control-card p,.admin-editor-heading p{margin:0;color:#e5c8ef;font-size:12px;line-height:1.6}.admin-control-card #reopenGeneralMessage{grid-column:1/-1}.category-admin-editor{margin:20px 0;padding:20px;border:1px solid #a85bc9;border-radius:20px;background:linear-gradient(145deg,#24143a,#160e29)}.admin-editor-heading{display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap}.category-editor-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:18px}.category-edit-row{padding:13px;border:1px solid #70438b;border-radius:14px;background:#160d28}.category-edit-row label{display:block;color:#f5ed75;font-size:10px;font-weight:900;letter-spacing:.1em;margin-bottom:5px}.category-edit-row .old-category-name{font-size:11px;color:#d6b6e4;margin:0 0 8px}.category-edit-row input,.category-edit-row textarea{width:100%;background:#0e081a;color:white;border:1px solid #70438b;border-radius:9px;padding:10px;font:inherit}.category-edit-row textarea{min-height:56px;resize:vertical}
+    body.is-admin #votingSection,body.is-admin #alreadyVoted,body.is-admin #resultsSection,body.is-admin #spoilersSection,body.is-admin #personalMessageCard,body.is-admin #investigationPanel,body.is-admin .timer-panel{display:none!important}body.is-admin #adminSection{display:block!important}body.is-admin #adminInvestigationTools{display:none!important}
+    #investigationPanel,#adminInvestigationTools{display:none!important}#spoilersSection{margin-top:22px}
+    @media(max-width:760px){.category-editor-list{grid-template-columns:1fr}.admin-control-card{grid-template-columns:1fr}.admin-control-card .button{width:100%}.hero h1{font-size:clamp(38px,12vw,64px)!important}}
+    @media(prefers-reduced-motion:reduce){.hero:before,.hero:after{animation:none!important}.button,.category-card{transition:none!important}}
+
   </style>
 </head>
 <body>
@@ -340,12 +359,12 @@
     <section class="hero" id="heroSection">
       <div class="eyebrow">UMA NOITE · UMA TURMA · UMA HISTÓRIA</div>
       <h1>THE AMAZING <em>PRIMEIRO A</em> AWARDS <span>CONEXÃO · MEMÓRIAS · TURMA 2026</span></h1>
-      <p>As cortinas estão prestes a se abrir. Entre na premiação, acompanhe os arquivos secretos e descubra os mistérios que cercam a edição de 2026.</p>
-      <div class="culture-strip" aria-label="Referências visuais"><span>Backstage</span><span>Match day</span><span>Pixel mode</span><span>Safe zone</span></div>
+      <p>A temporada começou. Entre, vote nas categorias e acompanhe os momentos que vão entrar para a história do 1ºA.</p>
+      <div class="culture-strip" aria-label="Elementos do espetáculo"><span>AO VIVO</span><span>VOTAÇÃO</span><span>BASTIDORES</span><span>GRANDE FINAL</span></div>
       <div class="hero-ribbon" aria-hidden="true"><span>✦ PERSONALIDADES</span><span>✦ ARQUIVO DOURADO</span><span>✦ 21 CATEGORIAS</span><span>✦ A GRANDE REVELAÇÃO</span></div>
     </section>
 
-    <section id="spoilersSection" class="spoilers-section" aria-labelledby="spoilersTitle">
+    <section id="spoilersSection" class="spoilers-section hidden" aria-labelledby="spoilersTitle">
       <div class="spoilers-head">
         <div><div class="eyebrow">PARCIAL DA TURMA</div><h2 id="spoilersTitle">👀 Spoilers do Awards</h2></div>
         <span class="pill" id="spoilersRefreshLabel">Atualiza a cada 15 minutos</span>
@@ -380,7 +399,7 @@
             <input class="field" id="adminPassword" name="adminPassword" type="password" autocomplete="current-password" placeholder="Senha administrativa" maxlength="512" disabled>
             <div class="fine">Acesso exclusivo à administração do 1ºA Awards.</div>
           </div>
-          <button class="button secondary" id="loginModeButton" type="button" style="width:100%;margin-top:14px">Entrar como ADM</button>
+          <button class="button secondary hidden" id="loginModeButton" type="button" tabindex="-1" aria-hidden="true">Acesso restrito</button>
           <button class="button primary" id="loginButton" type="submit">Acessar votação</button>
           <div id="loginMessage" aria-live="polite"></div>
         </form>
@@ -398,7 +417,7 @@
     </main>
 
     <main id="dashboardView" class="dashboard hidden">
-      <div class="dash-head"><div><div class="eyebrow">ÁREA DO PARTICIPANTE</div><h2 id="welcomeTitle">Bem-vindo(a)!</h2><div id="statusLine" class="sub" style="margin:7px 0 0">Conectando ao sistema...</div></div><div class="dash-actions"><button id="refreshButton" class="button secondary">Atualizar dados</button><button id="logoutButton" class="button danger">Sair</button></div></div>
+      <div class="dash-head"><div><div class="eyebrow" id="dashboardAreaLabel">ÁREA DO PARTICIPANTE</div><h2 id="welcomeTitle">Bem-vindo(a)!</h2><div id="statusLine" class="sub" style="margin:7px 0 0">Conectando ao sistema...</div></div><div class="dash-actions"><button id="refreshButton" class="button secondary">Atualizar dados</button><button id="logoutButton" class="button danger">Sair</button></div></div>
       <section id="personalMessageCard" class="panel personal-message hidden" aria-live="polite"><div class="eyebrow">UM RECADO PRA VOCÊ</div><h3>Mensagem individual</h3><p id="personalMessageText"></p></section>
       <section id="investigationPanel" class="panel investigation-shell" aria-labelledby="investigationTitle">
         <div style="padding:clamp(18px,3vw,27px)">
@@ -421,7 +440,10 @@
         <p class="sub" style="margin:0 0 12px">Quando houver 20 cédulas da primeira fase, este botão ficará liberado. Ao clicar, a Fase 2 terá prazo fixo até 08/11/2026. Os votos anteriores serão preservados.</p>
         <button id="startFinalButton" class="button primary" type="button" style="width:auto;margin:0" disabled>Iniciar 2ª fase (0/20 cédulas)</button>
         <div id="startFinalMessage" aria-live="polite"></div>
-      </div><div id="adminStats" class="loading">Carregando apuração...</div><div class="fine">A apuração completa é restrita à administração. Três spoilers públicos mostram destaques aleatórios a cada 15 minutos.</div>
+      </div><div class="admin-phase-controls">
+          <div class="admin-control-card"><div><span class="admin-kicker">CONTROLE DE FASE</span><h3>Reabrir votação geral</h3><p>Libera por 10 minutos quem ainda não enviou a cédula. Os votos já registrados permanecem intactos.</p></div><button id="reopenGeneralButton" class="button secondary" type="button">Reabrir por 10 minutos</button><div id="reopenGeneralMessage" aria-live="polite"></div></div>
+        </div>
+        <section id="categoryAdminEditor" class="category-admin-editor"><div class="admin-editor-heading"><div><span class="admin-kicker">IDENTIDADE DA PREMIAÇÃO</span><h3>Editar categorias</h3><p>O nome original fica visível para a ADM como referência. O novo nome aparece para os participantes.</p></div><button id="saveCategoriesButton" class="button primary" type="button">Salvar categorias</button></div><div id="categoryEditorList" class="category-editor-list"></div><div id="categoryEditorMessage" aria-live="polite"></div></section><div id="adminStats" class="loading">Carregando apuração...</div><div class="fine">A apuração completa é restrita à administração. Três spoilers públicos mostram destaques aleatórios a cada 15 minutos.</div>
         <div class="investigation-entry" id="maintenanceAdminControls" style="margin-top:16px">
           <div class="investigation-heading"><div><div class="investigation-kicker">CONTROLE DE DISPONIBILIDADE</div><h3 style="margin:4px 0">Modo manutenção</h3><p class="sub" style="margin:0">Congela a área pública e bloqueia ações de participantes no servidor. A ADM continua podendo entrar e reabrir o site.</p></div><span class="case-stamp">SOMENTE ADM</span></div>
           <p id="maintenanceStatusLabel" class="notice" style="margin:14px 0">Verificando estado do site…</p>
@@ -431,15 +453,15 @@
           <div id="maintenanceAdminMessage" aria-live="polite"></div>
         </div>
         <div id="adminInvestigationTools" class="investigation-admin">
-          <div class="investigation-heading"><div><div class="investigation-kicker">CONTROLE DE PRODUÇÃO</div><h3 style="margin:4px 0">Central do Arquivo Dourado</h3><p class="sub" style="margin:0">Edite recados privados, gerencie a rotação de perguntas e avalie sugestões.</p></div><span class="case-stamp">SOMENTE ADM</span></div>
+          <div class="investigation-heading"><div><div class="investigation-kicker">CONTROLE DE PRODUÇÃO</div><h3 style="margin:4px 0">Central do Arquivo Dourado</h3><p class="sub" style="margin:0">Edite recados privados, publique o desafio de cada dia, crie arquivos e avalie sugestões.</p></div><span class="case-stamp">SOMENTE ADM</span></div>
           <div class="investigation-entry" style="margin:14px 0;border-color:#76534a"><h4>Liberação de nova cédula</h4><p>Digite o nome completo para liberar a pessoa a votar novamente. Como as cédulas são anônimas, a cédula antiga não pode ser localizada nem removida individualmente; ela continuará nos totais.</p><form id="adminResetVoteForm"><label class="label" for="adminResetVoteName">Nome completo da pessoa</label><input id="adminResetVoteName" class="field" maxlength="120" autocomplete="off" placeholder="Nome completo, igual ao cadastro" required><div class="investigation-actions"><button type="submit" class="button danger" id="adminResetVoteButton">Liberar nova cédula</button></div><div id="adminResetVoteResult" aria-live="polite"></div></form></div>
           <div class="investigation-admin-grid">
             <form id="adminMessageForm" class="investigation-entry"><h4>Mensagens individuais</h4><label class="label" for="adminMessageStudent">Participante</label><select id="adminMessageStudent" class="field" required><option value="">Carregando participantes…</option></select><label class="label" for="adminPersonalMessage">Mensagem privada</label><textarea id="adminPersonalMessage" class="field" rows="4" maxlength="1200" placeholder="Escreva um recado só para essa pessoa…" style="resize:vertical"></textarea><div class="investigation-actions"><button type="submit" class="button primary">Salvar mensagem</button><button type="button" id="loadSelectedMessageButton" class="button secondary">Carregar atual</button></div><p class="fine">Deixe o campo vazio e salve para remover a mensagem atual.</p><div id="adminMessageResult" aria-live="polite"></div></form>
-            <form id="adminDailyForm" class="investigation-entry"><h4>Adicionar pergunta ao estoque aleatório</h4><p class="fine">O sistema sorteia uma pergunta diferente para cada participante a cada 2 horas, sem repetir entre as pessoas enquanto houver opções disponíveis.</p><label class="label" for="adminDailyTitle">Título curto</label><input id="adminDailyTitle" class="field" maxlength="90" placeholder="DROP 043 · NOVA PERGUNTA" required><label class="label" for="adminDailyPrompt">Pergunta</label><textarea id="adminDailyPrompt" class="field" rows="2" maxlength="500" required placeholder="Escreva a pergunta…" style="resize:vertical"></textarea><label class="label" for="adminDailyAnswers">Resposta(s) correta(s)</label><input id="adminDailyAnswers" class="field" maxlength="300" required placeholder="Resposta correta | alternativa"><div class="investigation-actions"><button type="submit" class="button primary">Adicionar ao estoque</button></div><div id="adminDailyResult" aria-live="polite"></div></form>
-            
+            <form id="adminDailyForm" class="investigation-entry"><h4>Adicionar pergunta ao estoque aleatório</h4><p class="fine">O sistema sorteia uma pergunta diferente para cada participante por dia, sem repetir a mesma pergunta entre as pessoas enquanto houver opções disponíveis.</p><label class="label" for="adminDailyTitle">Título curto</label><input id="adminDailyTitle" class="field" maxlength="90" placeholder="DROP 043 · NOVA PERGUNTA" required><label class="label" for="adminDailyPrompt">Pergunta</label><textarea id="adminDailyPrompt" class="field" rows="2" maxlength="500" required placeholder="Escreva a pergunta…" style="resize:vertical"></textarea><label class="label" for="adminDailyAnswers">Resposta(s) correta(s)</label><input id="adminDailyAnswers" class="field" maxlength="300" required placeholder="Resposta correta | alternativa"><div class="investigation-actions"><button type="submit" class="button primary">Adicionar ao estoque</button></div><div id="adminDailyResult" aria-live="polite"></div></form>
+            <form id="adminPuzzleForm" class="investigation-entry"><h4>Criar próximo arquivo ARG</h4><label class="label" for="adminPuzzleOrder">Número da etapa</label><input type="number" id="adminPuzzleOrder" class="field" min="1" max="100" required><label class="label" for="adminPuzzleTitle">Título do arquivo</label><input id="adminPuzzleTitle" class="field" maxlength="100" required placeholder="ARQUIVO 002 · ..."><label class="label" for="adminPuzzlePrompt">Enigma / pista</label><textarea id="adminPuzzlePrompt" class="field" rows="3" maxlength="500" required placeholder="Pista que os participantes verão…" style="resize:vertical"></textarea><label class="label" for="adminPuzzleAnswers">Resposta(s) correta(s)</label><input id="adminPuzzleAnswers" class="field" maxlength="300" required placeholder="Resposta | alternativa"><div class="investigation-actions"><button type="submit" class="button primary">Publicar arquivo</button></div><div id="adminPuzzleResult" aria-live="polite"></div></form>
             <div class="investigation-entry"><h4>Caixa de perguntas · avaliação</h4><p>Cada item mostra o nome de quem respondeu e a resposta enviada. Aprove ou recuse cada pergunta separadamente. Ao aprovar, ela entra no estoque da rotação diária e o autor recebe um Ticket VIP de 1 hora.</p><div id="adminSubmissionList"><p>Carregando sugestões…</p></div><div id="adminReviewResult" aria-live="polite"></div></div>
           </div>
-          
+          <div class="investigation-entry" style="margin-top:14px"><h4>Arquivos publicados</h4><div id="adminPublishedArchives"><p>Carregando arquivos…</p></div></div>
         </div>
       </section>
       <div id="dashboardMessage" aria-live="polite"></div>
@@ -451,7 +473,7 @@
   (() => {
     'use strict';
     const categories = [
-      {id:'iconico',name:'Mais Bonito(a)',desc:'Tem uma beleza que chama a atenção da turma.',group:'Clássicos & momentos memoráveis'},
+      {id:'iconico',name:'Mais Icônico(a)',desc:'Tem uma beleza que chama a atenção da turma.',group:'Clássicos & momentos memoráveis'},
       {id:'mais_fofoqueiro',name:'Mais Fofoqueiro(a)',desc:'Sempre sabe das novidades antes de todo mundo.',group:'Polêmicas & sem filtro'},
       {id:'mais_sem_filtro',name:'Mais Sem Filtro',desc:'Tem identidade própria e sabe montar combinações marcantes.',group:'Polêmicas & sem filtro'},
       {id:'mais_dramatico',name:'Mais Dramático(a)',desc:'Transforma qualquer coisa em uma cena de novela.',group:'Polêmicas & sem filtro'},
@@ -467,13 +489,21 @@
       {id:'mais_preguicoso',name:'Mais Preguiçoso(a)',desc:'Sempre procura o caminho mais fácil para resolver qualquer tarefa.',group:'Vida social & comportamento'},
       {id:'pai_mae_turma',name:'Mais “Pai/Mãe da Turma”',desc:'Lembra os prazos, organiza os trabalhos e salva o grupo dos esquecimentos.',group:'Vida social & comportamento'},
       {id:'mais_cringe',name:'Mais Cringe',desc:'Protagoniza momentos de vergonha alheia que viram história da turma.',group:'Clássicos & momentos memoráveis'},
-      {id:'mais_estiloso',name:'Mais Feio(a)',desc:'Tem identidade própria e sabe montar combinações marcantes.',group:'Clássicos & momentos memoráveis'},
+      {id:'mais_estiloso',name:'Mais Estiloso(a)',desc:'Tem identidade própria e sabe montar combinações marcantes.',group:'Clássicos & momentos memoráveis'},
       {id:'mais_cola',name:'Mais “Cola”',desc:'O mestre da sobrevivência nas avaliações — categoria de brincadeira.',group:'Clássicos & momentos memoráveis'},
       {id:'mais_gente_boa',name:'Mais Gente Boa',desc:'Trata os colegas bem e contribui para um clima leve na turma.',group:'Clássicos & momentos memoráveis'},
       {id:'mais_sortudo',name:'Mais Sortudo(a)',desc:'Parece sempre acertar no chute ou se salvar na última questão.',group:'Clássicos & momentos memoráveis'},
       {id:'mais_entrosa',name:'Mais Entrosa',desc:'Consegue puxar assunto, se enturmar e participar das conversas da sala.',group:'Vida social & comportamento'}
     ];
     const $ = id => document.getElementById(id);
+    let categoryOriginals = {};
+    let categorySettingsLoaded = false;
+    // Os spoilers só existem na área autenticada; a cédula vem primeiro no painel.
+    $('dashboardView').insertBefore($('spoilersSection'), $('adminSection'));
+    $('dashboardView').insertBefore($('votingSection'), $('personalMessageCard'));
+    $('dashboardView').insertBefore($('alreadyVoted'), $('personalMessageCard'));
+    $('dashboardView').insertBefore($('resultsSection'), $('personalMessageCard'));
+    $('adminSection').insertBefore($('adminStartWrap'), $('adminFinalWrap'));
     const cfg = window.AWARDS_CONFIG || {};
     const configReady = cfg.SUPABASE_URL && !cfg.SUPABASE_URL.includes('SEU-PROJETO') && cfg.SUPABASE_ANON_KEY && !cfg.SUPABASE_ANON_KEY.includes('COLE_');
     let session = null, candidates = [], finalistsByCategory = {}, status = null, results = null, adminStats = null, lastReleased = null, lastPhase = null, polling = null, ticker = null, investigationPolling = null, releaseRefreshPending = false, serverOffsetMs = 0, investigationState = null, investigationAdmin = null;
@@ -539,7 +569,9 @@
       const root=$('spoilersGrid');
       if(!root)return;
       try{
-        const data=await api('public_spoilers');
+        if(!session||session.isAdmin){$('spoilersSection').classList.add('hidden');return;}
+        $('spoilersSection').classList.remove('hidden');
+        const data=await api('public_spoilers',{session:session.token});
         const items=Array.isArray(data.items)?data.items:[];
         if(!items.length){
           root.innerHTML='<article class="spoiler-card"><div class="spoiler-category">AINDA SEM DESTAQUES</div><div class="spoiler-name">Aguardando os primeiros votos</div><div class="spoiler-rank">Os spoilers aparecem quando houver pontuação registrada.</div></article>';
@@ -708,7 +740,7 @@
     });
     let adminLoginMode = false;
     function updateLoginMode(){
-      $('loginModeButton').textContent=adminLoginMode?'Entrar como aluno':'Entrar como ADM';
+      $('loginModeButton').textContent='Acesso restrito';
       $('loginButton').textContent=adminLoginMode?'Acessar painel ADM':'Acessar votação';
       $('fullName').disabled=adminLoginMode;
       $('ra').disabled=adminLoginMode;
@@ -726,11 +758,10 @@
       $('maintenanceScreen').classList.add('hidden');$('heroSection').classList.remove('hidden');$('spoilersSection').classList.add('hidden');$('loginView').classList.remove('hidden');$('dashboardView').classList.add('hidden');
       adminLoginMode=true;clearMessage($('loginMessage'));updateLoginMode();$('loginView').scrollIntoView({behavior:'smooth',block:'start'});
     });
-    $('loginModeButton').addEventListener('click',()=>{
-      adminLoginMode=!adminLoginMode;
-      clearMessage($('loginMessage'));
-      updateLoginMode();
-    });
+    $('loginModeButton').addEventListener('click',()=>{adminLoginMode=!adminLoginMode;clearMessage($('loginMessage'));updateLoginMode();});
+    let brandTapCount=0,brandTapTimer=null;
+    document.querySelector('.brand').addEventListener('click',()=>{brandTapCount++;if(brandTapTimer)clearTimeout(brandTapTimer);brandTapTimer=setTimeout(()=>brandTapCount=0,2200);if(brandTapCount>=5){brandTapCount=0;adminLoginMode=true;clearMessage($('loginMessage'));updateLoginMode();$('adminUsername').focus();$('loginView').scrollIntoView({behavior:'smooth',block:'center'});}});
+    document.addEventListener('keydown',event=>{if(event.ctrlKey&&event.altKey&&event.key.toLowerCase()==='a'&&!session){adminLoginMode=true;updateLoginMode();$('adminUsername').focus();}});
     $('loginForm').addEventListener('submit',async e=>{
       e.preventDefault();
       const btn=$('loginButton'),msg=$('loginMessage');
@@ -748,8 +779,12 @@
         sessionStorage.setItem('firstA_session',JSON.stringify(session));
         candidates=data.candidates||[];
         $('loginView').classList.add('hidden');$('dashboardView').classList.remove('hidden');
+        document.body.classList.toggle('is-admin',session.isAdmin);
+        $('spoilersSection').classList.toggle('hidden',session.isAdmin);
         applyMaintenanceScreen();
-        await refreshAll(true);startPolling();
+        await refreshAll(true);
+        if(!session.isAdmin)refreshPublicSpoilers();
+        startPolling();
       }catch(err){message(msg,err.message||'Não foi possível entrar. Confira os dados.','error');}
       finally{btn.disabled=false;updateLoginMode();}
     });
@@ -757,12 +792,15 @@
       sessionStorage.removeItem('firstA_session');session=null;candidates=[];finalistsByCategory={};status=null;results=null;adminStats=null;lastPhase=null;investigationState=null;investigationAdmin=null;
       if(polling)clearInterval(polling);if(ticker)clearInterval(ticker);if(investigationPolling)clearInterval(investigationPolling);
       $('categoriesGrid').innerHTML='';$('categoriesGrid').dataset.rendered='';
+      document.body.classList.remove('is-admin');if(publicSpoilerTimer)clearTimeout(publicSpoilerTimer);$('spoilersSection').classList.add('hidden');
       $('dashboardView').classList.add('hidden');$('personalMessageCard').classList.add('hidden');$('personalMessageText').textContent='';
       $('loginView').classList.remove('hidden');$('fullName').value='';$('ra').value='';$('adminUsername').value='';$('adminPassword').value='';
       adminLoginMode=false;updateLoginMode();applyMaintenanceScreen();
     });
     updateLoginMode();
     $('maintenanceToggleButton').addEventListener('click',toggleMaintenanceMode);
+    $('reopenGeneralButton').addEventListener('click',async()=>{const b=$('reopenGeneralButton');b.disabled=true;try{const d=await api('admin_reopen_general',{session:session.token});message($('reopenGeneralMessage'),d.message||'Votação geral reaberta por 10 minutos. Os votos existentes foram preservados.','success');await refreshAll(true);}catch(e){message($('reopenGeneralMessage'),e.message||'Não foi possível reabrir.','error');}finally{b.disabled=false;}});
+    $('saveCategoriesButton').addEventListener('click',saveCategorySettings);
     $('refreshButton').addEventListener('click',()=>refreshAll(true).catch(showDashboardError));
     $('dailyChallengeForm').addEventListener('submit',onDailyChallengeSubmit);
     $('investigationTickets').addEventListener('click',event=>{const activate=event.target.closest('[data-activate-ticket]');if(activate){activateTicket(activate.getAttribute('data-activate-ticket'));return;}const view=event.target.closest('[data-view-vip]');if(view)viewVipSpoiler(view.getAttribute('data-view-vip'));});
@@ -770,7 +808,7 @@
     $('adminMessageForm').addEventListener('submit',saveAdminMessage);
     $('adminResetVoteForm').addEventListener('submit',async e=>{e.preventDefault();const name=$('adminResetVoteName').value.trim();if(!confirm(`Liberar uma nova cédula para ${name}? A cédula anterior é anônima e continuará contabilizada.`))return;const btn=$('adminResetVoteButton'),msg=$('adminResetVoteResult');btn.disabled=true;try{const data=await api('admin_reset_student_vote',{session:session.token,fullName:name});message(msg,data.message,'success');$('adminResetVoteForm').reset();await refreshAll(true);}catch(err){message(msg,err.message||'Não foi possível liberar a nova cédula.','error');}finally{btn.disabled=false;}});
     $('adminDailyForm').addEventListener('submit',saveAdminDaily);
-    
+    $('adminPuzzleForm').addEventListener('submit',saveAdminPuzzle);
     $('loadSelectedMessageButton').addEventListener('click',()=>{if(!investigationAdmin)return;const id=$('adminMessageStudent').value;const row=(investigationAdmin.messages||[]).find(item=>String(item.student_id)===String(id));$('adminPersonalMessage').value=row?row.message:'';});
     $('adminMessageStudent').addEventListener('change',()=>{if(!investigationAdmin)return;const id=$('adminMessageStudent').value;const row=(investigationAdmin.messages||[]).find(item=>String(item.student_id)===String(id));$('adminPersonalMessage').value=row?row.message:'';});
     $('adminSubmissionList').addEventListener('click',event=>{const button=event.target.closest('[data-review-submission]');if(button)reviewSubmission(button.getAttribute('data-review-submission'),button.getAttribute('data-review-decision'));});
@@ -866,8 +904,11 @@
         selector.innerHTML='<option value="">Selecione um participante…</option>'+(data.students||[]).map(p=>`<option value="${h(p.id)}">${h(p.full_name)}</option>`).join('');selector.dataset.loaded='true';
       }
       
+      const nextOrder=Math.max(0,...(data.puzzles||[]).map(p=>Number(p.puzzle_order)||0))+1;if(!$('adminPuzzleOrder').value)$('adminPuzzleOrder').value=nextOrder;
       const submissions=data.submissions||[];const submitRoot=$('adminSubmissionList');
       submitRoot.innerHTML=submissions.length?submissions.map(item=>{const name=item.students&&(item.students.full_name||(Array.isArray(item.students)&&item.students[0]&&item.students[0].full_name))||'Participante';return `<article class="admin-review-item"><strong>${h(name)}</strong><p><b>Pergunta:</b> ${h(item.question)}</p><p><b>Resposta enviada:</b> ${h(item.suggested_answer)}</p><p class="fine"><b>${h(suggestedReview(item.question,item.suggested_answer))}</b></p><div class="investigation-actions"><button type="button" class="button primary" data-review-submission="${h(item.id)}" data-review-decision="approve">Aprovar + ticket 1h</button><button type="button" class="button secondary" data-review-submission="${h(item.id)}" data-review-decision="reject">Recusar</button></div></article>`;}).join(''):'<p class="fine">Nenhuma pergunta aguardando avaliação.</p>';
+      const daily=(data.dailyChallenges||[]).slice(0,8);const puzzles=data.puzzles||[];
+      const stock=(data.stockQuestions||[]).filter(q=>q.active);$('adminPublishedArchives').innerHTML='<div class="investigation-list">'+stock.map(q=>`<article class="investigation-entry"><span class="case-stamp">ESTOQUE · SORTEIO DIÁRIO</span><h4>${h(q.title)}</h4><p>${h(q.prompt)}</p><p><b>Resposta:</b> ${h((q.accepted_answers||[]).join(' | '))}</p></article>`).join('')+daily.map(c=>`<article class="investigation-entry"><span class="case-stamp">${h(c.challenge_date)}</span><h4>${h(c.title)}</h4><p>${h(c.prompt)}</p><p><b>Resposta:</b> ${h((c.accepted_answers||[]).join(' | '))}</p></article>`).join('')+puzzles.map(p=>`<article class="investigation-entry"><span class="case-stamp">ARQUIVO ${String(p.puzzle_order).padStart(3,'0')}</span><h4>${h(p.title)}</h4><p>${h(p.prompt)}</p><p><b>Resposta:</b> ${h((p.accepted_answers||[]).join(' | '))}</p></article>`).join('')+'</div>';
     }
     async function refreshInvestigation(){
       if(!session)return;
@@ -891,12 +932,28 @@
     async function reviewSubmission(submissionId,decision){const msg=$('adminReviewResult');clearMessage(msg);try{const data=await api('investigation_admin_review_submission',{session:session.token,submissionId,decision});message(msg,data.message,'success');await refreshInvestigation();}catch(err){message(msg,err.message||'Não foi possível avaliar essa pergunta.','error');}}
     async function saveAdminMessage(e){e.preventDefault();const msg=$('adminMessageResult');clearMessage(msg);try{const data=await api('investigation_admin_save_message',{session:session.token,studentId:$('adminMessageStudent').value,message:$('adminPersonalMessage').value});message(msg,data.message,'success');await refreshInvestigation();}catch(err){message(msg,err.message||'Não foi possível salvar a mensagem.','error');}}
     async function saveAdminDaily(e){e.preventDefault();const msg=$('adminDailyResult');clearMessage(msg);try{const data=await api('investigation_admin_add_stock_question',{session:session.token,title:$('adminDailyTitle').value,prompt:$('adminDailyPrompt').value,answers:$('adminDailyAnswers').value});message(msg,data.message,'success');$('adminDailyForm').reset();await refreshInvestigation();}catch(err){message(msg,err.message||'Não foi possível adicionar ao estoque.','error');}}
+    async function saveAdminPuzzle(e){e.preventDefault();const msg=$('adminPuzzleResult');clearMessage(msg);try{const data=await api('investigation_admin_save_puzzle',{session:session.token,order:$('adminPuzzleOrder').value,title:$('adminPuzzleTitle').value,prompt:$('adminPuzzlePrompt').value,answers:$('adminPuzzleAnswers').value});message(msg,data.message,'success');$('adminPuzzleForm').reset();await refreshInvestigation();}catch(err){message(msg,err.message||'Não foi possível publicar o arquivo.','error');}}
+    async function loadCategorySettings(){
+      if(!session)return;
+      try{const d=await api('category_settings',{session:session.token});const rows=Array.isArray(d.categories)?d.categories:[];for(const row of rows){const c=categories.find(x=>x.id===row.id);if(!c)continue;categoryOriginals[c.id]=row.original_name||c.name;c.name=row.name||c.name;if(typeof row.desc==='string')c.desc=row.desc;}categorySettingsLoaded=true;}
+      catch(e){console.warn('Configuração de categorias indisponível; usando nomes originais.',e);}
+    }
+    function renderCategoryEditor(force=false){
+      if(!session?.isAdmin)return;const root=$('categoryEditorList');if(!root||(!force&&root.dataset.rendered==='true'))return;
+      root.innerHTML=categories.map((c,i)=>`<article class="category-edit-row"><label>CATEGORIA ${String(i+1).padStart(2,'0')}</label><p class="old-category-name">Nome original: <strong>${h(categoryOriginals[c.id]||c.name)}</strong></p><label for="catName_${h(c.id)}">Nome exibido</label><input id="catName_${h(c.id)}" maxlength="90" value="${h(c.name)}"><label for="catDesc_${h(c.id)}" style="margin-top:9px">Descrição</label><textarea id="catDesc_${h(c.id)}" maxlength="240">${h(c.desc||'')}</textarea></article>`).join('');root.dataset.rendered='true';
+    }
+    async function saveCategorySettings(){
+      const button=$('saveCategoriesButton');button.disabled=true;
+      try{const rows=categories.map(c=>({id:c.id,name:$('catName_'+c.id).value.trim(),desc:$('catDesc_'+c.id).value.trim()}));if(rows.some(x=>!x.name))throw new Error('Preencha o nome de todas as categorias.');const d=await api('admin_save_category_settings',{session:session.token,categories:rows});for(const row of rows){const c=categories.find(x=>x.id===row.id);c.name=row.name;c.desc=row.desc;}renderCategoryEditor(true);$('categoriesGrid').dataset.rendered='';$('categoriesGrid').innerHTML='';message($('categoryEditorMessage'),d.message||'Categorias atualizadas para todos os participantes.','success');if(status&&!status.hasVoted&&status.phase!=='closed')renderBallot();}
+      catch(e){message($('categoryEditorMessage'),e.message||'Não foi possível salvar as categorias.','error');}finally{button.disabled=false;}
+    }
     function showDashboardError(err){message($('dashboardMessage'),err.message||'Ocorreu um erro ao atualizar.','error');}
     async function refreshAll(forceRender=false){
       const previousPhase=status&&status.phase;
       const previousReleased=status&&status.resultsReleased;
       const s=await api('status',{session:session.token});
       status=s;serverOffsetMs=s.serverNow?Date.parse(s.serverNow)-Date.now():0;
+      if(!categorySettingsLoaded)await loadCategorySettings();
       const phaseChanged=previousPhase!==status.phase;
       if(!candidates.length||phaseChanged){
         const c=await api('candidates',{session:session.token});
@@ -909,13 +966,14 @@
       if(session.isAdmin){const a=await api('admin_stats',{session:session.token});adminStats=a;}
       if(forceRender||phaseChanged||previousReleased!==status.resultsReleased||lastReleased!==status.resultsReleased){renderDashboard();lastReleased=status.resultsReleased;lastPhase=status.phase;}
       else updateTimer();
-      if(session.isAdmin)renderAdminStats();
-      if(forceRender)await refreshInvestigation();
+      if(session.isAdmin){renderAdminStats();renderCategoryEditor();}
+      if(forceRender && false)await refreshInvestigation();
     }
     function renderDashboard(){
       if(!session||!status)return;
       $('welcomeTitle').textContent=`Olá, ${session.name.split(' ')[0]}.`;
-      $('statusLine').textContent=session.isAdmin?'Você está no modo administrador e pode acompanhar a votação e os totais da fase atual.':'Você está conectado à votação oficial da turma.';
+      $('dashboardAreaLabel').textContent=session.isAdmin?'CENTRAL DE PRODUÇÃO':'ÁREA DO PARTICIPANTE';
+      $('statusLine').textContent=session.isAdmin?'Controles, apuração e categorias.':'Você está conectado à votação oficial da turma.';
       const personalMessage = typeof status.personalMessage === 'string' ? status.personalMessage : '';
       $('personalMessageCard').classList.toggle('hidden', !personalMessage);
       $('personalMessageText').textContent = personalMessage;
@@ -934,11 +992,11 @@
         $('timerTitle').textContent=general?'Fase 1 — votação geral':'Fase 2 — final por categoria';
         $('timerDescription').textContent=general
           ?'Vote na primeira fase. Quando houver pelo menos 20 cédulas, a ADM poderá iniciar a final manualmente. A votação da Fase 1 encerra em 29/10/2026 às 23h59 (Brasília).'
-          :'A Fase 2 termina em 08/11/2026 às 23h59 (Brasília). Vote entre os quatro finalistas de cada categoria; os resultados saem quando o prazo terminar.';
+          :'A Fase 2 termina em 08/11/2026 às 23h59 (Brasília). Vote entre os finalistas de cada categoria (incluindo empates na última vaga); os resultados saem quando o prazo terminar.';
         $('ballotTitle').textContent=general?'Votação geral':'Final por categoria';
         $('ballotIntro').textContent=general
           ?'Escolha uma 1ª opção (1 ponto) e uma 2ª opção diferente (0,5 ponto) por categoria. Quando houver 20 cédulas gerais, a ADM poderá iniciar a final. Você pode pular categorias.'
-          :'Agora cada categoria mostra apenas os quatro finalistas da primeira fase. Escolha 1ª opção (1 ponto) e 2ª opção diferente (0,5 ponto). A cédula da final é independente da primeira.';
+          :'Agora cada categoria mostra os finalistas da primeira fase. Empates na quarta vaga avançam juntos. Escolha 1ª opção (1 ponto) e 2ª opção diferente (0,5 ponto). A cédula da final é independente da primeira.';
         $('resultsSection').classList.add('hidden');
         const generalDeadlinePassed = general && !!status.phaseDeadline && new Date(status.phaseDeadline).getTime() <= (Date.now()+serverOffsetMs);
         $('votingSection').classList.toggle('hidden',!!status.hasVoted||generalDeadlinePassed);
@@ -948,7 +1006,7 @@
           $('alreadyVotedText').textContent='O prazo da Fase 1 terminou em 29/10/2026 às 23h59. Aguarde a ADM iniciar a Fase 2.';
         }else if(status.hasVoted){
           $('alreadyVotedText').textContent=general
-            ?'Seu voto da primeira fase já foi registrado. Quando a ADM iniciar a final, você poderá votar novamente entre os quatro finalistas de cada categoria.'
+            ?'Seu voto da primeira fase já foi registrado. Quando a ADM iniciar a final, você poderá votar novamente entre os finalistas de cada categoria (incluindo empates na última vaga).'
             :'Seu voto da final já foi registrado. Os resultados oficiais serão liberados quando terminar o prazo da segunda fase.';
         }else{
           $('submitBallotButton').textContent=general?'Enviar voto da primeira fase':'Enviar voto da final';
@@ -993,12 +1051,20 @@
       const phases=adminStats.phaseCounts||{general:0,final:0};
       const generalBallots=Number(phases.general||0);
       const finalWrap=$('adminFinalWrap'),finalButton=$('startFinalButton');
+      const reopen=$('reopenGeneralButton');if(reopen)reopen.disabled=!(status&&status.phase==='general');
       if(finalWrap)finalWrap.classList.toggle('hidden',!session.isAdmin||!status||status.phase!=='general');
       if(finalButton){finalButton.disabled=generalBallots<20;finalButton.textContent=generalBallots<20?`Iniciar 2ª fase (${generalBallots}/20 cédulas)`:`Iniciar 2ª fase (${generalBallots} cédulas)`;}
       const phaseName=adminStats.phase==='general'?'Votação geral':adminStats.phase==='final'?'Final por categoria':adminStats.phase==='closed'?'Encerrada':'Não iniciada';
       root.innerHTML=`<div class="stats-grid"><div class="stat"><strong>${total}</strong><span>Cédulas nesta fase</span></div><div class="stat"><strong>${max}</strong><span>Participantes cadastrados</span></div><div class="stat"><strong>${pct}%</strong><span>Participação nesta fase</span></div></div><div class="notice">Fase: ${phaseName}. Cédulas na votação geral: ${Number(phases.general||0)} · Cédulas na final: ${Number(phases.final||0)}. ${status&&status.deadline?`Prazo final: ${new Date(status.deadline).toLocaleString('pt-BR')}`:'Contagem ainda não iniciada.'} ${status&&status.resultsReleased?'Resultados públicos liberados.':'Os totais abaixo são restritos à ADM até o fim do prazo.'}</div><h3 class="section-title" style="font-size:20px">Apuração ao vivo — ${adminStats.tallyPhase==='final'?'final por categoria':'votação geral'}</h3><div class="tally-list">${categories.map(c=>{const item=(adminStats.results||[]).find(x=>x.categoryId===c.id)||{votes:[]};const sorted=(item.votes||[]).slice().sort((a,b)=>b.count-a.count||a.name.localeCompare(b.name,'pt-BR')).filter(x=>x.count>0);return `<div class="tally-card"><h3>${h(c.name)}</h3>${sorted.length?sorted.slice(0,5).map(v=>`<div class="tally-row"><span>${h(v.name)}</span><span class="count">${Number(v.count).toLocaleString('pt-BR',{maximumFractionDigits:1})} pt</span></div>`).join(''):'<div class="tally-row"><span>Sem votos ainda</span><span class="count">0</span></div>'}</div>`}).join('')}</div>`;
     }
-    function startPolling(){if(polling)clearInterval(polling);if(ticker)clearInterval(ticker);if(investigationPolling)clearInterval(investigationPolling);if(maintenancePolling)clearInterval(maintenancePolling);polling=setInterval(async()=>{try{await refreshMaintenanceMode();if(!session||maintenanceEnabled&&!session.isAdmin)return;await refreshAll(false)}catch(e){/* polling quietly retries */}},20000);investigationPolling=setInterval(async()=>{try{if(session&&(!maintenanceEnabled||session.isAdmin))await refreshInvestigation()}catch(e){/* rotation polling quietly retries */}},60000);maintenancePolling=setInterval(async()=>{try{await refreshMaintenanceMode()}catch(e){/* polling quietly retries */}},20000);ticker=setInterval(updateTimer,1000);}
+    function startPolling(){
+      if(polling)clearInterval(polling);if(ticker)clearInterval(ticker);if(investigationPolling)clearInterval(investigationPolling);if(maintenancePolling)clearInterval(maintenancePolling);
+      polling=setInterval(async()=>{try{await refreshMaintenanceMode();if(!session||maintenanceEnabled&&!session.isAdmin)return;await refreshAll(false)}catch(e){/* polling quietly retries */}},20000);
+      // Desafios, perguntas, enigmas e tickets não fazem parte desta edição.
+      investigationPolling=null;
+      maintenancePolling=setInterval(async()=>{try{await refreshMaintenanceMode()}catch(e){/* polling quietly retries */}},20000);
+      ticker=setInterval(updateTimer,1000);
+    }
     async function boot(){
       if(!configReady){$('loginButton').disabled=true;message($('loginMessage'),'O site está pronto, mas falta a configuração do Supabase. Siga o LEIA-ME do projeto e preencha docs/config.js.','error');return;}
       try{
@@ -1007,9 +1073,9 @@
         maintenancePolling=setInterval(async()=>{try{await refreshMaintenanceMode()}catch(e){/* retry quietly */}},20000);
         const saved=sessionStorage.getItem('firstA_session');
         if(!saved){applyMaintenanceScreen();return;}
-        session=JSON.parse(saved);
+        session=JSON.parse(saved);document.body.classList.toggle('is-admin',!!session.isAdmin);$('spoilersSection').classList.toggle('hidden',!!session.isAdmin);
         if(maintenanceEnabled&&!session.isAdmin){sessionStorage.removeItem('firstA_session');session=null;applyMaintenanceScreen();return;}
-        $('loginView').classList.add('hidden');$('dashboardView').classList.remove('hidden');applyMaintenanceScreen();await refreshAll(true);startPolling();
+        $('loginView').classList.add('hidden');$('dashboardView').classList.remove('hidden');applyMaintenanceScreen();await refreshAll(true);if(!session.isAdmin)refreshPublicSpoilers();startPolling();
       }catch(err){sessionStorage.removeItem('firstA_session');session=null;$('dashboardView').classList.add('hidden');$('loginView').classList.remove('hidden');message($('loginMessage'),'Não foi possível verificar o modo de manutenção ou a sessão. Atualize a página e confira a configuração do Supabase.','error');}
     }
     // Música ambiente original, sintetizada localmente no navegador (sem arquivo externo).
@@ -1049,7 +1115,6 @@
     $('soundToggle').addEventListener('click',toggleSound);
     function playSelectionSound(){if(!soundEnabled)return;tone(783.99,0.12,0.018,'triangle');tone(1046.5,0.2,0.014,'sine',0.08);}
     boot();
-    refreshPublicSpoilers();
   })();
   </script>
 </body>

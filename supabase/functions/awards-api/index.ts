@@ -12,7 +12,7 @@ const ADMIN_NAME = "david chrispim de melo";
 const DAY_MS = 24 * 60 * 60 * 1000;
 
 const categories = [
-  { id: "iconico", name: "Mais Bonito(a)" },
+  { id: "iconico", name: "Mais Icônico(a)" },
   { id: "mais_fofoqueiro", name: "Mais Fofoqueiro(a)" },
   { id: "mais_sem_filtro", name: "Mais Sem Filtro" },
   { id: "mais_dramatico", name: "Mais Dramático(a)" },
@@ -28,7 +28,7 @@ const categories = [
   { id: "mais_preguicoso", name: "Mais Preguiçoso(a)" },
   { id: "pai_mae_turma", name: "Mais “Pai/Mãe da Turma”" },
   { id: "mais_cringe", name: "Mais Cringe" },
-  { id: "mais_estiloso", name: "Mais Feio(a)" },
+  { id: "mais_estiloso", name: "Mais Estiloso(a)" },
   { id: "mais_cola", name: "Mais “Cola”" },
   { id: "mais_gente_boa", name: "Mais Gente Boa" },
   { id: "mais_sortudo", name: "Mais Sortudo(a)" },
@@ -209,8 +209,10 @@ async function getFinalistsByCategory(): Promise<Record<string, Array<{ id: stri
   const general = await getAggregate("general");
   const finalists: Record<string, Array<{ id: string; name: string; count: number }>> = {};
   for (const category of general.results) {
-    // Ordenação determinística: votos decrescentes; em empate, ordem alfabética.
-    finalists[category.categoryId] = category.votes.slice(0, 4);
+    // Avançam os quatro primeiros e todos os empatados na pontuação da 4ª vaga.
+    const ranked = category.votes.filter((person) => person.count > 0);
+    const cutoff = ranked.length >= 4 ? ranked[3].count : (ranked[ranked.length - 1]?.count ?? 0);
+    finalists[category.categoryId] = ranked.filter((person) => person.count >= cutoff);
   }
   return finalists;
 }
@@ -238,9 +240,42 @@ Deno.serve(async (req: Request) => {
   try {
     const body = await req.json();
     const action = String(body.action ?? "");
+    const retiredInvestigationActions = new Set([
+      "investigation_data", "solve_daily_challenge", "solve_investigation_puzzle",
+      "submit_investigation_question", "claim_investigation_easter_egg",
+      "activate_investigation_ticket", "investigation_spoiler", "investigation_admin_data",
+      "investigation_admin_add_stock_question", "investigation_admin_save_daily",
+      "investigation_admin_save_puzzle", "investigation_admin_review_submission",
+    ]);
+    if (retiredInvestigationActions.has(action)) {
+      return json({ error: "Os desafios, perguntas, enigmas e tickets VIP foram encerrados nesta edição do Awards." }, 410);
+    }
 
     if (action === "maintenance_status") {
       return json(await getMaintenanceState());
+    }
+    if (action === "category_settings") {
+      await authenticatedSession(body.session);
+      const { data, error } = await supabase.from("awards_category_labels").select("category_id, original_name, display_name, description");
+      if (error && String(error.code ?? "") !== "42P01") throw error;
+      const saved = new Map<string, any>((data ?? []).map((row: any) => [String(row.category_id), row] as [string, any]));
+      return json({ categories: categories.map((category) => { const row: any = saved.get(category.id); return { id: category.id, original_name: row?.original_name || category.name, name: row?.display_name || category.name, desc: row?.description || "" }; }) });
+    }
+
+    if (action === "admin_save_category_settings") {
+      await authenticatedSession(body.session, true);
+      if (!Array.isArray(body.categories) || body.categories.length !== categories.length) return json({ error: "A lista de categorias está incompleta." }, 400);
+      const rows = body.categories.map((item: any) => {
+        const original = categories.find((category) => category.id === String(item.id));
+        if (!original) throw new Error("Categoria inválida.");
+        const displayName = String(item.name ?? "").trim().slice(0, 90);
+        const description = String(item.desc ?? "").trim().slice(0, 240);
+        if (!displayName) throw new Error("O nome de uma categoria está vazio.");
+        return { category_id: original.id, original_name: original.name, display_name: displayName, description, updated_at: new Date().toISOString() };
+      });
+      const { error } = await supabase.from("awards_category_labels").upsert(rows, { onConflict: "category_id" });
+      if (error) { if (String(error.code ?? "") === "42P01") return json({ error: "A tabela de categorias editáveis ainda não existe. Execute a migração SQL incluída no pacote." }, 409); throw error; }
+      return json({ success: true, message: "Categorias atualizadas para todos os participantes." });
     }
 
     if (action === "admin_set_maintenance") {
@@ -273,6 +308,8 @@ Deno.serve(async (req: Request) => {
     }
 
     if (action === "public_spoilers") {
+      const viewer = await authenticatedSession(body.session);
+      if (viewer.admin === true) return json({ items: [], nextRefreshAt: Date.now() + 15 * 60 * 1000 });
       const { phase } = await getAwardsState();
       const slotMs = 15 * 60 * 1000;
       const slot = Math.floor(Date.now() / slotMs);
@@ -744,6 +781,19 @@ Deno.serve(async (req: Request) => {
       if (data?.deadline) return json({ deadline: data.deadline, phase: data.phase, alreadyStarted: false });
       const latest = await getAwardsState();
       return json({ deadline: latest.deadline, phase: latest.phase, alreadyStarted: true });
+    }
+
+    if (action === "admin_reopen_general") {
+      await authenticatedSession(body.session, true);
+      const current = await getAwardsState();
+      if (current.phase !== "general") return json({ error: "A votação geral só pode ser reaberta antes do início da final." }, 409);
+      const deadline = new Date(Date.now() + 10 * 60 * 1000).toISOString();
+      const { data, error } = await supabase.from("awards_config")
+        .update({ deadline, phase: "general" }).eq("id", 1).eq("phase", "general")
+        .select("deadline, phase").maybeSingle();
+      if (error) throw error;
+      if (!data) return json({ error: "Não foi possível atualizar o prazo. Atualize a página e tente novamente." }, 409);
+      return json({ success: true, deadline: data.deadline, message: "Votação geral reaberta por 10 minutos. Cédulas existentes foram preservadas." });
     }
 
     if (action === "start_final") {
