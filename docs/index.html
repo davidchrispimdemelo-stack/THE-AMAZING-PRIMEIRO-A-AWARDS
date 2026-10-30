@@ -344,6 +344,13 @@
     .section-title{font-family:'Nunito',sans-serif!important;font-weight:1000!important;color:#fff!important;text-shadow:0 0 18px #ff74c855}.spoilers-section{border-left:4px solid #f5ed75!important}.spoiler-card{border-top:3px solid #f5ed75!important}.spoiler-card .spoiler-points{color:#f5ed75!important}.timebox{background:#160d2b!important;border-color:#b15acb!important}.timebox strong{color:#f5ed75!important}
     .admin-phase-controls{margin:20px 0}.admin-control-card{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px;align-items:center;padding:18px;border:1px solid #ff9bd6;border-radius:18px;background:linear-gradient(120deg,#391b50,#1a1942);box-shadow:0 12px 35px #0005}.admin-control-card h3,.admin-editor-heading h3{margin:5px 0;color:#fff;font-size:22px}.admin-control-card p,.admin-editor-heading p{margin:0;color:#e5c8ef;font-size:12px;line-height:1.6}.admin-control-card #reopenGeneralMessage{grid-column:1/-1}.category-admin-editor{margin:20px 0;padding:20px;border:1px solid #a85bc9;border-radius:20px;background:linear-gradient(145deg,#24143a,#160e29)}.admin-editor-heading{display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap}.category-editor-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:18px}.category-edit-row{padding:13px;border:1px solid #70438b;border-radius:14px;background:#160d28}.category-edit-row label{display:block;color:#f5ed75;font-size:10px;font-weight:900;letter-spacing:.1em;margin-bottom:5px}.category-edit-row .old-category-name{font-size:11px;color:#d6b6e4;margin:0 0 8px}.category-edit-row input,.category-edit-row textarea{width:100%;background:#0e081a;color:white;border:1px solid #70438b;border-radius:9px;padding:10px;font:inherit}.category-edit-row textarea{min-height:56px;resize:vertical}
     body.is-admin #votingSection,body.is-admin #alreadyVoted,body.is-admin #resultsSection,body.is-admin #spoilersSection,body.is-admin #personalMessageCard,body.is-admin #investigationPanel,body.is-admin .timer-panel{display:none!important}body.is-admin #adminSection{display:block!important}body.is-admin #adminInvestigationTools{display:none!important}
+    body.is-admin #viewGeneralResultsButton,body.is-admin #generalResultsPanel{display:none!important}
+    #generalResultsPanel .stats-head{margin-bottom:8px}
+    #generalResultsPanel .tally-list{margin-top:14px}
+    #generalResultsPanel .tally-card{min-width:0}
+    #generalResultsPanel .first-round-rank{display:inline-block;min-width:31px;color:var(--gold);font-weight:900}
+    #generalResultsPanel .tally-row{align-items:center}
+
     #investigationPanel,#adminInvestigationTools{display:none!important}#spoilersSection{margin-top:22px}
     @media(max-width:760px){.category-editor-list{grid-template-columns:1fr}.admin-control-card{grid-template-columns:1fr}.admin-control-card .button{width:100%}.hero h1{font-size:clamp(38px,12vw,64px)!important}}
     @media(prefers-reduced-motion:reduce){.hero:before,.hero:after{animation:none!important}.button,.category-card{transition:none!important}}
@@ -812,7 +819,7 @@
     </main>
 
     <main id="dashboardView" class="dashboard hidden">
-      <div class="dash-head"><div><div class="eyebrow" id="dashboardAreaLabel">ÁREA DO PARTICIPANTE</div><h2 id="welcomeTitle">Bem-vindo(a)!</h2><div id="statusLine" class="sub" style="margin:7px 0 0">Conectando ao sistema...</div></div><div class="dash-actions"><button id="refreshButton" class="button secondary">Atualizar dados</button><button id="logoutButton" class="button danger">Sair</button></div></div>
+      <div class="dash-head"><div><div class="eyebrow" id="dashboardAreaLabel">ÁREA DO PARTICIPANTE</div><h2 id="welcomeTitle">Bem-vindo(a)!</h2><div id="statusLine" class="sub" style="margin:7px 0 0">Conectando ao sistema...</div></div><div class="dash-actions"><button id="viewGeneralResultsButton" class="button secondary hidden" type="button" aria-expanded="false" aria-controls="generalResultsPanel">✦ Ver resultados do 1º turno</button><button id="refreshButton" class="button secondary">Atualizar dados</button><button id="logoutButton" class="button danger">Sair</button></div></div>
       <section id="personalMessageCard" class="panel personal-message hidden" aria-live="polite"><div class="eyebrow">UM RECADO PRA VOCÊ</div><h3>Mensagem individual</h3><p id="personalMessageText"></p></section>
       <section id="investigationPanel" class="panel investigation-shell" aria-labelledby="investigationTitle">
         <div style="padding:clamp(18px,3vw,27px)">
@@ -829,6 +836,13 @@
       <section class="timer-panel"><div><h3 id="timerTitle">A contagem regressiva</h3><p id="timerDescription">Fase 1 termina em 29/10/2026. Fase 2 termina em 08/11/2026.</p><div id="adminStartWrap" class="hidden" style="margin-top:14px"><button id="startCountdownButton" class="button primary" style="width:auto;margin:0">Abrir votação · iniciar prazo</button><p class="fine">A contagem começa uma única vez. O horário é registrado no servidor e vale para toda a turma.</p></div></div><div class="timer" id="timer"><div class="timebox"><strong id="days">20</strong><span>Dias</span></div><div class="timebox"><strong id="hours">00</strong><span>Horas</span></div><div class="timebox"><strong id="minutes">00</strong><span>Minutos</span></div><div class="timebox"><strong id="seconds">00</strong><span>Segundos</span></div></div></section>
       <section id="votingSection" class="hidden"><h2 class="section-title" id="ballotTitle">Votação geral</h2><p class="ballot-intro" id="ballotIntro">Em cada categoria, escolha uma 1ª opção (1 ponto) e uma 2ª opção diferente (0,5 ponto). Você pode pular categorias. A cédula desta fase não pode ser alterada depois do envio.</p><div class="ballot-progress" aria-live="polite"><div class="ballot-progress-top"><span>PROGRESSO DA CÉDULA</span><strong id="ballotProgressText">0 de 42 opções escolhidas</strong></div><div class="progress-track" role="progressbar" aria-label="Categorias preenchidas" aria-valuemin="0" aria-valuemax="42" aria-valuenow="0" id="ballotProgressTrack"><span id="ballotProgressBar"></span></div></div><form id="ballotForm"><div id="categoriesGrid" class="cat-grid"></div><div class="ballot-footer"><button class="button primary" id="submitBallotButton" type="submit" style="width:auto;margin:0">Enviar cédula</button><small>Confira as escolhas antes de enviar. O envio é definitivo.</small></div><div id="voteMessage" aria-live="polite"></div></form></section>
       <section id="alreadyVoted" class="panel hidden"><h2>Cédula registrada</h2><p id="alreadyVotedText" class="sub" style="margin-bottom:0">Sua cédula desta fase foi registrada. Você poderá participar da próxima fase quando ela abrir.</p></section>
+      <section id="generalResultsPanel" class="panel hidden" aria-labelledby="generalResultsTitle" style="margin-top:18px">
+        <div class="stats-head"><div><div class="eyebrow">CLASSIFICAÇÃO OFICIAL · FASE 1</div><h2 id="generalResultsTitle" class="section-title" style="margin:6px 0">Resultados do 1º turno</h2></div><button id="closeGeneralResultsButton" class="button secondary" type="button">Fechar</button></div>
+        <p class="ballot-intro">Confira a classificação da votação geral. Os cinco primeiros de cada categoria, incluindo todos os empatados na quinta posição, avançaram para a final.</p>
+        <div id="generalResultsSummary" class="notice" aria-live="polite"></div>
+        <div id="generalResultsMessage" aria-live="polite"></div>
+        <div id="generalResultsGrid" class="tally-list"></div>
+      </section>
       <section id="resultsSection" class="hidden"><h2 class="section-title">Resultados oficiais</h2><p class="ballot-intro">A votação terminou após as duas fases. Os resultados abaixo usam a pontuação da final: 1 ponto para a primeira opção e 0,5 para a segunda. Em caso de empate, todos os nomes empatados aparecem como vencedores.</p><div id="resultsGrid" class="result-grid"></div></section>
       <section id="adminSection" class="panel hidden" style="margin-top:28px"><div class="stats-head"><div><div class="eyebrow">ACESSO RESTRITO</div><h2 style="margin:8px 0 4px">Painel de administração</h2><p class="sub" style="margin:0">Acompanhe os totais por categoria e a participação. O painel não associa escolhas a alunos.</p></div><span class="pill">ADMIN</span></div><div id="adminFinalWrap" class="hidden" style="margin:18px 0;padding:15px;border:1px solid #5b4b20;background:#171819">
         <h3 style="margin:0 0 7px;font-size:20px">Começar a segunda fase</h3>
@@ -941,7 +955,7 @@
     $('adminSection').insertBefore($('adminStartWrap'), $('adminFinalWrap'));
     const cfg = window.AWARDS_CONFIG || {};
     const configReady = cfg.SUPABASE_URL && !cfg.SUPABASE_URL.includes('SEU-PROJETO') && cfg.SUPABASE_ANON_KEY && !cfg.SUPABASE_ANON_KEY.includes('COLE_');
-    let session = null, candidates = [], finalistsByCategory = {}, status = null, results = null, adminStats = null, lastReleased = null, lastPhase = null, polling = null, ticker = null, investigationPolling = null, releaseRefreshPending = false, serverOffsetMs = 0, investigationState = null, investigationAdmin = null;
+    let session = null, candidates = [], finalistsByCategory = {}, status = null, results = null, generalResultsData = null, adminStats = null, lastReleased = null, lastPhase = null, polling = null, ticker = null, investigationPolling = null, releaseRefreshPending = false, serverOffsetMs = 0, investigationState = null, investigationAdmin = null;
     let maintenanceEnabled = false, maintenanceMessage = 'O THE AMAZING PRIMEIRO A AWARDS está em manutenção. Voltaremos em breve.', maintenancePolling = null;
     function normalizeName(s){return (s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('pt-BR').replace(/[^a-z0-9 ]/g,' ').replace(/\s+/g,' ').trim();}
     function h(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
@@ -1224,7 +1238,7 @@
       finally{btn.disabled=false;updateLoginMode();}
     });
     $('logoutButton').addEventListener('click',()=>{
-      sessionStorage.removeItem('firstA_session');session=null;candidates=[];finalistsByCategory={};status=null;results=null;adminStats=null;lastPhase=null;investigationState=null;investigationAdmin=null;
+      sessionStorage.removeItem('firstA_session');session=null;candidates=[];finalistsByCategory={};status=null;results=null;generalResultsData=null;adminStats=null;lastPhase=null;investigationState=null;investigationAdmin=null;
       if(polling)clearInterval(polling);if(ticker)clearInterval(ticker);if(investigationPolling)clearInterval(investigationPolling);
       $('categoriesGrid').innerHTML='';$('categoriesGrid').dataset.rendered='';
       document.body.classList.remove('is-admin');if(publicSpoilerTimer)clearTimeout(publicSpoilerTimer);$('spoilersSection').classList.add('hidden');
@@ -1237,6 +1251,18 @@
     $('reopenGeneralButton').addEventListener('click',async()=>{const b=$('reopenGeneralButton');b.disabled=true;try{const d=await api('admin_reopen_general',{session:session.token});message($('reopenGeneralMessage'),d.message||'Votação geral reaberta por 10 minutos. Os votos existentes foram preservados.','success');await refreshAll(true);}catch(e){message($('reopenGeneralMessage'),e.message||'Não foi possível reabrir.','error');}finally{b.disabled=false;}});
     $('saveCategoriesButton').addEventListener('click',saveCategorySettings);
     $('generateResultsImageButton').addEventListener('click',generateResultsImage);
+    $('viewGeneralResultsButton').addEventListener('click',async()=>{
+      const button=$('viewGeneralResultsButton'),panel=$('generalResultsPanel');
+      if(!panel.classList.contains('hidden')){panel.classList.add('hidden');button.setAttribute('aria-expanded','false');return;}
+      button.disabled=true;button.textContent='Carregando resultados…';clearMessage($('generalResultsMessage'));
+      try{
+        if(!generalResultsData)generalResultsData=await api('general_results',{session:session.token});
+        renderGeneralResults();panel.classList.remove('hidden');button.setAttribute('aria-expanded','true');
+        panel.scrollIntoView({behavior:document.body.classList.contains('minimal-mode')?'auto':'smooth',block:'start'});
+      }catch(error){panel.classList.remove('hidden');message($('generalResultsMessage'),error.message||'Não foi possível carregar os resultados do 1º turno.','error');button.setAttribute('aria-expanded','true');}
+      finally{button.disabled=false;button.textContent='✦ Ver resultados do 1º turno';}
+    });
+    $('closeGeneralResultsButton').addEventListener('click',()=>{$('generalResultsPanel').classList.add('hidden');$('viewGeneralResultsButton').setAttribute('aria-expanded','false');$('viewGeneralResultsButton').focus();});
     $('refreshButton').addEventListener('click',()=>refreshAll(true).catch(showDashboardError));
     $('dailyChallengeForm').addEventListener('submit',onDailyChallengeSubmit);
     $('investigationTickets').addEventListener('click',event=>{const activate=event.target.closest('[data-activate-ticket]');if(activate){activateTicket(activate.getAttribute('data-activate-ticket'));return;}const view=event.target.closest('[data-view-vip]');if(view)viewVipSpoiler(view.getAttribute('data-view-vip'));});
@@ -1415,6 +1441,9 @@
       $('personalMessageText').textContent = personalMessage;
       $('adminSection').classList.toggle('hidden',!session.isAdmin);
       $('adminStartWrap').classList.toggle('hidden',!session.isAdmin||!!status.deadline);
+      const canSeeGeneralResults = !session.isAdmin && (status.phase === 'final' || status.phase === 'closed');
+      $('viewGeneralResultsButton').classList.toggle('hidden',!canSeeGeneralResults);
+      if(!canSeeGeneralResults){$('generalResultsPanel').classList.add('hidden');$('viewGeneralResultsButton').setAttribute('aria-expanded','false');}
       $('timer').classList.toggle('hidden',!status.deadline);
       if(status.phase==='not_started'){
         $('timerTitle').textContent='A contagem ainda não começou';
@@ -1432,7 +1461,7 @@
         $('ballotTitle').textContent=general?'Votação geral':'Final por categoria';
         $('ballotIntro').textContent=general
           ?'Escolha uma 1ª opção (1 ponto) e uma 2ª opção diferente (0,5 ponto) por categoria. Quando houver 20 cédulas gerais, a ADM poderá iniciar a final. Você pode pular categorias.'
-          :'Agora cada categoria mostra os finalistas da primeira fase. Empates na quarta vaga avançam juntos. Escolha 1ª opção (1 ponto) e 2ª opção diferente (0,5 ponto). A cédula da final é independente da primeira.';
+          :'Agora cada categoria mostra os cinco primeiros colocados da primeira fase. Empates na quinta vaga avançam juntos. Escolha 1ª opção (1 ponto) e 2ª opção diferente (0,5 ponto). A cédula da final é independente da primeira.';
         $('resultsSection').classList.add('hidden');
         const generalDeadlinePassed = general && !!status.phaseDeadline && new Date(status.phaseDeadline).getTime() <= (Date.now()+serverOffsetMs);
         $('votingSection').classList.toggle('hidden',!!status.hasVoted||generalDeadlinePassed);
@@ -1479,6 +1508,25 @@
     function renderResults(){
       const map=new Map((results||[]).map(x=>[x.categoryId,x]));
       $('resultsGrid').innerHTML=categories.map(c=>{const item=map.get(c.id)||{votes:[]};const top=(item.votes||[]).filter(v=>v.count===Math.max(0,...(item.votes||[]).map(x=>x.count))&&v.count>0);const winners=top.length?top.map(t=>h(t.name)).join(' & '):'Sem votos';const n=top.length?top[0].count:0;return `<article class="result"><span class="pill">${h(c.group)}</span><h3>${h(c.name)}</h3><div class="winner">${winners}</div><div class="votes">${n?`${String(n).replace('.',',')} ponto(s) na liderança por vencedor`:'Nenhum voto nesta categoria'}</div></article>`}).join('');
+    }
+    function renderGeneralResults(){
+      const map=new Map((generalResultsData&&generalResultsData.results||[]).map(item=>[item.categoryId,item]));
+      const ballotCount=Number(generalResultsData&&generalResultsData.totalBallots||0);
+      $('generalResultsSummary').textContent=`${ballotCount.toLocaleString('pt-BR')} cédula(s) contabilizada(s) no 1º turno. A pontuação considera 1 ponto para a 1ª opção e 0,5 ponto para a 2ª opção.`;
+      $('generalResultsGrid').innerHTML=categories.map(category=>{
+        const source=map.get(category.id)||{votes:[]};
+        const sorted=(source.votes||[]).map(row=>({name:String(row.name||'Participante'),count:Number(row.count)||0})).filter(row=>row.count>0).sort((a,b)=>b.count-a.count||a.name.localeCompare(b.name,'pt-BR'));
+        const cutoff=sorted.length>=5?sorted[4].count:(sorted[sorted.length-1]?.count||0);
+        const classified=cutoff>0?sorted.filter(row=>row.count>=cutoff):[];
+        let lastScore=null,rank=0;
+        const rows=classified.map((row,index)=>{
+          if(lastScore===null||row.count!==lastScore)rank=index+1;
+          lastScore=row.count;
+          const points=row.count.toLocaleString('pt-BR',{maximumFractionDigits:1});
+          return `<div class="tally-row"><span><strong class="first-round-rank">${rank}º</strong>${h(row.name)}</span><span class="count">${points} pt</span></div>`;
+        }).join('');
+        return `<article class="tally-card"><h3>${h(category.name)}</h3>${rows||'<div class="tally-row"><span>Sem votos nesta categoria</span><span class="count">—</span></div>'}${classified.length>5?'<p class="fine" style="margin:9px 0 0">Empate na 5ª posição: todos avançaram.</p>':''}</article>`;
+      }).join('');
     }
     function canvasRoundRect(ctx,x,y,w,h,r,fill,stroke){
       const radius=Math.min(r,w/2,h/2);

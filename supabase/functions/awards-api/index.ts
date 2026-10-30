@@ -217,9 +217,9 @@ async function getFinalistsByCategory(): Promise<Record<string, Array<{ id: stri
   const general = await getAggregate("general");
   const finalists: Record<string, Array<{ id: string; name: string; count: number }>> = {};
   for (const category of general.results) {
-    // Avançam os quatro primeiros e todos os empatados na pontuação da 4ª vaga.
+    // Avançam os cinco primeiros e todos os empatados na pontuação da 5ª vaga.
     const ranked = category.votes.filter((person) => person.count > 0);
-    const cutoff = ranked.length >= 4 ? ranked[3].count : (ranked[ranked.length - 1]?.count ?? 0);
+    const cutoff = ranked.length >= 5 ? ranked[4].count : (ranked[ranked.length - 1]?.count ?? 0);
     finalists[category.categoryId] = ranked.filter((person) => person.count >= cutoff);
   }
   return finalists;
@@ -892,7 +892,7 @@ Deno.serve(async (req: Request) => {
           const allowed = finalists[categoryId] ?? [];
           for (const candidateId of [selection.first, selection.second].filter((id): id is string => Boolean(id))) {
             if (!allowed.some((person) => person.id === candidateId)) {
-              return json({ error: "Na final, escolha entre as quatro pessoas classificadas em cada categoria. Atualize a página e confira a lista de finalistas." }, 400);
+              return json({ error: "Na final, escolha entre as cinco pessoas classificadas em cada categoria, incluindo possíveis empates na 5ª vaga. Atualize a página e confira a lista de finalistas." }, 400);
             }
           }
         }
@@ -923,6 +923,16 @@ Deno.serve(async (req: Request) => {
       const { phase } = await getAwardsState();
       if (phase !== "closed") return json({ error: "Os resultados oficiais ficam disponíveis ao terminar o prazo da final." }, 403);
       const aggregate = await getAggregate("final");
+      return json({ results: aggregate.results, totalBallots: aggregate.totalBallots });
+    }
+
+    if (action === "general_results") {
+      await authenticatedSession(body.session);
+      const { phase } = await getAwardsState();
+      if (phase !== "final" && phase !== "closed") {
+        return json({ error: "A classificação do 1º turno será liberada quando a ADM iniciar a segunda fase." }, 403);
+      }
+      const aggregate = await getAggregate("general");
       return json({ results: aggregate.results, totalBallots: aggregate.totalBallots });
     }
 
