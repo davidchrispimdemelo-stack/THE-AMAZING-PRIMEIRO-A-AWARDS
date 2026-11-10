@@ -12,7 +12,7 @@ const ADMIN_NAME = "david chrispim de melo";
 const DAY_MS = 24 * 60 * 60 * 1000;
 
 const categories = [
-  { id: "iconico", name: "Mais Icônico(a)" },
+  { id: "mais_iconico", name: "Mais Icônico(a)" },
   { id: "mais_fofoqueiro", name: "Mais Fofoqueiro(a)" },
   { id: "mais_sem_filtro", name: "Mais Sem Filtro" },
   { id: "mais_dramatico", name: "Mais Dramático(a)" },
@@ -175,20 +175,24 @@ async function getPersonalMessage(studentId: string): Promise<string | null> {
 async function getAggregate(phase: "general" | "final" | null = null) {
   const [{ data: students, error: studentsError }, { data: allBallots, error: ballotsError }] = await Promise.all([
     supabase.from("students").select("id, full_name"),
-    supabase.from("ballots").select("votes, phase"),
+    supabase.from("ballots").select("votes, phase, is_iconico_revote"),
   ]);
   if (studentsError) throw studentsError;
   if (ballotsError) throw ballotsError;
   const people = (students ?? []).map((s: any) => ({ id: String(s.id), name: String(s.full_name) }));
   const names = new Map<string, string>(people.map((s: any) => [s.id, s.name] as [string, string]));
   const ballots = (allBallots ?? []).filter((b: any) => !phase || b.phase === phase);
+  const regularBallots = ballots.filter((b: any) => b.is_iconico_revote !== true);
   const counts = new Map<string, Map<string, number>>();
   for (const category of categories) {
     counts.set(category.id, new Map(people.map((person: any) => [person.id, 0] as [string, number])));
   }
   for (const ballot of ballots) {
     const votes = ballot.votes && typeof ballot.votes === "object" ? ballot.votes as Record<string, unknown> : {};
-    for (const [categoryId, selection] of Object.entries(votes)) {
+    for (const [storedCategoryId, selection] of Object.entries(votes)) {
+      // Votos antigos usavam "iconico"; o ID atual da categoria é "mais_iconico".
+      if (storedCategoryId === "iconico" && Object.prototype.hasOwnProperty.call(votes, "mais_iconico")) continue;
+      const categoryId = storedCategoryId === "iconico" ? "mais_iconico" : storedCategoryId;
       if (!categoryIds.has(categoryId)) continue;
       const tally = counts.get(categoryId)!;
       // Compatibilidade: cédulas antigas guardavam apenas um ID por categoria (1 ponto).
@@ -211,7 +215,7 @@ async function getAggregate(phase: "general" | "final" | null = null) {
       .map(([id, count]) => ({ id, name: names.get(id)!, count }))
       .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name, "pt-BR")),
   }));
-  return { results, totalBallots: ballots.length, totalStudents: people.length };
+  return { results, totalBallots: regularBallots.length, totalStudents: people.length };
 }
 async function getFinalistsByCategory(): Promise<Record<string, Array<{ id: string; name: string; count: number }>>> {
   const general = await getAggregate("general");
@@ -225,13 +229,14 @@ async function getFinalistsByCategory(): Promise<Record<string, Array<{ id: stri
   return finalists;
 }
 async function getPhaseBallotCounts() {
-  const { data, error } = await supabase.from("ballots").select("phase");
+  const { data, error } = await supabase.from("ballots").select("phase, is_iconico_revote");
   if (error) throw error;
-  return (data ?? []).reduce((counts: { general: number; final: number }, ballot: any) => {
+  return (data ?? []).reduce((counts: { general: number; final: number; iconicoRevotes: number }, ballot: any) => {
+    if (ballot.is_iconico_revote === true) { counts.iconicoRevotes++; return counts; }
     if (ballot.phase === "general") counts.general++;
     if (ballot.phase === "final") counts.final++;
     return counts;
-  }, { general: 0, final: 0 });
+  }, { general: 0, final: 0, iconicoRevotes: 0 });
 }
 async function authenticatedSession(token: unknown, requireAdmin = false) {
   const session = await verifySession(token);
@@ -264,10 +269,10 @@ Deno.serve(async (req: Request) => {
     }
     if (action === "category_settings") {
       await authenticatedSession(body.session);
-      const { data, error } = await supabase.from("awards_category_labels").select("category_id, original_name, display_name, description");
+      const { data, error } = await supabase.from("awards_category_labels").select("category_id, original_name, display_name, description, category_type");
       if (error && String(error.code ?? "") !== "42P01") throw error;
       const saved = new Map<string, any>((data ?? []).map((row: any) => [String(row.category_id), row] as [string, any]));
-      return json({ categories: categories.map((category) => { const row: any = saved.get(category.id); return { id: category.id, original_name: row?.original_name || category.name, name: row?.display_name || category.name, desc: row?.description || "" }; }) });
+      return json({ categories: categories.map((category) => { const row: any = saved.get(category.id); return { id: category.id, original_name: row?.original_name || category.name, name: row?.display_name || category.name, desc: row?.description || "", category_type: row?.category_type === 'extra' ? 'extra' : 'main' }; }) });
     }
 
     if (action === "admin_save_category_settings") {
@@ -278,8 +283,9 @@ Deno.serve(async (req: Request) => {
         if (!original) throw new Error("Categoria inválida.");
         const displayName = String(item.name ?? "").trim().slice(0, 90);
         const description = String(item.desc ?? "").trim().slice(0, 240);
+        const categoryType = item.category_type === "extra" ? "extra" : "main";
         if (!displayName) throw new Error("O nome de uma categoria está vazio.");
-        return { category_id: original.id, original_name: original.name, display_name: displayName, description, updated_at: new Date().toISOString() };
+        return { category_id: original.id, original_name: original.name, display_name: displayName, description, category_type: categoryType, updated_at: new Date().toISOString() };
       });
       const { error } = await supabase.from("awards_category_labels").upsert(rows, { onConflict: "category_id" });
       if (error) { if (String(error.code ?? "") === "42P01") return json({ error: "A tabela de categorias editáveis ainda não existe. Execute a migração SQL incluída no pacote." }, 409); throw error; }
@@ -335,23 +341,26 @@ Deno.serve(async (req: Request) => {
         return randomState / 4294967296;
       };
 
-      const shuffled = categories.slice();
-      for (let i = shuffled.length - 1; i > 0; i--) {
-        const j = Math.floor(seededRandom() * (i + 1));
-        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-      }
-
-      const items: Array<{ categoryId: string; categoryName: string; name: string; points: number; rank: number }> = [];
-      for (const category of shuffled) {
-        const categoryResult = aggregate.results.find((item) => item.categoryId === category.id);
-        if (!categoryResult) continue;
-        const eligible = categoryResult.votes.filter((person) => Number(person.count) > 0);
-        if (!eligible.length) continue;
-        const person = eligible[Math.floor(seededRandom() * eligible.length)];
-        const rank = 1 + categoryResult.votes.filter((other) => Number(other.count) > Number(person.count)).length;
-        items.push({ categoryId: category.id, categoryName: category.name, name: person.name, points: person.count, rank });
-        if (items.length === 3) break;
-      }
+      const { data: categoryRows, error: categoryRowsError } = await supabase.from("awards_category_labels").select("category_id, display_name, category_type");
+      if (categoryRowsError && String(categoryRowsError.code ?? "") !== "42P01") throw categoryRowsError;
+      const categoryMeta = new Map<string, any>((categoryRows ?? []).map((row: any) => [String(row.category_id), row]));
+      const pickFrom = (type: "main" | "extra", limit: number) => {
+        const pool = categories.filter((category) => (categoryMeta.get(category.id)?.category_type === "extra" ? "extra" : "main") === type).slice();
+        for (let i = pool.length - 1; i > 0; i--) { const j = Math.floor(seededRandom() * (i + 1)); [pool[i], pool[j]] = [pool[j], pool[i]]; }
+        const picked: Array<{ categoryId: string; categoryName: string; name: string; points: number; rank: number; categoryType: string }> = [];
+        for (const category of pool) {
+          const categoryResult = aggregate.results.find((item) => item.categoryId === category.id);
+          if (!categoryResult) continue;
+          const eligible = categoryResult.votes.filter((person) => Number(person.count) > 0);
+          if (!eligible.length) continue;
+          const person = eligible[Math.floor(seededRandom() * eligible.length)];
+          const rank = 1 + categoryResult.votes.filter((other) => Number(other.count) > Number(person.count)).length;
+          picked.push({ categoryId: category.id, categoryName: categoryMeta.get(category.id)?.display_name || category.name, name: person.name, points: person.count, rank, categoryType: type });
+          if (picked.length >= limit) break;
+        }
+        return picked;
+      };
+      const items = [...pickFrom("main", 2), ...pickFrom("extra", 1)];
 
       return json({ items, phase: tallyPhase, nextRefreshAt });
     }
@@ -575,6 +584,30 @@ Deno.serve(async (req: Request) => {
       return json({ success: true, message: "Mensagem individual salva." });
     }
 
+    if (action === "admin_enable_iconico_revote") {
+      await authenticatedSession(body.session, true);
+      const fullName = String(body.fullName ?? "").trim();
+      const normalized = normalizeName(fullName);
+      if (normalized.length < 5) return json({ error: "Digite o nome completo da pessoa." }, 400);
+      const { phase } = await getAwardsState();
+      if (phase !== "general" && phase !== "final") return json({ error: "Não há uma fase de votação aberta para liberar o voto complementar." }, 409);
+      const { data: student, error: studentError } = await supabase.from("students")
+        .select("id, full_name, has_voted_general, has_voted_final, is_admin, iconico_revote_enabled, iconico_revote_used, iconico_revote_phase")
+        .eq("normalized_name", normalized).maybeSingle();
+      if (studentError) throw studentError;
+      if (!student) return json({ error: "Não encontrei uma pessoa com esse nome completo. Confira a grafia." }, 404);
+      if (student.is_admin) return json({ error: "A conta ADM não pode receber voto complementar." }, 400);
+      const alreadyVotedAwards = Boolean(student.has_voted_general || student.has_voted_final);
+      if (!alreadyVotedAwards) return json({ error: "Essa pessoa ainda não enviou nenhuma cédula do Awards." }, 409);
+      if (student.iconico_revote_used) return json({ error: "Essa pessoa já usou o voto complementar de Mais Bonito(a)." }, 409);
+      if (student.iconico_revote_enabled && student.iconico_revote_phase === phase) return json({ error: "O voto complementar já está liberado para essa pessoa nesta fase." }, 409);
+      const { error } = await supabase.from("students")
+        .update({ iconico_revote_enabled: true, iconico_revote_phase: phase })
+        .eq("id", student.id).eq("iconico_revote_used", false);
+      if (error) throw error;
+      return json({ success: true, fullName: student.full_name, phase, message: `Voto complementar liberado para ${student.full_name}, somente na categoria Mais Bonito(a) e na fase ${phase === "general" ? "geral" : "final"}. A cédula antiga e as outras categorias permanecem intactas.` });
+    }
+
     if (action === "admin_reset_student_vote") {
       await authenticatedSession(body.session, true);
       const fullName = String(body.fullName ?? "").trim();
@@ -749,19 +782,25 @@ Deno.serve(async (req: Request) => {
       let hasVotedFinal: boolean | null = null;
       let isAdmin = false;
       let personalMessage: string | null = null;
+      let iconicoRevoteEnabled = false;
+      let iconicoRevoteUsed = false;
+      let iconicoRevotePhase: string | null = null;
       if (body.session) {
         const session = await authenticatedSession(body.session);
         isAdmin = session.admin === true;
         personalMessage = await getPersonalMessage(String(session.sid));
         const { data: studentState, error } = await supabase.from("students")
-          .select("has_voted_general, has_voted_final").eq("id", session.sid).single();
+          .select("has_voted_general, has_voted_final, iconico_revote_enabled, iconico_revote_used, iconico_revote_phase").eq("id", session.sid).single();
         if (error) throw error;
         hasVotedGeneral = Boolean(studentState?.has_voted_general);
         hasVotedFinal = Boolean(studentState?.has_voted_final);
         hasVoted = phase === "general" ? hasVotedGeneral : phase === "final" ? hasVotedFinal : false;
+        iconicoRevoteEnabled = Boolean(studentState?.iconico_revote_enabled);
+        iconicoRevoteUsed = Boolean(studentState?.iconico_revote_used);
+        iconicoRevotePhase = typeof studentState?.iconico_revote_phase === "string" ? studentState.iconico_revote_phase : null;
       }
       const phaseDeadline = phase === "general" || phase === "final" || phase === "closed" ? deadline : null;
-      return json({ deadline, phaseDeadline, phase, resultsReleased: phase === "closed", hasVoted, hasVotedGeneral, hasVotedFinal, isAdmin, personalMessage, serverNow: new Date().toISOString() });
+      return json({ deadline, phaseDeadline, phase, resultsReleased: phase === "closed", hasVoted, hasVotedGeneral, hasVotedFinal, iconicoRevoteEnabled, iconicoRevoteUsed, iconicoRevotePhase, isAdmin, personalMessage, serverNow: new Date().toISOString() });
     }
 
     if (action === "candidates") {
@@ -810,6 +849,38 @@ Deno.serve(async (req: Request) => {
       return json({ success: true, deadline: data.deadline, message: "Votação geral reaberta por 10 minutos. Cédulas existentes foram preservadas." });
     }
 
+    if (action === "admin_reopen_final") {
+      await authenticatedSession(body.session, true);
+      const { data: config, error: configError } = await supabase.from("awards_config")
+        .select("deadline, phase").eq("id", 1).single();
+      if (configError) throw configError;
+      const storedPhase = String(config?.phase ?? "not_started");
+      const currentDeadline = config?.deadline ?? null;
+      const finalWasStarted = storedPhase === "final" || (storedPhase === "closed" && !isLegacyClosedGeneralPhase(currentDeadline, storedPhase));
+      if (!finalWasStarted || !currentDeadline) {
+        return json({ error: "A grande final não está encerrada em um estado que possa ser reaberto." }, 409);
+      }
+      const currentDeadlineMs = new Date(currentDeadline).getTime();
+      if (!Number.isFinite(currentDeadlineMs) || Date.now() < currentDeadlineMs) {
+        return json({ error: "A grande final ainda está aberta. Não é necessário reabri-la." }, 409);
+      }
+      const { data: generalBallots, error: ballotsError } = await supabase.from("ballots")
+        .select("ballot_id").eq("phase", "general").eq("is_iconico_revote", false);
+      if (ballotsError) throw ballotsError;
+      const totalGeneralBallots = generalBallots?.length ?? 0;
+      if (totalGeneralBallots < 20) {
+        return json({ error: `A final exige pelo menos 20 cédulas gerais. Encontradas: ${totalGeneralBallots}/20.` }, 409);
+      }
+      const deadline = new Date(Date.now() + 10 * DAY_MS).toISOString();
+      const { data, error } = await supabase.from("awards_config")
+        .update({ deadline, phase: "final" })
+        .eq("id", 1).eq("phase", storedPhase).eq("deadline", currentDeadline)
+        .select("deadline, phase").maybeSingle();
+      if (error) throw error;
+      if (!data) return json({ error: "A fase mudou enquanto você reabria a final. Atualize a página." }, 409);
+      return json({ success: true, deadline: data.deadline, phase: data.phase, totalGeneralBallots, message: "Grande final reaberta por 10 dias. Todas as cédulas já registradas foram preservadas." });
+    }
+
     if (action === "start_final") {
       await authenticatedSession(body.session, true);
       const { data: config, error: configError } = await supabase.from("awards_config")
@@ -823,15 +894,15 @@ Deno.serve(async (req: Request) => {
       }
 
       const { data: ballots, error: ballotsError } = await supabase
-        .from("ballots").select("ballot_id").eq("phase", "general");
+        .from("ballots").select("ballot_id").eq("phase", "general").eq("is_iconico_revote", false);
       if (ballotsError) throw ballotsError;
       const total = ballots?.length ?? 0;
       if (total < 20) {
         return json({ error: `Ainda são necessárias 20 cédulas da primeira fase. Recebidas: ${total}/20.` }, 409);
       }
 
-      // Prazo fixo: 08/11/2026 às 23:59:59 no horário de Brasília.
-      const deadline = "2026-11-09T02:59:59.000Z";
+      // A Fase 2 fica aberta por 10 dias a partir do momento em que a ADM a inicia.
+      const deadline = new Date(Date.now() + 10 * DAY_MS).toISOString();
       const { data, error } = await supabase.from("awards_config")
         .update({ deadline, phase: "final" })
         .eq("id", 1).eq("phase", storedPhase).eq("deadline", currentDeadline)
@@ -839,6 +910,53 @@ Deno.serve(async (req: Request) => {
       if (error) throw error;
       if (!data) return json({ error: "A fase mudou enquanto você iniciava a final. Atualize a página." }, 409);
       return json({ success: true, deadline: data.deadline, phase: data.phase, totalGeneralBallots: total });
+    }
+
+    if (action === "submit_iconico_revote") {
+      const session = await authenticatedSession(body.session);
+      if (session.admin === true) return json({ error: "A conta ADM não pode votar." }, 400);
+      const first = typeof body.first === "string" ? body.first.trim() : "";
+      const second = typeof body.second === "string" && body.second.trim() ? body.second.trim() : null;
+      if (!first) return json({ error: "Escolha uma pessoa para Mais Bonito(a)." }, 400);
+      if (second && second === first) return json({ error: "Escolha pessoas diferentes para a primeira e a segunda opção." }, 400);
+      const candidateIds = [first, second].filter((id): id is string => Boolean(id));
+      if (candidateIds.includes(String(session.sid))) return json({ error: "Você não pode votar em si mesmo(a)." }, 400);
+      const { data: validCandidates, error: candidatesError } = await supabase.from("students")
+        .select("id").in("id", candidateIds);
+      if (candidatesError) throw candidatesError;
+      const validIds = new Set((validCandidates ?? []).map((student: any) => String(student.id)));
+      if (candidateIds.some((id) => !validIds.has(id))) return json({ error: "Um ou mais indicados não são válidos." }, 400);
+      const { data: revoteState, error: revoteStateError } = await supabase.from("students")
+        .select("iconico_revote_enabled, iconico_revote_used, iconico_revote_phase")
+        .eq("id", session.sid).single();
+      if (revoteStateError) throw revoteStateError;
+      const targetPhase = String(revoteState?.iconico_revote_phase ?? "");
+      if (revoteState?.iconico_revote_enabled !== true || revoteState?.iconico_revote_used === true) {
+        return json({ error: "Você não tem um voto complementar disponível. Peça à ADM para conferir sua liberação." }, 403);
+      }
+      if (targetPhase !== "general" && targetPhase !== "final") return json({ error: "A fase salva para seu voto complementar é inválida. Avise a ADM." }, 409);
+      const { phase: activePhase } = await getAwardsState();
+      if (activePhase !== targetPhase) return json({ error: "A fase de votação mudou desde a liberação. Peça à ADM para liberar novamente seu voto de Mais Bonito(a) na fase atual." }, 409);
+      if (targetPhase === "final") {
+        const finalists = await getFinalistsByCategory();
+        const allowed = finalists["mais_iconico"] ?? [];
+        if (candidateIds.some((id) => !allowed.some((person) => person.id === id))) {
+          return json({ error: "Na final, escolha somente entre os classificados da categoria Mais Bonito(a)." }, 400);
+        }
+      }
+      const { error } = await supabase.rpc("submit_iconico_revote", {
+        p_student_id: session.sid, p_phase: targetPhase, p_first: first, p_second: second,
+      });
+      if (error) {
+        const msg = String(error.message ?? "");
+        if (msg.includes("já usou")) return json({ error: "Você já enviou seu voto complementar de Mais Bonito(a)." }, 409);
+        if (msg.includes("não foi liberado")) return json({ error: "A ADM ainda não liberou seu voto complementar." }, 403);
+        if (msg.includes("fase correspondente")) return json({ error: "Você precisa ter enviado a cédula da fase para a qual a ADM liberou seu voto." }, 403);
+        if (msg.includes("fase salva")) return json({ error: "A liberação não corresponde à fase atual. Peça à ADM para liberar novamente." }, 409);
+        if (msg.includes("participou do Awards")) return json({ error: "Esse voto complementar é exclusivo para quem já participou do Awards." }, 403);
+        throw error;
+      }
+      return json({ success: true, message: "Voto complementar de Mais Bonito(a) registrado." });
     }
 
     if (action === "submit_vote") {

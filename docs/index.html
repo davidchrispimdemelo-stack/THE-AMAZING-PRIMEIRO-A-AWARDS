@@ -837,6 +837,24 @@
       </section>
       <section class="timer-panel"><div><h3 id="timerTitle">A contagem regressiva</h3><p id="timerDescription">A votação da final fica aberta por 10 dias após ser iniciada ou reaberta.</p><div id="adminStartWrap" class="hidden" style="margin-top:14px"><button id="startCountdownButton" class="button primary" style="width:auto;margin:0">Abrir votação · iniciar prazo</button><p class="fine">A contagem começa uma única vez. O horário é registrado no servidor e vale para toda a turma.</p></div></div><div class="timer" id="timer"><div class="timebox"><strong id="days">20</strong><span>Dias</span></div><div class="timebox"><strong id="hours">00</strong><span>Horas</span></div><div class="timebox"><strong id="minutes">00</strong><span>Minutos</span></div><div class="timebox"><strong id="seconds">00</strong><span>Segundos</span></div></div></section>
       <section id="votingSection" class="hidden"><h2 class="section-title" id="ballotTitle">Votação geral</h2><p class="ballot-intro" id="ballotIntro">Em cada categoria, escolha uma 1ª opção (1 ponto) e uma 2ª opção diferente (0,5 ponto). Você pode pular categorias. A cédula desta fase não pode ser alterada depois do envio.</p><div class="ballot-progress" aria-live="polite"><div class="ballot-progress-top"><span>PROGRESSO DA CÉDULA</span><strong id="ballotProgressText">0 de 42 opções escolhidas</strong></div><div class="progress-track" role="progressbar" aria-label="Categorias preenchidas" aria-valuemin="0" aria-valuemax="42" aria-valuenow="0" id="ballotProgressTrack"><span id="ballotProgressBar"></span></div></div><form id="ballotForm"><div id="categoriesGrid" class="cat-grid"></div><div class="ballot-footer"><button class="button secondary" id="saveDraftButton" type="button" style="width:auto;margin:0">Salvar votação</button><button class="button primary" id="submitBallotButton" type="submit" style="width:auto;margin:0">Enviar cédula</button><small id="draftStatus">Salvamento automático ativado neste navegador. Salvar não envia seu voto.</small></div><div id="voteMessage" aria-live="polite"></div></form></section>
+      <section id="iconicoRevoteSection" class="panel hidden" style="margin-top:18px">
+        <div class="eyebrow">VOTO COMPLEMENTAR LIBERADO PELA ADM</div>
+        <h2 class="section-title" style="margin:7px 0" id="iconicoRevoteTitle">Mais Bonito(a)</h2>
+        <p class="ballot-intro" style="margin-bottom:14px">Esta é uma votação extra, somente para esta categoria. Seu voto antigo e todas as outras categorias continuam preservados. Escolha uma primeira opção (1 ponto) e, se quiser, uma segunda pessoa diferente (0,5 ponto).</p>
+        <form id="iconicoRevoteForm" class="investigation-entry">
+          <label class="label" for="iconicoRevoteFirst">1ª opção · 1 ponto</label>
+          <select id="iconicoRevoteFirst" class="field" required><option value="">Carregando participantes…</option></select>
+          <label class="label" for="iconicoRevoteSecond">2ª opção · 0,5 ponto (opcional)</label>
+          <select id="iconicoRevoteSecond" class="field"><option value="">Não escolher segunda opção</option></select>
+          <div class="investigation-actions"><button type="submit" class="button primary" id="iconicoRevoteSubmitButton">Enviar voto de Mais Bonito(a)</button></div>
+          <div id="iconicoRevoteMessage" aria-live="polite"></div>
+        </form>
+      </section>
+      <section id="iconicoRevoteDone" class="panel hidden" style="margin-top:18px">
+        <div class="eyebrow">VOTO COMPLEMENTAR REGISTRADO</div>
+        <h2 class="section-title" style="margin:7px 0">Mais Bonito(a)</h2>
+        <p class="sub" style="margin-bottom:0">Seu voto complementar já foi enviado. Você não pode votar novamente nesta categoria. Sua cédula anterior e as demais categorias continuam intactas.</p>
+      </section>
       <section id="alreadyVoted" class="panel hidden"><h2>Cédula registrada</h2><p id="alreadyVotedText" class="sub" style="margin-bottom:0">Sua cédula desta fase foi registrada. Você poderá participar da próxima fase quando ela abrir.</p></section>
       <section id="generalResultsPanel" class="panel hidden" aria-labelledby="generalResultsTitle" style="margin-top:18px">
         <div class="stats-head"><div><div class="eyebrow">CLASSIFICAÇÃO OFICIAL · FASE 1</div><h2 id="generalResultsTitle" class="section-title" style="margin:6px 0">Resultados do 1º turno</h2></div><button id="closeGeneralResultsButton" class="button secondary" type="button">Fechar</button></div>
@@ -879,7 +897,8 @@
         </div>
         <div id="adminInvestigationTools" class="investigation-admin">
           <div class="investigation-heading"><div><div class="investigation-kicker">CONTROLE DE PRODUÇÃO</div><h3 style="margin:4px 0">Central do Arquivo Dourado</h3><p class="sub" style="margin:0">Edite recados privados, publique o desafio de cada dia, crie arquivos e avalie sugestões.</p></div><span class="case-stamp">SOMENTE ADM</span></div>
-          <div class="investigation-entry" style="margin:14px 0;border-color:#76534a"><h4>Liberação de nova cédula</h4><p>Digite o nome completo para liberar a pessoa a votar novamente. Como as cédulas são anônimas, a cédula antiga não pode ser localizada nem removida individualmente; ela continuará nos totais.</p><form id="adminResetVoteForm"><label class="label" for="adminResetVoteName">Nome completo da pessoa</label><input id="adminResetVoteName" class="field" maxlength="120" autocomplete="off" placeholder="Nome completo, igual ao cadastro" required><div class="investigation-actions"><button type="submit" class="button danger" id="adminResetVoteButton">Liberar nova cédula</button></div><div id="adminResetVoteResult" aria-live="polite"></div></form></div>
+          <div class="investigation-entry" style="margin:14px 0;border-color:#3f7954"><h4>Liberação exclusiva — Mais Bonito(a)</h4><p>Use esta opção para liberar somente um voto complementar na categoria cujo ID é <code>mais_iconico</code>. A pessoa precisa já ter enviado pelo menos uma cédula do Awards (geral ou final). O voto extra entra na fase que estiver aberta e só poderá ser enviado uma vez.</p><form id="adminEnableIconicoRevoteForm"><label class="label" for="adminEnableIconicoRevoteName">Nome completo da pessoa</label><input id="adminEnableIconicoRevoteName" class="field" maxlength="120" autocomplete="off" placeholder="Nome completo, igual ao cadastro" required><div class="investigation-actions"><button type="submit" class="button primary" id="adminEnableIconicoRevoteButton">Liberar somente Mais Bonito(a)</button></div><div id="adminEnableIconicoRevoteResult" aria-live="polite"></div></form></div>
+          <div class="investigation-entry" style="margin:14px 0;border-color:#76534a"><h4>Liberação de cédula completa (todas as categorias)</h4><p>Esta opção antiga libera uma cédula inteira, não use para a votação exclusiva de Mais Bonito(a). Digite o nome completo para liberar a pessoa a votar novamente. Como as cédulas são anônimas, a cédula antiga não pode ser localizada nem removida individualmente; ela continuará nos totais.</p><form id="adminResetVoteForm"><label class="label" for="adminResetVoteName">Nome completo da pessoa</label><input id="adminResetVoteName" class="field" maxlength="120" autocomplete="off" placeholder="Nome completo, igual ao cadastro" required><div class="investigation-actions"><button type="submit" class="button danger" id="adminResetVoteButton">Liberar nova cédula</button></div><div id="adminResetVoteResult" aria-live="polite"></div></form></div>
           <div class="investigation-admin-grid">
             <form id="adminMessageForm" class="investigation-entry"><h4>Mensagens individuais</h4><label class="label" for="adminMessageStudent">Participante</label><select id="adminMessageStudent" class="field" required><option value="">Carregando participantes…</option></select><label class="label" for="adminPersonalMessage">Mensagem privada</label><textarea id="adminPersonalMessage" class="field" rows="4" maxlength="1200" placeholder="Escreva um recado só para essa pessoa…" style="resize:vertical"></textarea><div class="investigation-actions"><button type="submit" class="button primary">Salvar mensagem</button><button type="button" id="loadSelectedMessageButton" class="button secondary">Carregar atual</button></div><p class="fine">Deixe o campo vazio e salve para remover a mensagem atual.</p><div id="adminMessageResult" aria-live="polite"></div></form>
             <form id="adminDailyForm" class="investigation-entry"><h4>Adicionar pergunta ao estoque aleatório</h4><p class="fine">O sistema sorteia uma pergunta diferente para cada participante por dia, sem repetir a mesma pergunta entre as pessoas enquanto houver opções disponíveis.</p><label class="label" for="adminDailyTitle">Título curto</label><input id="adminDailyTitle" class="field" maxlength="90" placeholder="DROP 043 · NOVA PERGUNTA" required><label class="label" for="adminDailyPrompt">Pergunta</label><textarea id="adminDailyPrompt" class="field" rows="2" maxlength="500" required placeholder="Escreva a pergunta…" style="resize:vertical"></textarea><label class="label" for="adminDailyAnswers">Resposta(s) correta(s)</label><input id="adminDailyAnswers" class="field" maxlength="300" required placeholder="Resposta correta | alternativa"><div class="investigation-actions"><button type="submit" class="button primary">Adicionar ao estoque</button></div><div id="adminDailyResult" aria-live="polite"></div></form>
@@ -1051,6 +1070,19 @@
     function draftKey(){return `awards_draft_${session?.studentId||'unknown'}_${status?.phase||'general'}`;}
     function collectDraftVotes(){const out={};for(const c of categories){const first=($('vote_'+c.id+'_first')||{}).value||'';const second=($('vote_'+c.id+'_second')||{}).value||'';if(first||second)out[c.id]={first,second};}return out;}
     function saveDraft(showMessage=true){try{const payload={savedAt:new Date().toISOString(),phase:status?.phase||'general',votes:collectDraftVotes()};localStorage.setItem(draftKey(),JSON.stringify(payload));if(showMessage&&$('draftStatus'))$('draftStatus').textContent='Rascunho salvo neste navegador às '+new Date(payload.savedAt).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});return true;}catch(_){if($('draftStatus'))$('draftStatus').textContent='Não foi possível salvar neste navegador. Verifique o espaço disponível.';return false;}}
+    function renderIconicoRevoteOptions(){
+      const first=$('iconicoRevoteFirst'), second=$('iconicoRevoteSecond');
+      if(!first||!second)return;
+      const selectedFirst=first.value, selectedSecond=second.value;
+      const revoteOptions=status?.iconicoRevotePhase==='final'?(finalistsByCategory.mais_iconico||[]):candidates;
+      const optionRows=revoteOptions.map(person=>`<option value="${h(String(person.id))}">${h(person.full_name||person.name||'Participante')}</option>`).join('');
+      first.innerHTML='<option value="">Selecione uma pessoa…</option>'+optionRows;
+      second.innerHTML='<option value="">Não escolher segunda opção</option>'+optionRows;
+      if(selectedFirst&&revoteOptions.some(person=>String(person.id)===selectedFirst))first.value=selectedFirst;
+      if(selectedSecond&&revoteOptions.some(person=>String(person.id)===selectedSecond))second.value=selectedSecond;
+      const category=categories.find(item=>item.id==='mais_iconico');
+      $('iconicoRevoteTitle').textContent=category?.name||'Mais Bonito(a)';
+    }
     function restoreDraft(){try{const raw=localStorage.getItem(draftKey());if(!raw)return;const saved=JSON.parse(raw);if(!saved||saved.phase!==status?.phase||!saved.votes)return;for(const [id,choice] of Object.entries(saved.votes)){if(!categories.some(c=>c.id===id))continue;for(const rank of ['first','second']){const value=choice?.[rank]||'';const input=$('vote_'+id+'_'+rank);if(input&&value){input.value=String(value);const person=candidates.find(p=>String(p.id)===String(value));if(person)setCandidateChoice(id,rank,String(value),person.full_name||person.name||'');}}}updateBallotProgress();if($('draftStatus'))$('draftStatus').textContent='Rascunho recuperado automaticamente.';}catch(_){}}
     function selectBallotTab(type){document.querySelectorAll('[data-ballot-tab]').forEach(b=>b.setAttribute('aria-selected',String(b.dataset.ballotTab===type)));document.querySelectorAll('[data-ballot-panel]').forEach(p=>p.hidden=p.dataset.ballotPanel!==type);}
     function updateBallotProgress(){
@@ -1280,6 +1312,27 @@
     $('investigationTickets').addEventListener('click',event=>{const activate=event.target.closest('[data-activate-ticket]');if(activate){activateTicket(activate.getAttribute('data-activate-ticket'));return;}const view=event.target.closest('[data-view-vip]');if(view)viewVipSpoiler(view.getAttribute('data-view-vip'));});
     $('questionBoxForm').addEventListener('submit',submitQuestionBox);
     $('adminMessageForm').addEventListener('submit',saveAdminMessage);
+    $('adminEnableIconicoRevoteForm').addEventListener('submit',async e=>{
+      e.preventDefault();
+      const name=$('adminEnableIconicoRevoteName').value.trim();
+      if(!confirm(`Liberar para ${name} somente mais um voto na categoria Mais Bonito(a)? A cédula antiga e as demais categorias não serão alteradas.`))return;
+      const btn=$('adminEnableIconicoRevoteButton'),msg=$('adminEnableIconicoRevoteResult');btn.disabled=true;clearMessage(msg);
+      try{const data=await api('admin_enable_iconico_revote',{session:session.token,fullName:name});message(msg,data.message,'success');$('adminEnableIconicoRevoteForm').reset();}
+      catch(err){message(msg,err.message||'Não foi possível liberar o voto complementar.','error');}
+      finally{btn.disabled=false;}
+    });
+    $('iconicoRevoteForm').addEventListener('submit',async e=>{
+      e.preventDefault();
+      const first=$('iconicoRevoteFirst').value, second=$('iconicoRevoteSecond').value||null;
+      const msg=$('iconicoRevoteMessage'),btn=$('iconicoRevoteSubmitButton');clearMessage(msg);
+      if(!first){message(msg,'Escolha uma pessoa na primeira opção.','error');return;}
+      if(second&&second===first){message(msg,'Escolha duas pessoas diferentes.','error');return;}
+      if(!confirm(`Confirmar seu voto complementar de Mais Bonito(a)? 1ª opção: 1 ponto${second?' · 2ª opção: 0,5 ponto':''}. Esse voto só poderá ser enviado uma vez.`))return;
+      btn.disabled=true;btn.textContent='Enviando…';
+      try{const data=await api('submit_iconico_revote',{session:session.token,first,second});await refreshAll(true);message($('dashboardMessage'),data.message||'Voto complementar registrado.','success');}
+      catch(err){message(msg,err.message||'Não foi possível registrar seu voto complementar.','error');}
+      finally{btn.disabled=false;btn.textContent='Enviar voto de Mais Bonito(a)';}
+    });
     $('adminResetVoteForm').addEventListener('submit',async e=>{e.preventDefault();const name=$('adminResetVoteName').value.trim();if(!confirm(`Liberar uma nova cédula para ${name}? A cédula anterior é anônima e continuará contabilizada.`))return;const btn=$('adminResetVoteButton'),msg=$('adminResetVoteResult');btn.disabled=true;try{const data=await api('admin_reset_student_vote',{session:session.token,fullName:name});message(msg,data.message,'success');$('adminResetVoteForm').reset();await refreshAll(true);}catch(err){message(msg,err.message||'Não foi possível liberar a nova cédula.','error');}finally{btn.disabled=false;}});
     $('adminDailyForm').addEventListener('submit',saveAdminDaily);
     $('adminPuzzleForm').addEventListener('submit',saveAdminPuzzle);
@@ -1425,6 +1478,7 @@
     async function refreshAll(forceRender=false){
       const previousPhase=status&&status.phase;
       const previousReleased=status&&status.resultsReleased;
+      const previousIconicoAccess=status?`${status.iconicoRevoteEnabled}:${status.iconicoRevoteUsed}`:'';
       const s=await api('status',{session:session.token});
       status=s;serverOffsetMs=s.serverNow?Date.parse(s.serverNow)-Date.now():0;
       if(!categorySettingsLoaded)await loadCategorySettings();
@@ -1438,7 +1492,8 @@
       }
       if(status.resultsReleased){const r=await api('results',{session:session.token});results=r.results||[];}
       if(session.isAdmin){const a=await api('admin_stats',{session:session.token});adminStats=a;}
-      if(forceRender||phaseChanged||previousReleased!==status.resultsReleased||lastReleased!==status.resultsReleased){renderDashboard();lastReleased=status.resultsReleased;lastPhase=status.phase;}
+      const iconicoAccessChanged=previousIconicoAccess!==`${status.iconicoRevoteEnabled}:${status.iconicoRevoteUsed}`;
+      if(forceRender||phaseChanged||previousReleased!==status.resultsReleased||lastReleased!==status.resultsReleased||iconicoAccessChanged){renderDashboard();lastReleased=status.resultsReleased;lastPhase=status.phase;}
       else updateTimer();
       if(session.isAdmin){renderAdminStats();renderCategoryEditor();}
       if(forceRender && false)await refreshInvestigation();
@@ -1453,6 +1508,11 @@
       $('personalMessageText').textContent = personalMessage;
       $('adminSection').classList.toggle('hidden',!session.isAdmin);
       $('adminStartWrap').classList.toggle('hidden',!session.isAdmin||!!status.deadline);
+      const showIconicoRevote=!session.isAdmin&&!!status.iconicoRevoteEnabled&&!status.iconicoRevoteUsed&&status.iconicoRevotePhase===status.phase;
+      const showIconicoRevoteDone=!session.isAdmin&&!!status.iconicoRevoteUsed;
+      $('iconicoRevoteSection').classList.toggle('hidden',!showIconicoRevote);
+      $('iconicoRevoteDone').classList.toggle('hidden',!showIconicoRevoteDone);
+      if(showIconicoRevote)renderIconicoRevoteOptions();
       const canSeeGeneralResults = !session.isAdmin && (status.phase === 'final' || status.phase === 'closed');
       $('viewGeneralResultsButton').classList.toggle('hidden',!canSeeGeneralResults);
       if(!canSeeGeneralResults){$('generalResultsPanel').classList.add('hidden');$('viewGeneralResultsButton').setAttribute('aria-expanded','false');}
